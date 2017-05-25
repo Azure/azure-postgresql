@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>postgres-nodejs-app</Name>
+    <RootNamespace>ExpressApp2</RootNamespace>
+    <NameOfLastUsedPublishProfile>DayPlannerApp1 - Web Deploy</NameOfLastUsedPublishProfile>
+    <Environment>POSTGRESQLCONNSTR_DefaultConnection=postgres://postgres@postgres-dayplanner:pg%4012345@postgres-dayplanner.database.windows.net:5432/dayplanner</Environment>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>7fe358f9-e388-4487-9636-17acd6825957</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>bin\www</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <NodejsPort>1337</NodejsPort>
+    <StartWebBrowser>True</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.js" />
+    <Compile Include="public\javascripts\bootstrap.min.js" />
+    <Compile Include="public\javascripts\datepicker.js" />
+    <Compile Include="public\javascripts\datepicker\bootstrap-datetimepicker.js" />
+    <Compile Include="public\javascripts\datepicker\bootstrap-datetimepicker.min.js" />
+    <Compile Include="public\javascripts\datepicker\bootstrap.min.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ar.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.az.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.bg.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.bn.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ca.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.cs.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.da.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.de.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ee.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.el.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.es.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.fi.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.fr.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.he.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.hr.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.hu.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.hy.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.id.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.is.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.it.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ja.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ka.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ko.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.lt.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.lv.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ms.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.nb.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.nl.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.no.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.pl.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.pt-BR.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.pt.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ro.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.rs-latin.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.rs.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ru.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.sk.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.sl.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.sv.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.sw.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.th.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.tr.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.ua.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.uk.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.zh-CN.js" />
+    <Compile Include="public\javascripts\datepicker\locales\bootstrap-datetimepicker.zh-TW.js" />
+    <Compile Include="public\javascripts\global.js" />
+    <Compile Include="public\javascripts\jquery.blockUI.js" />
+    <Compile Include="public\javascripts\jquery.min.js" />
+    <Compile Include="public\javascripts\main.js" />
+    <Compile Include="public\javascripts\moment.min.js" />
+    <Compile Include="public\javascripts\sweetalert.min.js" />
+    <Compile Include="routes\index.js" />
+    <Compile Include="routes\users.js" />
+    <Compile Include="bin\www" />
+    <Content Include="deploy\azuredeploy.json" />
+    <Content Include="deploy\azuredeploy.parameters.json">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="LICENSE" />
+    <Content Include="deploy\metadata.json">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="package.json" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="public\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="public\stylesheets\azure_deploy.png" />
+    <Content Include="public\stylesheets\bootstrap.min.css" />
+    <Content Include="public\stylesheets\custom.css" />
+    <Content Include="public\stylesheets\datepicker.css" />
+    <Content Include="public\stylesheets\datepicker\bootstrap-datetimepicker.css" />
+    <Content Include="public\stylesheets\datepicker\bootstrap-datetimepicker.min.css" />
+    <Content Include="public\stylesheets\font-awesome.min.css" />
+    <Content Include="public\stylesheets\ionicons.min.css" />
+    <Content Include="public\stylesheets\mfb.css" />
+    <Content Include="public\stylesheets\style.css" />
+    <Content Include="public\stylesheets\style.styl" />
+    <Content Include="public\stylesheets\sweetalert.min.css" />
+    <Content Include="README.md" />
+    <Content Include="typings.json" />
+    <Content Include="views\dayplanner.jade" />
+    <Content Include="views\index.jade" />
+    <Content Include="views\layout.jade" />
+    <Content Include="views\error.jade" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="deploy\" />
+    <Folder Include="public\" />
+    <Folder Include="public\fonts\" />
+    <Folder Include="public\images\" />
+    <Folder Include="public\javascripts\" />
+    <Folder Include="public\javascripts\datepicker\" />
+    <Folder Include="public\javascripts\datepicker\locales\" />
+    <Folder Include="public\stylesheets\" />
+    <Folder Include="public\stylesheets\datepicker\" />
+    <Folder Include="routes\" />
+    <Folder Include="typings\" />
+    <Folder Include="typings\globals\" />
+    <Folder Include="typings\globals\body-parser\" />
+    <Folder Include="typings\globals\cookie-parser\" />
+    <Folder Include="typings\globals\debug\" />
+    <Folder Include="typings\globals\express-serve-static-core\" />
+    <Folder Include="typings\globals\express\" />
+    <Folder Include="typings\globals\jade\" />
+    <Folder Include="typings\globals\mime\" />
+    <Folder Include="typings\globals\morgan\" />
+    <Folder Include="typings\globals\node\" />
+    <Folder Include="typings\globals\serve-favicon\" />
+    <Folder Include="typings\globals\serve-static\" />
+    <Folder Include="typings\globals\stylus\" />
+    <Folder Include="views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config" />
+    <Content Include="bin\ChangeConfig.ps1" />
+    <Content Include="bin\download.ps1" />
+    <Content Include="bin\setup_web.cmd" />
+    <Content Include="bin\node.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="typings\globals\body-parser\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\cookie-parser\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\debug\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\express-serve-static-core\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\express\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\jade\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\serve-favicon\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\stylus\index.d.ts" />
+    <TypeScriptCompile Include="typings\index.d.ts" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

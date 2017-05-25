@@ -1,0 +1,405 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "variables": {
+    "webSiteName": "[concat('nodejs', uniqueString(resourceGroup().id))]",
+    "serverName": "[concat('postgresql', uniqueString(resourceGroup().id))]",
+    "databaseName": "dayplanner",
+    "hostingPlanName": "[concat(variables('webSiteName'),'-plan')]",
+    "searchServiceName": "[concat('gis-service', uniqueString(resourceGroup().id))]"
+  },
+  "parameters": {
+    "appServicePlan": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "The pricing tier for the hosting plan."
+      }
+    },
+    "repoUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/Click2Cloud/postgres-nodejs-app.git",
+      "metadata": {
+        "description": "The URL for the GitHub repository that contains the project to deploy."
+      }
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "master",
+      "metadata": {
+        "description": "The branch of the GitHub repository to use."
+      }
+    },
+    "postgresServiceTier": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard"
+      ],
+      "metadata": {
+        "description": "The pricing tier for the PostgreSQL service. Choose 'Basic' for workloads that scale with variable IOPS else 'Standard' for workloads that require on-demand scaling optimized for high throughput with provisioned IOPS."
+      }
+    },
+    "postgresComputeUnit": {
+      "type": "int",
+      "defaultValue": 50,
+      "allowedValues": [
+        50,
+        100,
+        200,
+        400,
+        800
+      ],
+      "metadata": {
+        "description": "The PostgreSQL database Compute Unit to use. For 'Basic' tier, expected values are 50 and 100. For 'Standard' tier, expected values are 100,200,400 and 800."
+      }
+    },
+    "postgresStorageGB": {
+      "type": "int",
+      "defaultValue": 50,
+      "metadata": {
+        "description": "The PostgreSQL database storage size to use. For 'Basic' tier, maximum value is 1050 and for 'Standard' tier, maximum value is 10000 (Can be increased by 125 GB)"
+      }
+    },
+    "postgresAdministratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "The PostgreSQL database administrator username to use."
+      }
+    },
+    "postgresAdministratorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The PostgreSQL database administrator password to use. The password must contain character from three of the following categories � English uppercase letters, English lowercase letters, number (0-9), and non-alphanumeric characters (!, $, #, %)."
+      }
+    },
+    "postgresVersion": {
+      "type": "string",
+      "defaultValue": "9.6",
+      "allowedValues": [
+        "9.5",
+        "9.6"
+      ],
+      "metadata": {
+        "description": "The PostgreSQL version to use."
+      }
+    },
+    "postgresLocation": {
+      "type": "string",
+      "defaultValue": "West Europe",
+      "allowedValues": [
+        "East Asia",
+        "East US",
+        "East US 2",
+        "Japan East",
+        "Japan West",
+        "North Central US",
+        "North Europe",
+        "South Central US",
+        "Southeast Asia",
+        "West Europe",
+        "West US"
+      ],
+      "metadata": {
+        "description": "The PostgreSQL server location to use."
+      }
+    },
+    "searchServiceSku": {
+      "type": "string",
+      "defaultValue": "free",
+      "allowedValues": [
+        "free",
+        "basic",
+        "standard",
+        "standard2",
+        "standard3"
+      ],
+      "metadata": {
+        "description": "The SKU of the search service you want to create. E.g. free or standard"
+      }
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-02-01-privatepreview",
+      "name": "[variables('serverName')]",
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "sku": {
+        "tier": "[parameters('postgresServiceTier')]",
+        "capacity": "[parameters('postgresComputeUnit')]",
+        "size": "[mul(parameters('postgresStorageGB'), 1024)]"
+      },
+      "location": "[parameters('postgresLocation')]",
+      "properties": {
+        "version": "[parameters('postgresVersion')]",
+        "administratorLogin": "[parameters('postgresAdministratorLogin')]",
+        "administratorLoginPassword": "[parameters('postgresAdministratorPassword')]",
+        "storageMB": "[mul(parameters('postgresStorageGB'), 1024)]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2017-04-30-preview",
+          "name": "[variables('databaseName')]",
+          "type": "databases",
+          "location": "[parameters('postgresLocation')]",
+          "tags": {
+            "displayName": "PSQLDatabase"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+          ],
+          "properties": {
+          }
+        },
+        {
+          "apiVersion": "2017-04-30-preview",
+          "name": "PSQLServerFirewallRule",
+          "type": "firewallrules",
+          "location": "[parameters('postgresLocation')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+          ],
+          "properties": {
+            "endIpAddress": "255.255.255.255",
+            "startIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "type": "Microsoft.Insights/alertRules",
+          "name": "CPU-Alert",
+          "apiVersion": "2016-03-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+          ],
+          "properties": {
+              "name": "CPU-Alert",
+              "description": "Default alert which notify when cpu percent is greater than 80%",
+              "isEnabled": "true",
+              "condition": {
+                  "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                  "dataSource": {
+                      "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                      "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
+                      "metricName": "cpu_percent"
+                  },
+                  "operator": "GreaterThan",
+                  "threshold": "80",
+                  "windowSize": "00:05:00",
+                  "timeAggregation": "Average"
+              },
+              "actions": [
+                  {
+                      "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                      "sendToServiceOwners": "true"
+                  }
+              ]
+          }
+        },
+        {
+            "type": "Microsoft.Insights/alertRules",
+            "name": "Storage-Alert",
+            "apiVersion": "2016-03-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+            ],
+            "properties": {
+                "name": "Storate_Alert",
+                "description": "Default alert which notify when storage percent is greater than 80%",
+                "isEnabled": "true",
+                "condition": {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+                    "dataSource": {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                        "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
+                        "metricName": "storage_percent"
+                    },
+                    "operator": "GreaterThan",
+                    "threshold": "80",
+                    "windowSize": "00:05:00",
+                    "timeAggregation": "Average"
+                },
+                "actions": [
+                    {
+                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                        "sendToServiceOwners": "true"
+                    }
+                ]
+            }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2015-08-19",
+      "name": "[variables('searchServiceName')]",
+      "type": "Microsoft.Search/searchServices",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "[toLower(parameters('searchServiceSku'))]"
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "HostingPlan"
+      },
+      "sku": {
+        "name": "[parameters('AppServicePlan')]",
+        "capacity": 0
+      },
+      "properties": {
+        "name": "[variables('hostingPlanName')]"
+      }
+    },
+    {
+      "apiVersion": "2015-08-01",
+      "name": "[variables('webSiteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverFarms/', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]",
+        "[resourceId('Microsoft.Search/searchServices', variables('searchServiceName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "empty",
+        "displayName": "Website"
+      },
+      "properties": {
+        "name": "[variables('webSiteName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      },
+      "resources": [
+        {
+          "apiVersion": "2015-08-01",
+          "type": "config",
+          "name": "connectionstrings",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]",
+            "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]"
+          ],
+          "properties": {
+            "DefaultConnection": {
+              "value": "[concat('postgres://', parameters('postgresAdministratorLogin'), '@',  variables('serverName'), ':', uriComponent(parameters('postgresAdministratorPassword')), '@', reference(resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))).fullyQualifiedDomainName, ':5432/', variables('databaseName'), '?ssl=true')]",
+              "type": "PostgreSQL"
+            }
+          }
+        },
+        {
+          "name": "appsettings",
+          "type": "config",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+              "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]",
+            "[resourceId('Microsoft.Search/searchServices', variables('searchServiceName'))]"
+          ],
+          "tags": {
+              "displayName": "WebAppSettings"
+          },
+          "properties": {
+              "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
+              "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
+          }
+        },
+        {
+          "apiVersion": "2015-08-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('hostingPlanName'), '-', resourceGroup().name)]",
+      "type": "Microsoft.Insights/autoscalesettings",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "Resource",
+        "displayName": "AutoScaleSettings"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
+      ],
+      "properties": {
+        "profiles": [
+          {
+            "name": "Default",
+            "capacity": {
+              "minimum": 1,
+              "maximum": 2,
+              "default": 1
+            },
+            "rules": [
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT10M",
+                  "timeAggregation": "Average",
+                  "operator": "GreaterThan",
+                  "threshold": 80.0
+                },
+                "scaleAction": {
+                  "direction": "Increase",
+                  "type": "ChangeCount",
+                  "value": 1,
+                  "cooldown": "PT10M"
+                }
+              },
+              {
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT1H",
+                  "timeAggregation": "Average",
+                  "operator": "LessThan",
+                  "threshold": 60.0
+                },
+                "scaleAction": {
+                  "direction": "Decrease",
+                  "type": "ChangeCount",
+                  "value": 1,
+                  "cooldown": "PT1H"
+                }
+              }
+            ]
+          }
+        ],
+        "enabled": false,
+        "name": "[concat(variables('hostingPlanName'), '-', resourceGroup().name)]",
+        "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
+      }
+    }
+  ]
+}
