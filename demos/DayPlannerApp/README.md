@@ -44,3 +44,8 @@ To clean up the Azure assets:
 1. Login to the Azure portal.
 2. Delete the resource group created as part of the deployment. Internally this will delete all the child resources created in it.
 
+## Contributing
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+

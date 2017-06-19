@@ -68,7 +68,7 @@ function createTableAndSampleData(client, done, meeting_date, res) {
                             date date, \
                             start_time time without time zone, \
                             end_time time without time zone, \
-                            location geography(Point));
+                            location geography(Point));\
                             ALTER TABLE public.engagements OWNER TO "+ pgAdminUser +"; \
                             CREATE SEQUENCE engagements_loc_id_seq START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1; \
                             ALTER TABLE public.engagements_loc_id_seq OWNER TO "+ pgAdminUser +"; \

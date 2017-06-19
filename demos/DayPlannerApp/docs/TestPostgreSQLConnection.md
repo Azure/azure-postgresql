@@ -34,24 +34,33 @@
 
     ![](img/image-41.png)
 
-1. Download <a href="https://www.pgadmin.org/download/">pgAdmin-3</a> for connecting the Server database on your local machine for testing the database connection.
+1. Download <a href="https://www.pgadmin.org/download/">pgAdmin-4</a> for connecting the Server database on your local machine for testing the database connection.
 
-1. Open the pgAdmin-3 to connect ServerDatabase on local environment. 
+1. Open the pgAdmin-4 and click on `Add New Server` to add New Server into it.
 
-    - Name:- AzurePostgreSQLDatabase 
-    - HostName:- postgresqliugazasuoohwq.postgres.database.azure.com 
-    - Username:- postgres@postgresqliugazasuoohwq 
-    - Password:- pg@12345  
+    ![](img/PostgreSQLImage-1.png)
 
-    ![](img/image-2.png)
+1.  Now, to connect the Server Database on local environment add information on pop up model. 
+    ```
+    Name:- AzurePostgreSQLDatabase 
+    ```
+    ![](img/PostgreSQLImage-2.png)
 
-1. After successful connection, the `AzurePostgreSQLDatabase` server will be visible on pgAdmin-3.
+1.  After that add some more information on pop up model. 
+    ```
+    HostName:- postgresqliugazasuoohwq.postgres.database.azure.com 
+    Username:- postgres@postgresqliugazasuoohwq 
+    Password:- pg@12345  
+    ```
+    ![](img/PostgreSQLImage-3.png)
 
-    ![](img/image-3.png)
+1. After successful connection, the `AzurePostgreSQLDatabase` server will be visible on pgAdmin-4.
+
+    ![](img/PostgreSQLImage-4.png)
 
 1.	The Server will contain `dayplanner` database at first which gets created during deployment. The first time that you run the Day Planner app then `engagements` table with sample data with current date will be created. 
 
-    ![](img/image-4.png)
+    ![](img/PostgreSQLImage-5.png)
 
 1.	The schema of `engagements` table is as follows.
     
@@ -70,22 +79,22 @@
       -  After that, click on the `View Data`.
       -  Now click on `View All Rows`.
 
-    ![](img/image-42.png)
+    ![](img/PostgreSQLImage-6.png)
 
 1.	Now you can see all records present on the `engagements` table.
 
-    ![](img/image-43.png)
+    ![](img/PostgreSQLImage-7.png)
 
-1.	To perform the crud operation like `select`, `insert`, `update`, `delete` and so on.... on the `engagements` table, all we need is __query-tools__.<br/>
-    To open __query-tools__ click on the __SQL__ icon present on the `pg-admin 3`.
+1.	To perform the crud operation like `select`, `insert`, `update`, `delete` and so on.... on the `engagements` table, all we need is __Query Tool__.<br/>
+    To open __Query Tool__ click on the __Tools__ present at the top of `pgAdmin-4` and then click on __Query Tool__.
 
-    ![](img/image-44.png)
+    ![](img/PostgreSQLImage-8.png)
 
-1.	Write the actual query in the __query-tools__ box and press the run button(highlighted in the image) to run the written query.
+1.	Write the actual query in the __Query Tools__ box and press the run button(highlighted in the image) to run the written query.
     
-    ![](img/image-45.png)
+    ![](img/PostgreSQLImage-9.png)
 
-1.	The result of the query is shown below the __query-tool__ box. 
+1.	The result of the query is shown below the __Query Tool__ box. 
     
     __Basic Query :-__
     ```sql
@@ -97,7 +106,7 @@
     as t;
     ```
 
-    ![](img/image-46.png)
+    ![](img/PostgreSQLImage-10.png)
 
 
 

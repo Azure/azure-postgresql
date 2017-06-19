@@ -7,7 +7,8 @@
     "databaseName": "dayplanner",
     "hostingPlanName": "[concat(variables('webSiteName'),'-plan')]",
     "searchServiceName": "[concat('gis-service', uniqueString(resourceGroup().id))]",
-    "skuNamePG": "PGSQLS3M100"
+    "skuNamePG": "PGSQLS3M100",
+    "customEmails": "[split(parameters('postgresAlertsAdditionalAdministratorEmail(s)'), ';')]"
   },
   "parameters": {
     "appServicePlan": {
@@ -45,7 +46,7 @@
         "description": "The branch of the GitHub repository to use."
       }
     },
-    "postgresServiceTier": {
+    "postgresPricingTier": {
       "type": "string",
       "defaultValue": "Basic",
       "allowedValues": [
@@ -77,13 +78,13 @@
         "description": "The PostgreSQL database storage size to use. For 'Basic' tier, min value is 50 and max value is 1050 and for 'Standard' tier, min value is 125 and max value is 10000 (Can be increased by 125 GB)"
       }
     },
-    "postgresAdministratorLogin": {
+    "postgresAdminLoginName": {
       "type": "string",
       "metadata": {
         "description": "The PostgreSQL database administrator username to use."
       }
     },
-    "postgresAdministratorPassword": {
+    "postgresAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "The PostgreSQL database administrator password to use. The password must contain character from three of the following categories � English uppercase letters, English lowercase letters, number (0-9), and non-alphanumeric characters (!, $, #, %)."
@@ -120,7 +121,13 @@
         "description": "The PostgreSQL server location to use."
       }
     },
-    "searchServiceSku": {
+    "postgresAlertsAdditionalAdministratorEmail(s)": {
+      "type": "string",
+      "metadata": {
+        "description": "For CPU and Storage usage alerts, add email addresses separated by semicolons"
+      }
+    },
+    "searchPricingTier": {
       "type": "string",
       "defaultValue": "free",
       "allowedValues": [
@@ -142,15 +149,15 @@
       "type": "Microsoft.DBforPostgreSQL/servers",
       "sku": {
         "name": "[variables('skuNamePG')]",
-        "tier": "[parameters('postgresServiceTier')]",
+        "tier": "[parameters('postgresPricingTier')]",
         "capacity": "[parameters('postgresComputeUnit')]",
         "size": "[mul(parameters('postgresStorageGB'), 1024)]"
       },
       "location": "[parameters('postgresLocation')]",
       "properties": {
         "version": "[parameters('postgresVersion')]",
-        "administratorLogin": "[parameters('postgresAdministratorLogin')]",
-        "administratorLoginPassword": "[parameters('postgresAdministratorPassword')]",
+        "administratorLogin": "[parameters('postgresAdminLoginName')]",
+        "administratorLoginPassword": "[parameters('postgresAdminPassword')]",
         "storageMB": "[mul(parameters('postgresStorageGB'), 1024)]"
       },
       "resources": [
@@ -205,12 +212,13 @@
                   "windowSize": "00:05:00",
                   "timeAggregation": "Average"
               },
-              "actions": [
-                  {
-                      "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                      "sendToServiceOwners": "true"
-                  }
-              ]
+            "actions": [
+              {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                "sendToServiceOwners": "true",
+                "customEmails": "[variables('customEmails')]"
+              }
+            ]
           }
         },
         {
@@ -237,12 +245,13 @@
                     "windowSize": "00:05:00",
                     "timeAggregation": "Average"
                 },
-                "actions": [
-                    {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                        "sendToServiceOwners": "true"
-                    }
-                ]
+              "actions": [
+                {
+                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                  "sendToServiceOwners": "true",
+                  "customEmails": "[variables('customEmails')]"
+                }
+              ]
             }
         }
       ]
@@ -253,7 +262,7 @@
       "type": "Microsoft.Search/searchServices",
       "location": "[resourceGroup().location]",
       "sku": {
-        "name": "[toLower(parameters('searchServiceSku'))]"
+        "name": "[toLower(parameters('searchPricingTier'))]"
       }
     },
     {
@@ -301,7 +310,7 @@
           ],
           "properties": {
             "DefaultConnection": {
-              "value": "[concat('postgres://', parameters('postgresAdministratorLogin'), '@',  variables('serverName'), ':', uriComponent(parameters('postgresAdministratorPassword')), '@', reference(resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))).fullyQualifiedDomainName, ':5432/', variables('databaseName'), '?ssl=true')]",
+              "value": "[concat('postgres://', parameters('postgresAdminLoginName'), '@',  variables('serverName'), ':', uriComponent(parameters('postgresAdminPassword')), '@', reference(resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))).fullyQualifiedDomainName, ':5432/', variables('databaseName'), '?ssl=true')]",
               "type": "PostgreSQL"
             }
           }
@@ -319,7 +328,7 @@
           },
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
-            "pgAdminUser": "[parameters('postgresAdministratorLogin')]",
+            "pgAdminUser": "[parameters('postgresAdminLoginName')]",
             "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
             "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
           }
