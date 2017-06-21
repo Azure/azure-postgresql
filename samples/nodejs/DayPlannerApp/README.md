@@ -16,7 +16,7 @@ The app also helps to search the near-by coffee shops to engagements by selectin
 If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/en-us/free/?WT.mc_id=A261C142F) before you begin.
 
 ## Deployment
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fazure%2Fazure-postgresql%2Fmaster%2Fdemos%2FDayPlannerApp%2Fdeploy%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FClick2Cloud%2FDayPlannerApp%2Fmaster%2Fdeploy%2Fazuredeploy.json" target="_blank">
       <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 

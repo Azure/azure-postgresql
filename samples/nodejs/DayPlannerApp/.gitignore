@@ -3,7 +3,3 @@
 ################################################################################
 
 /.vs/config/applicationhost.config
-
-# Others
-node_modules/
-typings/
