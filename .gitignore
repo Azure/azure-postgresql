@@ -18,7 +18,7 @@
 x64/
 x86/
 bld/
-[Bb]in/
+[B]in/
 [Oo]bj/
 [Ll]og/
 
@@ -191,6 +191,7 @@ ClientBin/
 *.pfx
 *.publishsettings
 node_modules/
+typings/
 orleans.codegen.cs
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
