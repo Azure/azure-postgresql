@@ -27,15 +27,15 @@ Following steps provide the information about the ARM Template being used for de
           "type": "Microsoft.DBforPostgreSQL/servers",
           "sku": {
             "name": "[variables('skuNamePG')]",
-            "tier": "[parameters('postgresServiceTier')]",
+            "tier": "[parameters('postgresPricingTier')]",
             "capacity": "[parameters('postgresComputeUnit')]",
             "size": "[mul(parameters('postgresStorageGB'), 1024)]"
           },
           "location": "[parameters('postgresLocation')]",
           "properties": {
             "version": "[parameters('postgresVersion')]",
-            "administratorLogin": "[parameters('postgresAdministratorLogin')]",
-            "administratorLoginPassword": "[parameters('postgresAdministratorPassword')]",
+            "administratorLogin": "[parameters('postgresAdminLoginName')]",
+            "administratorLoginPassword": "[parameters('postgresAdminPassword')]",
             "storageMB": "[mul(parameters('postgresStorageGB'), 1024)]"
           },
           "resources": [
@@ -90,12 +90,13 @@ Following steps provide the information about the ARM Template being used for de
                       "windowSize": "00:05:00",
                       "timeAggregation": "Average"
                   },
-                  "actions": [
-                      {
-                          "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                          "sendToServiceOwners": "true"
-                      }
-                  ]
+                "actions": [
+                  {
+                    "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                    "sendToServiceOwners": "true",
+                    "customEmails": "[variables('customEmails')]"
+                  }
+                ]
               }
             },
             {
@@ -122,12 +123,13 @@ Following steps provide the information about the ARM Template being used for de
                         "windowSize": "00:05:00",
                         "timeAggregation": "Average"
                     },
-                    "actions": [
-                        {
-                            "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                            "sendToServiceOwners": "true"
-                        }
-                    ]
+                  "actions": [
+                    {
+                      "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                      "sendToServiceOwners": "true",
+                      "customEmails": "[variables('customEmails')]"
+                    }
+                  ]
                 }
             }
           ]
@@ -193,14 +195,12 @@ Following steps provide the information about the ARM Template being used for de
           "name": "[variables('webSiteName')]",
           "type": "Microsoft.Web/sites",
           "location": "[resourceGroup().location]",
-          "dependsOn": 
-          [
+          "dependsOn": [
             "[resourceId('Microsoft.Web/serverFarms/', variables('hostingPlanName'))]",
             "[resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))]",
             "[resourceId('Microsoft.Search/searchServices', variables('searchServiceName'))]"
           ],
-          "tags": 
-          {
+          "tags": {
             "[concat('hidden-related:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "empty",
             "displayName": "Website"
           },
@@ -219,7 +219,7 @@ Following steps provide the information about the ARM Template being used for de
               ],
               "properties": {
                 "DefaultConnection": {
-                  "value": "[concat('postgres://', parameters('postgresAdministratorLogin'), '@',  variables('serverName'), ':', uriComponent(parameters('postgresAdministratorPassword')), '@', reference(resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))).fullyQualifiedDomainName, ':5432/', variables('databaseName'), '?ssl=true')]",
+                  "value": "[concat('postgres://', parameters('postgresAdminLoginName'), '@',  variables('serverName'), ':', uriComponent(parameters('postgresAdminPassword')), '@', reference(resourceId('Microsoft.DBforPostgreSQL/servers/', variables('serverName'))).fullyQualifiedDomainName, ':5432/', variables('databaseName'), '?ssl=true')]",
                   "type": "PostgreSQL"
                 }
               }
@@ -236,9 +236,10 @@ Following steps provide the information about the ARM Template being used for de
                   "displayName": "WebAppSettings"
               },
               "properties": {
-                  "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
-                  "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
-                  "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
+                "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+                "pgAdminUser": "[parameters('postgresAdminLoginName')]",
+                "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
+                "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
               }
             },
             {
