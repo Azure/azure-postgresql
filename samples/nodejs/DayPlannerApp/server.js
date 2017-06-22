@@ -1,6 +1,7 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
+
 var debug = require('debug')('ExpressApp2');
-var app = require('../app');
+var app = require('./app');
 
 app.set('port', process.env.PORT || 3000);
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var debug = require('debug')('ExpressApp2');
-var app = require('./demos/DayPlannerApp/app');
+var app = require('./samples/nodejs/DayPlannerApp/app');
 
 app.set('port', process.env.PORT || 3000);
 
