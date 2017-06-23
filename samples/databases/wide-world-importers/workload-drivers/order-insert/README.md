@@ -51,7 +51,7 @@ To run this sample, you need the following prerequisites.
 
 This application is used to provide an intensive order entry workload for the wide_world_importers_pg database. When started it displays the following:
 
-![Alt text](/../master/media/wide-world-importers-order-insert-app.png "wide_world_importers_pg Order Insert Workload Simulation")
+![Alt text](/../master/samples/databases/wide-world-importers/workload-drivers/order-insert/media/wide-world-importers-order-insert-app.png "wide_world_importers_pg Order Insert Workload Simulation")
 
 Ensure that the connection string is set appropriately. It is saved when the program exits. If you ever need to set it back to the default value, open the program, clear the string, and exit the program. When you restart the program, the connection string will have been returned to the default value.
 
