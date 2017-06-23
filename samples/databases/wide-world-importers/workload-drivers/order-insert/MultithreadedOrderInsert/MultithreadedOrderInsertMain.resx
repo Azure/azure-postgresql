@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DescriptionTextBox.Text" xml:space="preserve">
-    <value>This application is used to provide an intensive order entry workload for the WideWorldImporters database. Ensure that the connection string details are valid. To reset the connection string details, leave the value blank. When inserts are occurring, click the button to stop but allow time for the system to respond and stop. It may take a few seconds to respond, particularly if a larger number of threads is being used.</value>
+    <value>This application is used to provide an intensive order entry workload for the wide_world_importers_pg database. Ensure that the connection string details are valid. To reset the connection string details, leave the value blank. When inserts are occurring, click the button to stop but allow time for the system to respond and stop. It may take a few seconds to respond, particularly if a larger number of threads is being used.</value>
   </data>
   <metadata name="DisplayUpdateTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>

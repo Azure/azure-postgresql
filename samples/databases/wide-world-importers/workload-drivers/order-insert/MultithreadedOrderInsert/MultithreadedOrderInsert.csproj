@@ -58,7 +58,6 @@
     <Compile Include="ErrorFormMain.Designer.cs">
       <DependentUpon>ErrorFormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="MsSqlTask.cs" />
     <Compile Include="MultithreadedOrderInsertMain.cs">
       <SubType>Form</SubType>
     </Compile>
