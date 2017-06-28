@@ -12,7 +12,8 @@ Perform following steps to Deploy Node.js web application in Azure and connect i
 4. Select __Location__ from the available locations for resource group.
 5. Select __App Service Plan__. It is pricing model for hosting application, default value is set to __F1__ which represent free service.
 6. The __Repo Url__ is the GitHub repository url of web application. The default value is set to the current GitHub repository Url which contains sample Node.js application source code which connects with AzureDB for PostgreSQL Service and Azure Search service created with the ARM template. Leave it as is for this demo
-7. This __Branch__ is branch name of GitHub repository where code resides, leave it as is for this demo.
+7. This __Branch__ is branch name of GitHub repository where application resides, leave it as is for this demo.
+8. __App Source Directory__ is application source code directory in the GitHub repository to deploy on Azure App Service.
 
     ![](img/azure-deploy.png)
 

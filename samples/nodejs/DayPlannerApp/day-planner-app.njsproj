@@ -98,11 +98,11 @@
     <Compile Include="routes\users.js" />
     <Compile Include="bin\www" />
     <Compile Include="searchService.js" />
+    <Compile Include="server.js" />
     <Content Include="deploy\azuredeploy.json" />
     <Content Include="deploy\azuredeploy.parameters.json">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="LICENSE" />
     <Content Include="deploy\metadata.json">
       <SubType>Code</SubType>
     </Content>
@@ -133,7 +133,6 @@
     <Content Include="views\error.jade" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\" />
     <Folder Include="deploy\" />
     <Folder Include="public\" />
     <Folder Include="public\fonts\" />
@@ -163,7 +162,6 @@
   <ItemGroup>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
-    <Content Include="bin\ChangeConfig.ps1" />
     <Content Include="bin\download.ps1" />
     <Content Include="bin\setup_web.cmd" />
     <Content Include="bin\node.cmd" />

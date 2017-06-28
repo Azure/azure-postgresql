@@ -46,6 +46,13 @@
         "description": "The branch of the GitHub repository to use."
       }
     },
+    "appSourceDirectory": {
+      "type": "string",
+      "defaultValue": "samples/nodejs/DayPlannerApp",
+      "metadata": {
+        "description": "The application source code directory in the GitHub repository to deploy."
+      }
+    },
     "postgresPricingTier": {
       "type": "string",
       "defaultValue": "Basic",
@@ -328,6 +335,7 @@
           },
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+            "PROJECT": "[parameters('appSourceDirectory')]",
             "pgAdminUser": "[parameters('postgresAdminLoginName')]",
             "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
             "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
