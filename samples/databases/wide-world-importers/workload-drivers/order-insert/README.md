@@ -35,7 +35,7 @@ To run this sample, you need the following prerequisites.
 <!-- Examples -->
 1. PostgreSQL Instance. Tested on Postgres 9.6 using Azure Database for PostgreSQL. Expected to work on all recent versions of PostgreSQL.
 2. Visual Studio 2015 or greater. This project uses the [Npgsql ADO.NET Data Provider for PostgreSQL](http://www.npgsql.org/).
-3. The wide_world_importers_pg database.
+3. The wide_world_importers_pg database. You can download the dump file from here: [wide_world_importers_pg](/../master/samples/databases/wide-world-importers/ "wide_world_importers_pg database") 
 
 <a name=run-this-sample></a>
 
