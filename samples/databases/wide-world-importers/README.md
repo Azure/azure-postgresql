@@ -12,7 +12,7 @@ The file provided is in .dump format. To restore it, follow these steps:
 2. Create a database (likely called wide_world_importers_pg and with azure_pg_admin as the owner)
 3. Restore the database by executing the command:
 
-`pg_restore -h yourazurepgserver.database.windows.net -p 5432 -U yourusername -W -v -Fc -d wide_world_importers_pg < wide_world_importers_pg.dump`
+`pg_restore -h yourazurepgserver.postgres.database.azure.com -p 5432 -U yourusername -W -v -Fc -d wide_world_importers_pg < wide_world_importers_pg.dump`
 
 
 
