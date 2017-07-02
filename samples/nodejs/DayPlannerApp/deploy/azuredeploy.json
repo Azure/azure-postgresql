@@ -34,7 +34,7 @@
     },
     "repoUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/click2cloud/DayPlannerApp.git",
+      "defaultValue": "https://github.com/azure/azure-postgresql",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
       }
@@ -44,6 +44,13 @@
       "defaultValue": "master",
       "metadata": {
         "description": "The branch of the GitHub repository to use."
+      }
+    },
+    "appSourceDirectory": {
+      "type": "string",
+      "defaultValue": "samples/nodejs/DayPlannerApp",
+      "metadata": {
+        "description": "The application source code directory in the GitHub repository to deploy."
       }
     },
     "postgresPricingTier": {
@@ -197,21 +204,21 @@
             "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
           ],
           "properties": {
-              "name": "CPU-Alert",
-              "description": "Default alert which notify when cpu percent is greater than 80%",
-              "isEnabled": "true",
-              "condition": {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                  "dataSource": {
-                      "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                      "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
-                      "metricName": "cpu_percent"
-                  },
-                  "operator": "GreaterThan",
-                  "threshold": "80",
-                  "windowSize": "00:05:00",
-                  "timeAggregation": "Average"
+            "name": "CPU-Alert",
+            "description": "Default alert which notify when cpu percent is greater than 80%",
+            "isEnabled": "true",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
+                "metricName": "cpu_percent"
               },
+              "operator": "GreaterThan",
+              "threshold": "80",
+              "windowSize": "00:05:00",
+              "timeAggregation": "Average"
+            },
             "actions": [
               {
                 "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
@@ -222,37 +229,37 @@
           }
         },
         {
-            "type": "Microsoft.Insights/alertRules",
-            "name": "Storage-Alert",
-            "apiVersion": "2016-03-01",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
-            ],
-            "properties": {
-                "name": "Storate_Alert",
-                "description": "Default alert which notify when storage percent is greater than 80%",
-                "isEnabled": "true",
-                "condition": {
-                    "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-                    "dataSource": {
-                        "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                        "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
-                        "metricName": "storage_percent"
-                    },
-                    "operator": "GreaterThan",
-                    "threshold": "80",
-                    "windowSize": "00:05:00",
-                    "timeAggregation": "Average"
-                },
-              "actions": [
-                {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-                  "sendToServiceOwners": "true",
-                  "customEmails": "[variables('customEmails')]"
-                }
-              ]
-            }
+          "type": "Microsoft.Insights/alertRules",
+          "name": "Storage-Alert",
+          "apiVersion": "2016-03-01",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]"
+          ],
+          "properties": {
+            "name": "Storate_Alert",
+            "description": "Default alert which notify when storage percent is greater than 80%",
+            "isEnabled": "true",
+            "condition": {
+              "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
+              "dataSource": {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
+                "resourceUri": "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('serverName'))]",
+                "metricName": "storage_percent"
+              },
+              "operator": "GreaterThan",
+              "threshold": "80",
+              "windowSize": "00:05:00",
+              "timeAggregation": "Average"
+            },
+            "actions": [
+              {
+                "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
+                "sendToServiceOwners": "true",
+                "customEmails": "[variables('customEmails')]"
+              }
+            ]
+          }
         }
       ]
     },
@@ -320,14 +327,15 @@
           "type": "config",
           "apiVersion": "2015-08-01",
           "dependsOn": [
-              "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]",
+            "[resourceId('Microsoft.Web/Sites/', variables('webSiteName'))]",
             "[resourceId('Microsoft.Search/searchServices', variables('searchServiceName'))]"
           ],
           "tags": {
-              "displayName": "WebAppSettings"
+            "displayName": "WebAppSettings"
           },
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+            "PROJECT": "[parameters('appSourceDirectory')]",
             "pgAdminUser": "[parameters('postgresAdminLoginName')]",
             "searchServicePrimaryKey": "[listAdminKeys(resourceId('Microsoft.Search/searchServices', variables('searchServiceName')), '2015-08-19').primaryKey]",
             "searchServiceUri": "[concat('https://', variables('searchServiceName'), '.search.windows.net')]"
