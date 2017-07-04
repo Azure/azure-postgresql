@@ -1,0 +1,67 @@
+html
+  title Login/SignUp - Day Planner App
+  link(href='stylesheets/bootstrap.min.css', rel='stylesheet')
+  script(src='javascripts/jquery.min.js')
+  script(src='javascripts/bootstrap.min.js')
+  script(src='javascripts/sweetalert.min.js')
+  link(href='stylesheets/sweetalert.min.css', rel='stylesheet')
+  script(src='javascripts/jquery.blockUI.js') 
+  script(src='javascripts/login.js')  
+  link(href='stylesheets/login.css', rel='stylesheet') 
+
+  body
+    .container
+      .row
+        .col-md-6.col-md-offset-3
+          .panel.panel-login
+            .panel-heading
+              .row
+                .col-xs-6
+                  a#login-form-link.active(href='#') Login
+                .col-xs-6
+                  a#register-form-link(href='#') Register
+              hr
+            .panel-body
+              .row
+                .col-lg-12
+                  form#login-form(action='/login', method='post', role='form', style='display: block;')
+                    .form-group
+                      input#username.form-control(type='text', name='username', tabindex='1', placeholder='Username', autofocus='', required)
+                    .form-group
+                      input#password.form-control(type='password', name='password', tabindex='2', placeholder='Password', required)
+                    .form-group
+                      .row
+                        .col-sm-6.col-sm-offset-3
+                          input#login-submit.form-control.btn.btn-login(type='submit', name='login-submit', tabindex='4', value='Log In')
+                    //
+                      -<div class="form-group">
+                      <div class="row">
+                      <div class="col-lg-12">
+                      <div class="text-center">
+                      <a href="#" tabindex="5" class="forgot-password">Forgot Password?</a>
+                      </div>
+                      </div>
+                      </div>
+                      </div>-
+                  form#register-form(action='/local-reg', method='post', role='form', style='display: none;')
+                    .form-group
+                      input#firstname.form-control(type='text', name='firstname', tabindex='1', pattern=".{3,}", title= 'First Name should contain Minimum 3 characters', placeholder='Firstname', required)
+                    .form-group
+                      input#lastname.form-control(type='text', name='lastname', tabindex='1', pattern=".{3,}", title= 'Last Name should contain Minimum 3 characters', placeholder='Lastname', required)
+                    .form-group
+                      input#username.form-control(type='text', name='username', tabindex='1',  pattern=".{6,}", title= 'User Name should contain Minimum 6 characters', placeholder='Username', required)
+                    .form-group
+                      input#txt_password.form-control(type='password', name='password', tabindex='1', pattern=".{6,}", title= 'Password should contain Minimum 6 characters', placeholder='Password', required)
+                    .form-group
+                      input#txt_confirmpassword.form-control(type='password', name='confirm-password', pattern=".{6,}", title= 'Confirm Password should contain Minimum 6 characters', tabindex='1', placeholder='Confirm Password', required)
+                    .form-group
+                      .row
+                        .col-sm-6.col-sm-offset-3
+                          input#register-submit.form-control.btn.btn-register(type='submit', name='register-submit', tabindex='4', value='Register Now')
+
+            div.wrapper                        
+                    if error != ''                         
+                       .alert.alert-danger#error_msg(display='none') #{error} 
+                    if success != ''                         
+                       .alert.alert-danger#success_msg(display='none') #{success} 
+                       

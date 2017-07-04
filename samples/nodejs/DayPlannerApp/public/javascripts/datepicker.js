@@ -24,12 +24,11 @@
             $datepicker.data('date', cur_date.format('MM/DD/YYYY'));
             $datepicker.find('.input-datepicker').removeClass('show-input');
 
-            //getting meeting and route data and rendering data on google maps based on date
 
-            
+            //getting meeting and route data and rendering data on google maps based on date
             dateArray = $datepicker.data('date').split("/");
             formattedDate = dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
-            postgres.getAndSetMeetingLocationsData(formattedDate);
+            postgres.getEngagementsData(formattedDate);
             
             
         }

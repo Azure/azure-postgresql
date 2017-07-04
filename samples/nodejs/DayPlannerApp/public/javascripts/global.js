@@ -1,61 +1,6 @@
-﻿$(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-
-    $("#btndistance li").click(function () {
-        $("#btndistance #disttitle").text($(this).text())
-        $("#btndistance li").removeClass("Selected")
-        $(this).addClass("Selected")
-    })
-
-    //create index in azure search service.
-    azureSearch.createIndex()
-
-    //clear function of coffee shops
-    $("#btnclear").click(function () {
-        gMap.clearCoffeeMarker();
-    })
-    //click event of search coffee shops
-    $("#btnazuresearch").click(function () {
-        if ($(".dropdown li.Selected").length > 0) {
-            if ($("#btndistance li.Selected").length > 0) {
-                gMap.displayLoader();
-                for (var i = 0; i < gMap.locmarkers.length; i++) {
-                    gMap.locmarkers[i].setMap(null);
-                    //gMap.markers[i] = null;
-                }
-                for (var i = 0; i < gMap.locinfowindow.length; i++) {
-                    gMap.locinfowindow[i].close();
-                }
-                gMap.locinfowindow = [];
-                gMap.locmarkers = [];
-                //gMap.map.center(new google.maps.LatLng(lat, long))
-                gMap.map.setCenter(new google.maps.LatLng($(".dropdown li.Selected").attr("data-lat"), $(".dropdown li.Selected").attr("data-lng")));
-                gMap.map.setZoom(14)
-                azureSearch.getDataFromIndex($(".dropdown li.Selected").attr("data-lat"), $(".dropdown li.Selected").attr("data-lng"), $("#btndistance li.Selected").attr("data-value"))
-            } else {
-                swal('Error', 'Select Range for Azure Geospatial Search', 'error');
-            }
-        }
-        else {
-            swal('Error', 'Select Engagement for Azure Geospatial Search', 'error');
-        }
-    })
-});
+﻿
 var azureSearch = {
-    // Create index in azure search service.
-    createIndex: function () {
-        $.ajax({
-            url: "/api/v1/create_index",
-            type: "get",
-            data: {},
-            success: function (response) {
-
-            },
-            error: function (xhr) {
-
-            }
-        });
-    },
+    
 
     //Get geo-spatial data from index based on latitude, longitude and radius in km.
     getDataFromIndex: function (latitude, longitude, radius) {
@@ -89,7 +34,7 @@ var azureSearch = {
             },
             error: function (xhr) {
                 $.unblockUI()
-                console.log(xhr)
+                swal('Error', 'Error in getting coffee shops data from Azure Search Service', 'error');
             }
         });
     },
@@ -97,14 +42,10 @@ var azureSearch = {
 
 }
 var postgres = {
-
-    meetingData: null,//[{ loc_id: 1, loc_name: "Waltham, MA", subject: "First meeting", meeting_date: "2017-04-26", start_time: "01:00 PM", end_time: "03:00 PM", geometry: { type: "Point", coordinates: [21.1458004, 79.08815460000005] } }, { loc_id: 2, loc_name: "Manchester, NH", subject: "Second meeting", meeting_date: "2017-04-26", start_time: "02:00 PM", end_time: "04:00 PM", geometry: { type: "Point", coordinates: [19.0759837, 72.87765590000004] } }, { loc_id: 3, loc_name: "TI Blvd, TX", subject: "Third meeting", meeting_date: "2017-04-26", start_time: "03:00 PM", end_time: "05:00 PM", geometry: { type: "Point", coordinates: [28.6618976, 77.22739580000007] } }],
-
-    //meetingJsonData: JSON.stringify(postgres.meetingData),
-
-    getAndSetMeetingLocationsData: function (date) {
+    meetingData: null,
+    getEngagementsData: function (date) {
         //display please wait loader on date change/refresh page
-        gMap.displayLoader()
+        main.blockUI();
         $.ajax({
             url: "/api/v1/GetMeetingData",
             type: "get",
@@ -121,7 +62,7 @@ var postgres = {
                     gMap.renderRouteData(response);
                 else {
                     swal('No engagements', 'No engagements on ' + $('.date-picker').data('date'), 'info');
-                    $(".dropdown ul").html('<li><a>No Engagements</a></li>')
+                    $("#engagementdata").html('<li><a>No Engagements</a></li>')
                 }
             },
             error: function (xhr) {
@@ -132,6 +73,45 @@ var postgres = {
             }
         });
     },
+
+    saveEngagement: function (title, meeting_date, start_time, end_time, loc, latitude, longitude) {
+        //function call to display loader.
+        main.blockUI();
+        // ajaxpost to save new engagement
+        $.ajax({
+            url: '/insert_data',
+            type: 'PUT',
+            data: {
+                title: title,
+                meeting_date: meeting_date,
+                start_time: start_time,
+                end_time: end_time,
+                loc_name: loc,
+                lat: latitude,
+                long: longitude
+            },
+            success: function (data) {
+                //stop loader
+                $.unblockUI()
+                swal('Success', 'Engagement saved successfully.', 'success');
+
+                // reset map after saving new engagement
+                var dateArray = $('.date-picker').data('date').split("/");
+                var selectedMeetingdate = dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
+
+                var newEngagementDate = meeting_date.split('-')[0] + "-" + meeting_date.split('-')[1] + "-" + meeting_date.split('-')[2];
+
+                if (selectedMeetingdate == newEngagementDate) {
+                    postgres.getEngagementsData(selectedMeetingdate);
+                }
+            },
+            error: function (err) {
+                //stop loader
+                $.unblockUI()
+                swal('Error', 'Error while saving Engagement.', 'error');
+            }
+        });
+    }
 
 
 }
@@ -248,7 +228,7 @@ var gMap = {
 
             }
         }
-        $(".dropdown ul").html(str)
+        $("#engagementdata").html(str)
 
         $(".dropdown li").click(function () {
 
@@ -307,18 +287,12 @@ var gMap = {
                 if (i == latlongarray.length - 2) {
                     gMap.display_marker(latlongarray[i + 1], meetingContentArray[i + 1], locationTitles[i + 1], (i + 2))
                 }
-
             }
         }
-
-
-
     },
 
     //uses direction service to get middle location of route between provided source and dest - middle location is used to show distnace and hours between source and dest
     apply_direction_service: function (sourcelatlong, destlatlong) {
-
-
         var middle = "";
         gMap.directionsService.route({
             origin: sourcelatlong,
@@ -372,7 +346,6 @@ var gMap = {
                         var element = results[j]
                         var dt = element.distance.text;
                         var dr = element.duration.text;
-
                     }
                 }
 
@@ -454,24 +427,6 @@ var gMap = {
         infowindow1.open(gMap.map)
 
         gMap.infoWindows.push(infowindow1);
-
-    },
-
-    // function to display loader 
-    displayLoader: function () {
-
-        $.blockUI({
-            css: {
-                border: 'none',
-                padding: '10px 10px 15px 10px',
-                backgroundColor: '#000',
-                '-webkit-border-radius': '10px',
-                '-moz-border-radius': '10px',
-                opacity: .5,
-                color: '#fff'
-            }
-        });
-        $(".blockMsg h1").css({ 'font-size': '25px' })
 
     },
 
