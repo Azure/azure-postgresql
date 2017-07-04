@@ -63,11 +63,20 @@ Following are the steps to visit the hosted website with all this features:-
 
     ![](img/image-7.png)
 
-1.	Once you click on the `URL`, the application will launch and it will take some time for first time launch. The reason behind this is, that it will create the table schema with sample data in the `AzureDB for PostgreSQL` for current date. It will also create index and sample documents in that index with `Azure Search Service`. 
+1.	Once you click on the `URL`, the application will launch and it will take some time for first time launch. The reason behind this is, that it will create the table schema with sample data in the `AzureDB for PostgreSQL` for current date and create user in `userinfo` table. It will also create index and sample documents in that index with `Azure Search Service`. 
 
-    ![](img/image-8.png)
+    ![](img/image-login.png) 
 
-1.	As you click on the any marker it will display the details of that location which includes `Engagement Title`, `Start Time` of Engagement, `End Time` of Engagement and the `Location` of the Engagement.
+1.	At the First launch the login page will open. You can login with already created sample user with **Username** as `test` and **Password** as `test@123`. It will populate sample engagements data for the user on Day View page of the app.
+    
+    ![](img/image-logincredentials.png)
+   
+1.	You can click on Register tab to register with new user as well. After registering successfully, you can login with new credentials.
+   
+    ![](img/image-registration.png)
+
+
+1.	Once you login with demo/default user, Day Planner App page will open and as you click on the any marker it will display the details of that location which includes `Engagement Title`, `Start Time` of Engagement, `End Time` of Engagement and the `Location` of the Engagement.
 
     ![](img/image-20.png)
 
@@ -114,5 +123,22 @@ Following are the steps to visit the hosted website with all this features:-
 1.	For toggle between the dates, the `left arrow` and `right arrow` will help us.
 
     ![](img/image-19.png)
+
+1.	Click on the Username, it will show the link for profile page and logout.
+
+    ![](img/image-50.png)
+1.	Click on Profile page to view user profile and to change password.
+    
+    ![](img/image-51.png)
+
+1.	To change password, enter current password, new password and confirm password then click on Change password button.
+    
+    ![](img/image-52.png)
+
+1.	It will validate entered currend password, if it is valid then you will get a success message and you need to login again.
+
+    ![](img/image-53.png)
+
+__Default/Demo User__: Username: `test`, Password: `test@123`
 
 __Note__: The Sample Coffee Shops data, pushed by application's first launch to `Azure Search Service`, is in context with the sample engagements data pushed to `AzureDB for PostgreSQL`. As the application provides an interface only to add new engagement data to Azure Postgres Service, the following doc will help you to add more documents to Azure Search Service manually. Please refer <a href="AddingDocumentsToAzureSearchIndex.md">Adding Documents To Azure Search Index.</a>   

@@ -2,7 +2,7 @@
 var config = require('./config'); //required to get azure search related parameters
 var Payloads = require('./Payloads'); //required to get index schema and sample data
 
-function createIndex() {
+function createIndex(callback) {
      //Function to create index in Azure search service resource.
 
     //Create URL of  azure search query string using service URL, Index Name and api version.
@@ -28,16 +28,19 @@ function createIndex() {
 
     //Call put request to create the index in azure search portal.
     request.put(options, function (error, response, body) {
-        console.info("create index result: " + response.statusCode);
+        if (error) return callback(error);
+
         if (response.statusMessage == "Created" && response.statusCode == "201") {
             //After index is created, insert sample data into it.
-            insertDataIntoIndex();
+            insertDataIntoIndex(callback);
         }
+        else
+            callback();
     });
 }
 exports.createIndex = createIndex;
 
-function insertDataIntoIndex() {    
+function insertDataIntoIndex(callback) {    
     //Function to insert sample data into Azure search Index
 
     //Create URL of  azure search query string using service URL, Index Name and api version.
@@ -63,7 +66,9 @@ function insertDataIntoIndex() {
 
     //Call post request to insert data into Azure search Index.
     request.post(options, function (error, response, body) {
-        console.info("data inserted : " + response.statusCode);       
+        if (error) return callback(error);
+
+        callback();       
     });
     
 }
@@ -100,6 +105,10 @@ function getDataFromIndex(lat, lng, radius, res) {
 
     //Call get request to get data from azure search index with given parameters.
     request.get(options, function (error, response, body) {
+
+        if (error)
+            return res.status(500).json({ success: false, data: error });
+
         console.info("get data from index: " + response.statusCode);        
         var responseData = JSON.parse(response.body).value;
         return res.json(responseData);

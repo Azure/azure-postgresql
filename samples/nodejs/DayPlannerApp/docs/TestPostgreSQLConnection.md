@@ -58,10 +58,20 @@
 
     ![](img/PostgreSQLImage-4.png)
 
-1.	The Server will contain `dayplanner` database at first which gets created during deployment. The first time that you run the Day Planner app then `engagements` table with sample data with current date will be created. 
+1.	The Server will contain `dayplanner` database at first which gets created during deployment. The first time that you run the Day Planner app then `userinfo` table with test user and `engagements` tables with sample data with current date will be created. 
+    
+    ![](img/PostgreSQLImage-11.png)
 
-    ![](img/PostgreSQLImage-5.png)
-
+1.	The schema of `userinfo` table is as follows.
+    
+    Column Name | Data Type | Description
+    ------------ | ------------- | -------------
+    uid | serial | Unique id of users with auto-increment feature
+    firstname | character varying(255) | First Name of the user 
+    lastname | character varying(255) | Last Name of the user
+    username | character varying(255) | UserName of the user with unique feature
+    password | character varying(255) | Password of the user
+    
 1.	The schema of `engagements` table is as follows.
     
     Column Name | Data Type | Description
@@ -73,6 +83,19 @@
     start_time | time without time zone | Start time of engagement
     end_time | time without time zone | End time of engagement
     location | geography(Point) | latitude and longitude of engagement with PostGIS features
+
+1.	To view all records in the `userinfo` table follow the following steps:-
+      -  Right click on `userinfo` table.
+      -  After that, click on the `View Data`.
+      -  Now click on `View All Rows`.
+    
+    
+    ![](img/PostgreSQLImage-12.png)
+
+1.	Now you can see all records present on the `userinfo` table.
+
+    
+    ![](img/PostgreSQLImage-13.png)
 
 1.	To view all records in the `engagements` table follow the following steps:-
       -  Right click on `engagements` table.
@@ -96,14 +119,17 @@
 
 1.	The result of the query is shown below the __Query Tool__ box. 
     
+
     __Basic Query :-__
     ```sql
-    select array_to_json(array_agg(row_to_json(t))) as meeting_data
-    from (select loc_id, loc_name, title, date, to_char(start_time::time, 'HH12:MI AM') as start, to_char(end_time::time, 'HH12:MI AM') as end, ST_AsGeoJSON(location)::json As geometry
-    from engagements
-    where date = '<date_of_engagement>'
-    ORDER BY start_time )
-    as t;
+    SELECT array_to_json(array_agg(row_to_json(t))) as meeting_data 
+    FROM (SELECT loc_id, loc_name, title, date, to_char(start_time::time, 'HH12:MI AM') as start, to_char(end_time::time, 'HH12:MI AM') as end, ST_AsGeoJSON(location)::json As geometry 
+    FROM engagements As engmt 
+    JOIN (SELECT uid, username 
+    FROM userinfo) As usrinfo 
+    ON engmt.uid = usrinfo.uid 
+    where engmt.date = '<date_of_engagement>' and engmt.uid = '<user_id>') 
+    As t;
     ```
 
     ![](img/PostgreSQLImage-10.png)

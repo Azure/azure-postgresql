@@ -15,7 +15,7 @@
     <ProjectGuid>7fe358f9-e388-4487-9636-17acd6825957</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>bin\www</StartupFile>
+    <StartupFile>server.js</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -91,8 +91,10 @@
     <Compile Include="public\javascripts\global.js" />
     <Compile Include="public\javascripts\jquery.blockUI.js" />
     <Compile Include="public\javascripts\jquery.min.js" />
+    <Compile Include="public\javascripts\login.js" />
     <Compile Include="public\javascripts\main.js" />
     <Compile Include="public\javascripts\moment.min.js" />
+    <Compile Include="public\javascripts\profile.js" />
     <Compile Include="public\javascripts\sweetalert.min.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\users.js" />
@@ -121,7 +123,9 @@
     <Content Include="public\stylesheets\datepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="public\stylesheets\font-awesome.min.css" />
     <Content Include="public\stylesheets\ionicons.min.css" />
+    <Content Include="public\stylesheets\login.css" />
     <Content Include="public\stylesheets\mfb.css" />
+    <Content Include="public\stylesheets\profile.css" />
     <Content Include="public\stylesheets\style.css" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="public\stylesheets\sweetalert.min.css" />
@@ -145,37 +149,46 @@
     <Folder Include="routes\" />
     <Folder Include="typings\" />
     <Folder Include="typings\globals\" />
+    <Folder Include="typings\globals\async\" />
     <Folder Include="typings\globals\body-parser\" />
     <Folder Include="typings\globals\cookie-parser\" />
     <Folder Include="typings\globals\debug\" />
     <Folder Include="typings\globals\express-serve-static-core\" />
+    <Folder Include="typings\globals\express-session\" />
     <Folder Include="typings\globals\express\" />
     <Folder Include="typings\globals\jade\" />
     <Folder Include="typings\globals\mime\" />
     <Folder Include="typings\globals\morgan\" />
+    <Folder Include="typings\globals\node-schedule\" />
     <Folder Include="typings\globals\node\" />
+    <Folder Include="typings\globals\passport\" />
     <Folder Include="typings\globals\serve-favicon\" />
     <Folder Include="typings\globals\serve-static\" />
     <Folder Include="typings\globals\stylus\" />
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="views\login.jade" />
+    <Content Include="views\profile.jade" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
-    <Content Include="bin\download.ps1" />
     <Content Include="bin\setup_web.cmd" />
     <Content Include="bin\node.cmd" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="typings\globals\async\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\body-parser\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\cookie-parser\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\debug\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\express-serve-static-core\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\express-session\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\express\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jade\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-schedule\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\passport\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\serve-favicon\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\stylus\index.d.ts" />
