@@ -1,6 +1,6 @@
 ## Deployment Instructions
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FClick2Cloud%2Fazure-postgresql%2Fmaster%2Fsamples%2Frubyonrails%2FDayPlannerApp%2Fdeploy%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-postgresql%2Fmaster%2Fsamples%2Frubyonrails%2FDayPlannerApp%2Fdeploy%2Fazuredeploy.json" target="_blank">
       <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
