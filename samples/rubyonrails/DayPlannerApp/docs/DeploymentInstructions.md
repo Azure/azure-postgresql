@@ -25,4 +25,4 @@ Perform following steps to Deploy Ruby on Rails web application in Azure and con
 1. Mark Check __I agree to the terms and conditions stated above__ checkbox. 
 1. Click on __Purchase__ button.
 
-It will take few minutes to deploy the Ruby on Rails application, AzureDB for PostgreSQL Service and Azure Search Service; and takes <b>3-5 mins at first time</b> to load the application. After successful deployment, you can browse the Day Planner App.
+It will take few minutes to deploy the Ruby on Rails application, AzureDB for PostgreSQL Service and Azure Search Service. After successful deployment, you can browse the Day Planner App and it will take <b>3-5 mins at first time</b> to load the application as it runs the scripts and creates database on first time.
