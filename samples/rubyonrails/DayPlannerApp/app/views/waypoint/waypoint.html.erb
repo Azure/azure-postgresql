@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Day View - Day Planner App</title>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script defer="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPBj4ylbh-9S0934uz395F1OS_4sXREvo&amp;libraries=places"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Day Planner App</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron" style="padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px;">
+        <div class="container-fluid">
+            <div class="col-lg-3">
+                <br />
+                <h3>Day View</h3>
+                <br />
+                <div class="date-picker" data-date="01/01/1902" data-keyboard="true">
+                    <div class="date-container pull-left">
+                      <h4 class="weekday"></h4>
+                      <h2 class="date"></h2>
+                      <h4 class="year pull-right"></h4>
+                    </div>
+                    <span data-toggle="datepicker" data-type="subtract" class="fa fa-angle-left"></span>
+                    <span data-toggle="datepicker" data-type="add" class="fa fa-angle-right"></span>
+                    <div class="input-group input-datepicker">
+                        <input type="text" class="form-control" id="date-input" data-format="MM/DD/YYYY" placeholder="MM/DD/YYYY">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Go!</button>
+                        </span>
+                    </div>
+                    <span data-toggle="calendar" class="fa fa-calendar"></span>
+                </div>
+            </div>
+			<div class="col-lg-8"><br>
+            <div id="parentdiv">			
+              <div id="btnddl" style="margin-left:10px;width:305px;" class="dropdown btn-group">
+                <button id="btnnew" type="button" data-toggle="dropdown" title="Select Engagement for Azure Geo-spatial Search" class="btn btn-default col-md-12 dropdown-toggle"><span id="title" style="text-align: left;" class="col-md-12">Select Engagement </span><span class="caret"></span></button>
+                <ul style="top: 30px;" class="dropdown-menu col-xs-12"> 				
+				</ul>
+              </div>
+              <div id="btndistance" style="margin-left:10px;width:135px;" class="btn-group">
+                <button title="Select Distance in miles for Azure Geo-spatial Search" type="button" data-toggle="dropdown" class="btn btn-default col-md-12 dropdown-toggle"><span id="disttitle" style="text-align: left;" class="col-md-12">Select Range</span><span class="caret"></span></button>
+                <ul style="top: 30px;min-width: 75px !important;" class="dropdown-menu col-xs-12">
+                  <li data-value="1.60934"><a>1 mi</a></li>
+                  <li data-value="3.21869"><a>2 mi</a></li>
+                  <li data-value="4.82803"><a>3 mi</a></li>
+                  <li data-value="6.43738"><a>4 mi</a></li>
+                  <li data-value="8.04672"><a>5 mi</a></li>
+                </ul>
+              </div>
+              <button id="btnazuresearch" style="margin: 0px 10px 0px 10px;" type="button" data-toggle="tooltip" title="GeoSpatial search using Azure Search Service" class="btn">Search Coffee Shops</button>
+              <button id="btnclear" type="button" data-toggle="tooltip" title="Reset" class="btn"><i aria-hidden="true" class="fa fa-refresh"></i></button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="container container-map" style="float:left;">
+        <div class="row" style="margin-left: -30px !important;">
+            <div class="col-lg-12">
+              <div id="map" style="position:fixed !important;"></div>
+            </div>
+        </div>
+    </div>
+
+    <ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+        <li class="mfb-component__wrap">
+            <a id="newEventModel" href="#" class="mfb-component__button--main" data-mfb-label="Add New Event">
+                <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+                <i class="mfb-component__main-icon--active ion-plus-round"></i>
+            </a>
+        </li>
+    </ul>
+
+    <!-- Modal -->
+    <div id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="modal fade">
+      <div role="document" class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">×</button>
+            <h4 class="modal-title">Add New Engagement</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="title-name" class="form-control-label">Title:</label>
+                <input id="title-name" type="text" placeholder="Title" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="location-text" class="form-control-label">Location:</label>
+                <input id="location" type="text" placeholder="Enter a location" class="form-control">
+              </div>
+              <div class="form-group">
+                <label for="meetingdate-name" class="form-control-label">Meeting Date:</label>
+                <div data-date="" data-date-format="dd MM yyyy" data-link-field="meetingdate-name" data-link-format="yyyy-mm-dd" class="input-group date form_date col-md-12">
+                  <input size="16" type="text" value="" readonly="" class="form-control"><span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+                <input id="meetingdate-name" type="hidden" value="">
+              </div>
+              <div class="form-group">
+                <label for="starttime-name" class="form-control-label">Start Time:</label>
+                <div data-date="" data-date-format="hh:ii" data-link-field="starttime-name" data-link-format="hh:ii" class="input-group date form_time col-md-12">
+                  <input size="16" type="text" value="" readonly="" class="form-control"><span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                </div>
+                <input id="starttime-name" type="hidden" value="">
+              </div>
+              <div class="form-group">
+                <label for="endtime-name" class="form-control-label">End Time:</label>
+                <div data-date="" data-date-format="hh:ii" data-link-field="endtime-name" data-link-format="hh:ii" class="input-group date form_time col-md-12">
+                  <input size="16" type="text" value="" readonly="" class="form-control"><span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span><span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                </div>
+                <input id="endtime-name" type="hidden" value="">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button id="closeengagement" type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+            <button id="saveengagement" type="button" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
