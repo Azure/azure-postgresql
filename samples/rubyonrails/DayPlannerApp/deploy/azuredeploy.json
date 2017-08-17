@@ -68,6 +68,7 @@
         "type": "string",
         "defaultValue": "West Europe",
         "allowedValues": [
+	    "Central India",
             "East Asia",
             "East US",
             "East US 2",
