@@ -10,7 +10,7 @@
 ## Downloads
 1.	[Download PostgreSQL](https://www.postgresql.org/download/windows/)
 
-2.	[Download Go](https://www.postgresql.org/download/windows/)
+2.	[Download Go](https://golang.org/dl/)
 
 3.	[Download Git](https://git-scm.com/download/win)
 
