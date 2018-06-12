@@ -62,7 +62,7 @@
         "size": "[parameters('skuSizeMB')]",
         "family": "[parameters('skuFamily')]"
       },
-      "type": "Microsoft.DBforMySQL/servers"
+      "type": "Microsoft.DBforPostgreSQL/servers"
     }
   ],
   "variables": {}
