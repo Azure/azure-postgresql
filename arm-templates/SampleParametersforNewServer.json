@@ -37,15 +37,6 @@
         },
         "geoRedundantBackup": {
             "value": "Disabled"
-        },
-        "firewallRuleName": {
-            "value": "AllowAll"
-        },
-        "firewallStartIpAddress": {
-            "value": "0.0.0.0"
-        },
-        "firewallEndIpAddress": {
-            "value": "255.255.255.255"
         }
     }
 }
