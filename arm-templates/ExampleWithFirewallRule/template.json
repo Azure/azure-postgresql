@@ -1,0 +1,101 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "type": "string"
+        },
+        "administratorLoginPassword": {
+            "type": "securestring"
+        },
+        "location": {
+            "type": "string"
+        },
+        "serverName": {
+            "type": "string"
+        },
+        "skuCapacity": {
+            "type": "int"
+        },
+        "skuFamily": {
+            "type": "string"
+        },
+        "skuName": {
+            "type": "string"
+        },
+        "skuSizeMB": {
+            "type": "int"
+        },
+        "skuTier": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "backupRetentionDays": {
+            "type": "int"
+        },
+        "geoRedundantBackup": {
+            "type": "string"
+        },
+        "firewallRuleName": {
+            "defaultValue": "AllowAll",
+            "minLength": 1,
+            "maxLength": 128,
+            "type": "string"
+        },
+        "firewallStartIpAddress": {
+            "defaultValue": "0.0.0.0",
+            "minLength": 1,
+            "maxLength": 15,
+            "type": "string"
+        },
+        "firewallEndIpAddress": {
+            "defaultValue": "255.255.255.255",
+            "minLength": 1,
+            "maxLength": 15,
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]",
+                "size": "[parameters('skuSizeMB')]",
+                "family": "[parameters('skuFamily')]"
+            },
+            "kind": "",
+            "name": "[parameters('serverName')]",
+            "apiVersion": "2017-12-01-preview",
+            "location": "[parameters('location')]",
+            "properties": {
+                "version": "[parameters('version')]",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "storageProfile": {
+                    "storageMB": "[parameters('skuSizeMB')]",
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                }
+            },
+            "resources": [
+                {
+                    "type": "firewallRules",
+                    "name": "[parameters('firewallRuleName')]",
+                    "apiVersion": "2017-12-01-preview",
+                    "location": "[parameters('location')]",
+                    "properties": {
+                        "startIpAddress": "[parameters('firewallStartIpAddress')]",
+                        "endIpAddress": "[parameters('firewallEndIpAddress')]"
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('serverName'))]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
