@@ -31,7 +31,7 @@ This demo uses [Sentiment Analysis](https://docs.microsoft.com/en-us/azure/cogni
 ### Python and Cognitive Services
 This demo uses Python and assumes some familiarity with Python and connecting Python to Postgres. 
 You can create a similar demo in the language of your choice; [the Cognitive Services website](https://docs.microsoft.com/en-us/azure/cognitive-services/text-analytics/overview) has tutorials for a number of popular languages, and so does the Azure Database for PostgreSQL [documentation](https://docs.microsoft.com/en-us/azure/postgresql/connect-nodejs).
-#### Pre-requisite
+### Pre-requisites
 + [python](https://www.python.org/downloads/) installed
 + [pip](https://pip.pypa.io/en/stable/installing/) package installed
 
