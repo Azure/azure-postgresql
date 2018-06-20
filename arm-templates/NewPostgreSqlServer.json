@@ -41,7 +41,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2017-12-01-preview",
+      "apiVersion": "2017-12-01",
       "kind": "",
       "location": "[parameters('location')]",
       "name": "[parameters('serverName')]",

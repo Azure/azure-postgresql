@@ -69,7 +69,7 @@
             },
             "kind": "",
             "name": "[parameters('serverName')]",
-            "apiVersion": "2017-12-01-preview",
+            "apiVersion": "2017-12-01",
             "location": "[parameters('location')]",
             "properties": {
                 "version": "[parameters('version')]",
@@ -85,7 +85,7 @@
                 {
                     "type": "firewallRules",
                     "name": "[parameters('firewallRuleName')]",
-                    "apiVersion": "2017-12-01-preview",
+                    "apiVersion": "2017-12-01",
                     "location": "[parameters('location')]",
                     "properties": {
                         "startIpAddress": "[parameters('firewallStartIpAddress')]",
