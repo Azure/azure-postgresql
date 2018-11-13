@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model  EventGridListner.Models.OrderRequest
+
+<!DOCTYPE html>
+
+
+<table>
+    @using (Html.BeginForm())
+    {
+        <tr>
+            <td><b>Customer</b> </td>
+            <td>
+                <div class="select-wrapper">
+                    @Html.DropDownList("Customer", Model.Customers.Select(item => new SelectListItem
+                    {
+                        Value = item.Id.ToString(),
+                        Text = item.FirstName.ToString(),
+                        Selected = "select" == item.Id.ToString()
+                    }))
+                </div>
+            </td>
+            </tr>
+            <tr>
+                <td>
+                    Product
+                </td>
+                <td>
+                    <div class="select-wrapper">
+                        @Html.DropDownList("Product", Model.Products.Select(item => new SelectListItem
+                        {
+                            Value = item.ID.ToString(),
+                            Text = item.Name.ToString(),
+                            Selected = "select" == item.ID.ToString()
+                        }))
+                    </div>
+                </td>
+            </tr>
+            <tr>
+            <td><b>Quantity</b> </td>
+            <td>
+                @Html.TextBox("Quantity")
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Order" class="action" /></td>
+        </tr>
+    }
+</table>

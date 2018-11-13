@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model  EventGridListner.Models.Product
+
+<h2>Product</h2>
+
+<table>
+    @using (Html.BeginForm())
+    {
+        <tr>
+            <td><b>Name</b> </td>
+            <td>
+                @Html.TextBox("Name")
+            </td>
+        </tr>
+        <tr>
+            <td><b>Color</b> </td>
+            <td>
+                @Html.TextBox("Color")
+            </td>
+        </tr>
+        <tr>
+            <td><b>Weight</b> </td>
+            <td>
+                @Html.TextBox("Weight")
+            </td>
+        </tr>
+        <tr>
+            <td><b>DaysToManufacture</b> </td>
+            <td>
+                @Html.TextBox("DaysToManufacture")
+            </td>
+        </tr>
+        <tr>
+            <td><b>StandardCost</b> </td>
+            <td>
+                @Html.TextBox("StandardCost")
+            </td>
+        </tr>
+        <tr>
+            <td><b>ListPrice</b> </td>
+            <td>
+                @Html.TextBox("ListPrice")
+            </td>
+        </tr>
+        <tr>
+            <td><b>Description</b> </td>
+            <td>
+                @Html.TextBox("Description")
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Add" class="action" /></td>
+        </tr>
+    }
+
+</table>

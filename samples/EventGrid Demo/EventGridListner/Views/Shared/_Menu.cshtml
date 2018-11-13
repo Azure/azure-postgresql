@@ -1,0 +1,15 @@
+﻿<nav>
+    <ul>
+        <li class='@(ViewBag.Selected == "Notifications" ? "selected" : "")'>
+            @Html.ActionLink("Product Notification", "Index", "Home")
+        </li>
+        <li class='@(ViewBag.Selected == "Products" ? "selected" : "")'>
+            @Html.ActionLink("Products", "Products", "Products")
+        </li>
+        <li class='@(ViewBag.Selected == "Order" ? "selected" : "")'>
+            @Html.ActionLink("Order", "OrderRequest", "OrderRequest")
+        </li>
+
+    </ul>
+</nav>
+

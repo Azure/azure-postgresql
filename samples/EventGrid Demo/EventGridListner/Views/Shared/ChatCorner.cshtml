@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<html>
+<head>
+<link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+<style>
+    iframe {
+        height: 700px;
+        width: 500px;
+        position: fixed;
+        right: 10px;
+        bottom: 10px;
+        border-width: thin;
+        z-index: -1;
+    }
+
+    #message_button {
+        background-image: url('https://cdn2.iconfinder.com/data/icons/ios-7-style-metro-ui-icons/512/MetroUI_Messaging_Alt.png');
+        background-size: 50px 50px;
+        position: fixed;
+        right: 100px;
+        bottom: 100px;
+        height: 50px;
+        width: 50px;
+    }
+</style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+    function postYourAdd(button) {
+        var iframe = $("#chatbot");
+        iframe.attr("src", iframe.data("src"));
+        iframe.attr("frameborder", 1);
+        button.style.display = "none";
+    }
+</script>
+
+<button id="message_button" onclick="postYourAdd(this);"></button>
+
+<iframe id="chatbot" frameborder="0" data-src='https://eventgridlistnersampleapp.azurewebsites.net/Chat/Chatbot' />
+</body>
+</html>
