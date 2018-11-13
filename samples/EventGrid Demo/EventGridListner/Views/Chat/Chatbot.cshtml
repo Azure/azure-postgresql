@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Chatbot";
+    Layout = "~/Views/Shared/_BlankLayout.cshtml";
+}
+
+<html>
+<head>
+    <style>
+
+        #Welcome {
+            text-align: center;
+            font-family: Calibri;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="Welcome">Hi! How can I help today?</h1>
+    <div id="webchat"></div>
+    <script src="https://cdn.botframework.com/botframework-webchat/preview/botchat.js"></script>
+    <script>
+        const styleOptions = {
+            bubbleBackground: 'rgba(0, 0, 255, .1)',
+            bubbleFromUserBackground: 'rgba(0, 255, 0, .1)',
+        };
+
+        window.WebChat.renderWebChat({
+            directLine: window.WebChat.createDirectLine({ secret: 'bWDtizRJ9As.cwA.CyM.ngyDyPwVgAYR_zpcD00bTfDbD44tPl3kgUTgwoZuh88' }),
+
+            // Passing "styleOptions" when rendering Web Chat
+            styleOptions
+        }, document.getElementById('webchat'));
+
+        window.scrollTo(0, document.body.scrollHeight);
+    </script>
+</body>
+</html>
