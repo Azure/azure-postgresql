@@ -21,53 +21,60 @@ In file ```\EventGridListner\Helper.cs```, please fill in the PostgreSQL server 
 ### Step 1: Set up PG Notify
 Connect to the database and define the notification according to the table and column need to send.
 In our example, the function is on Product table and sending the Id as the unique identifier to receivers for correct action. The function looks like the following: 
--- DROP FUNCTION public."Products_update_notify"();
-CREATE FUNCTION public."Products_update_notify"()
-    RETURNS trigger
-    LANGUAGE 'plpgsql'
-    COST 100
-    VOLATILE NOT LEAKPROOF 
-AS $BODY$
-DECLARE
-  Id uuid;
-BEGIN
-  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-    Id = NEW."Id";
-  ELSE
-    Id = OLD."Id";
-  END IF;
-  PERFORM pg_notify('productsnotification', TG_OP || ';' || Id );
-  RETURN NEW;
-END;
+
+	-- DROP FUNCTION public."Products_update_notify"();
+	CREATE FUNCTION public."Products_update_notify"()
+		RETURNS trigger
+		LANGUAGE 'plpgsql'
+		COST 100
+		VOLATILE NOT LEAKPROOF 
+	AS $BODY$
+	DECLARE
+	  Id uuid;
+	BEGIN
+	  IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+		Id = NEW."Id";
+	  ELSE
+		Id = OLD."Id";
+	  END IF;
+	  PERFORM pg_notify('productsnotification', TG_OP || ';' || Id );
+	  RETURN NEW;
+	END;
 
 Then Create Triggers on the table that sends notification. For example, for Products table, we can create the trigger for update like the following.
-CREATE TRIGGER products_notify_update
-    AFTER UPDATE 
-    ON public."Products"
-    FOR EACH ROW
-    EXECUTE PROCEDURE public."Products_update_notify"();
 
-	We also created similar triggers for insert and delete.
+	CREATE TRIGGER products_notify_update
+		AFTER UPDATE 
+		ON public."Products"
+		FOR EACH ROW
+		EXECUTE PROCEDURE public."Products_update_notify"();
+
+		
+We also created similar triggers for insert and delete.
 
 ### Step 2: Write a process that’s listening to this notify 
 In our example, this is written in WPF application for demo purpose. This can be implemented in any process. 
 The main part for listening to work is:
 1.	Add the Npgsql Nuget package to the project.
 2.	Connect to the pg server
-    this.notificationConnection = new NpgsqlConnection(connectionstring);
+    
+	this.notificationConnection = new NpgsqlConnection(connectionstring);
     this.notificationConnection.Open();
 
 3.	Add the action to listen to the channel
-    using (var command = new NpgsqlCommand("listen "+ TriggerChannelName, this.notificationConnection))
+    
+	using (var command = new NpgsqlCommand("listen "+ TriggerChannelName, this.notificationConnection))
     {
           command.ExecuteNonQuery();
     }
 
     this.notificationConnection.Notification += this.PostgresNotification;
+
 In this function “PostgreNotification”, you can put any action you’d like to put. In our example, the WPF application will write the message, and publish the event to event grid.
 
 ### Step 3: Publish the event to Event Grid Topic
 In the function above, we define the process of publishing the data to Event Grid. The key is to get the topic endpoint and key from Azure Portal.
+
      string topicHostname = new Uri(topicEndpoint).Host;
      TopicCredentials topicCredentials = new TopicCredentials(topicKey);
      EventGridClient client = new EventGridClient(topicCredentials);
@@ -77,33 +84,33 @@ In the function above, we define the process of publishing the data to Event Gri
 
 ### Step4: Subscribe to the event and processing the data
 In our example, we’re implementing a Web Site. In order to subscribe to the Event Grid, the controller needs to implement the validation code for subscription. 
-if (EventTypeSubcriptionValidation)
-{
-   var gridEvent =
-   JsonConvert.DeserializeObject<List<EventGrid<Dictionary<string,string>>>> 
-         (jsonContent).First();
+	if (EventTypeSubcriptionValidation)
+	{
+	   var gridEvent =
+	   JsonConvert.DeserializeObject<List<EventGrid<Dictionary<string,string>>>> 
+			 (jsonContent).First();
 
-    await this._eventGridHubContext.Clients.All.SendAsync(
-       "eventgridrefresh",
-       gridEvent.Id,
-       gridEvent.EventType,
-       gridEvent.Subject,
-       gridEvent.EventTime.ToLongTimeString(),
-       jsonContent.ToString());
+		await this._eventGridHubContext.Clients.All.SendAsync(
+		   "eventgridrefresh",
+		   gridEvent.Id,
+		   gridEvent.EventType,
+		   gridEvent.Subject,
+		   gridEvent.EventTime.ToLongTimeString(),
+		   jsonContent.ToString());
 
-     // Retrieve the validation code and echo back.
-     var validationCode = gridEvent.Data["validationCode"];
-     return new JsonResult(new
-     {
-        validationResponse = validationCode
-     });
-
-   }
+		 // Retrieve the validation code and echo back.
+		 var validationCode = gridEvent.Data["validationCode"];
+		 return new JsonResult(new
+		 {
+			validationResponse = validationCode
+		 });
+	   }
 
 This piece of code is only used for subscribing to Event Grid Topic. After the web site is live, the subscribing process can be followed here. 
 The other part of the controller is the business logic. Deserialize the data and perform business logic.
-else if (EventTypeNotification)
-{
-   var eventData = JObject.Parse(jsonContent);
-   ……
+
+	else if (EventTypeNotification)
+	{
+	   var eventData = JObject.Parse(jsonContent);
+	   ……
 
