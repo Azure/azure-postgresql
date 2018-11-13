@@ -84,6 +84,7 @@ In the function above, we define the process of publishing the data to Event Gri
 
 ### Step4: Subscribe to the event and processing the data
 In our example, we’re implementing a Web Site. In order to subscribe to the Event Grid, the controller needs to implement the validation code for subscription. 
+
 	if (EventTypeSubcriptionValidation)
 	{
 	   var gridEvent =
