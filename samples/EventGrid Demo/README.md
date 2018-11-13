@@ -72,7 +72,43 @@ The main part for listening to work is:
 
 In this function “PostgreNotification”, you can put any action you’d like to put. In our example, the WPF application will write the message, and publish the event to event grid.
 
-### Step 3: Publish the event to Event Grid Topic
+### Step 3: Define the Event for publishing to Event Grid
+Event Grid defines the following schema for all event publishers:
+
+	[
+	  {
+		"topic": string,
+		"subject": string,
+		"id": string,
+		"eventType": string,
+		"eventTime": string,
+		"data":{
+		  object-unique-to-each-publisher
+		},
+		"dataVersion": string,
+		"metadataVersion": string
+	  }
+	]
+
+In our example, we define the following structure so any subscriber will be able to process the receiving data:
+
+            eventsList.Add(new EventGridEvent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                EventType = "EComPOC.Items.ItemReceived",
+                Data = new ItemReceivedEventData()
+                {
+                    OperationType = eventDetails[0],
+                    ItemId = eventDetails[1]
+                },
+                EventTime = DateTime.Now,
+                Subject = "ProductDataUpdate",
+                DataVersion = "1.0"
+            });
+
+More detailed explanation can be found here: https://docs.microsoft.com/en-us/azure/event-grid/event-schema. 
+
+### Step 4: Publish the event to Event Grid Topic
 In the function above, we define the process of publishing the data to Event Grid. The key is to get the topic endpoint and key from Azure Portal.
 
      string topicHostname = new Uri(topicEndpoint).Host;
@@ -82,7 +118,7 @@ In the function above, we define the process of publishing the data to Event Gri
      client.PublishEventsAsync(topicHostname, GetEventsList(oneEvent)).GetAwaiter().GetResult();
 
 
-### Step4: Subscribe to the event and processing the data
+### Step5: Subscribe to the event and processing the data
 In our example, we’re implementing a Web Site. In order to subscribe to the Event Grid, the controller needs to implement the validation code for subscription. 
 
 	if (EventTypeSubcriptionValidation)
@@ -115,3 +151,8 @@ The other part of the controller is the business logic. Deserialize the data and
 	   var eventData = JObject.Parse(jsonContent);
 	   ……
 
+
+## Failure handling
+Azure Event Grid is ensuring service SLA as 99.99%(https://azure.microsoft.com/en-us/support/legal/sla/event-grid/v1_0/). In case of PostgreSQL not able to publish notification, PG notify holds a queue with default 8GB. Please refer to PG NOTIFY docs for details: https://www.postgresql.org/docs/current/sql-notify.html.
+
+Event Grid message has built-in mechanism for handling events when delivery isn't acknoledged. Read more: https://docs.microsoft.com/en-us/azure/event-grid/delivery-and-retry.  
