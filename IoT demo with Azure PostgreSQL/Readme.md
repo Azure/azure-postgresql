@@ -1,4 +1,4 @@
-
+Download the sample Node.js project from https://github.com/Azure-Samples/azure-iot-samples-node/archive/master.zip and extract the ZIP archive.
 # Quickstart: Send telemetry from a device to an IoT hub to Azure Database for PostgreSQL 
 
 ![alt text](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/Images/IotTelemetry.png "IoT hub telemetry to Azure Database for PostgreSQL")
@@ -19,3 +19,7 @@ You can verify the current version of Node.js on your development machine using 
 ```cmd/sh
 node --version
 ```
+Download the sample Node.js project from https://github.com/Azure-Samples/azure-iot-samples-node/archive/master.zip and extract the ZIP archive.
+
+## Create an IoT hub
+Use the [Azure Portal to create IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal).
