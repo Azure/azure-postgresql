@@ -1,3 +1,4 @@
+
 # Quickstart: Send telemetry from a device to an IoT hub to Azure Database for PostgreSQL 
 
 ![alt text](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/Images/IotTelemetry.png "IoT hub telemetry to Azure Database for PostgreSQL")
@@ -9,3 +10,12 @@ The QuickStart uses Node.js applications to send telemetry to IoTHub. Before you
 [!INCLUDE [cloud-shell-try-it.md](../../includes/cloud-shell-try-it.md)]
 
 If you don’t have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+
+## Prerequisites
+The sample application to simulate device telemetry is written using Node.js. You need Node.js v4.x.x or later on your development machine. You can download Node.js for multiple platforms from [nodejs.org](https://nodejs.org).
+
+You can verify the current version of Node.js on your development machine using the following command:
+
+```cmd/sh
+node --version
+```
