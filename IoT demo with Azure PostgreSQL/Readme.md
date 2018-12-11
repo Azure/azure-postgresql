@@ -48,6 +48,7 @@ az iot hub device-identity create --hub-name YourIoTHubName --device-id MyNodeDe
 az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table
 ```
 
+
 Make a note of the **device connection string**, which looks like:
 
 **HostName={YourIoTHubName}.azuredevices.net;DeviceId=MyNodeDevice;SharedAccessKey={YourSharedAccessKey}**
@@ -87,6 +88,26 @@ The simulated device application connects to a device-specific endpoint on your 
    The following screenshot shows the output as the simulated device application sends telemetry to your IoT hub:
 
     ![Run the simulated device](Images/simulateddevice.png)
+
+## Create a Azure Database for PostgreSQL Server
+Use [Azure portal](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-portal) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-azure-cli) to provision a new Azure Database for PostgreSQL server. 
+After the server is provisioned, connect to the server using “pgadmin” or “psql” with the server admin user role and create a new database called iotdemo on the server
+
+```cmd/sh
+CREATE DATABASE iotdemo;
+CREATE TABLE public.iotdata
+(
+    deviceid integer NOT NULL,
+    createdate timestamp without time zone NOT NULL DEFAULT now(),
+    data jsonb
+);
+CREATE INDEX iot_temp_index
+    ON public.iotdata USING btree
+    (((data ->> 'temperature'::text)::double precision));
+```
+
+
+
 
 ## Create Azure Function 
 Create an Azure function with EventHub trigger bindings using [Azure Portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-event-hubs).
