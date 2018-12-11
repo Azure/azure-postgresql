@@ -66,3 +66,25 @@ Make a note of the **service connection string**, which looks like:
 **HostName={YourIoTHubName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={YourSharedAccessKey}`**
 
 You use this value later in the QuickStart. The service connection string is different from the device connection string.
+
+## Send simulated telemetry
+
+The simulated device application connects to a device-specific endpoint on your IoT hub and sends simulated temperature and humidity telemetry.
+
+1. Open your local terminal window, navigate to the root folder of the sample Node.js project. Then navigate to the **simulated-device** folder.
+
+1. Open the **SimulatedDevice.js** file in a text editor of your choice.
+
+Replace the value of the `connectionString` variable with the device connection string you made a note of previously. Then save your changes to **SimulatedDevice.js** file.
+
+2. In the local terminal window, run the following commands to install the required libraries and run the simulated device application:
+
+    ```cmd/sh
+    npm install
+    node SimulatedDevice.js
+    ```
+
+   The following screenshot shows the output as the simulated device application sends telemetry to your IoT hub:
+
+    ![Run the simulated device](Images/simulateddevice.png)
+
