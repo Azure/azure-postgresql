@@ -48,6 +48,7 @@ az iot hub device-identity show-connection-string --hub-name YourIoTHubName --de
 ```
 
 Make a note of the **device connection string**, which looks like:
+
 **HostName={YourIoTHubName}.azuredevices.net;DeviceId=MyNodeDevice;SharedAccessKey={YourSharedAccessKey}**
 
 You use this value later in the quickstart.
@@ -61,6 +62,7 @@ az iot hub show-connection-string --hub-name YourIoTHubName --output table
 ```
 
 Make a note of the **service connection string**, which looks like:
+
 **HostName={YourIoTHubName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={YourSharedAccessKey}`**
 
 You use this value later in the QuickStart. The service connection string is different from the device connection string.
