@@ -29,7 +29,6 @@ Use the [Azure Portal to create IoT Hub](https://docs.microsoft.com/en-us/azure/
 A device must be registered with your IoT hub before it can connect. In this QuickStart, you use the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) or [Azure Cloud shell](https://azure.microsoft.com/en-us/features/cloud-shell/) to register a simulated device.
 
 1.	 Run the following commands in Azure Cloud Shell to add the IoT Hub CLI extension and to create the device identity. 
-
 **YourIoTHubName**: Replace this placeholder below with the name you choose for your IoT hub.
 
 **MyNodeDevice**: This is the name given for the registered device. Use MyNodeDevice as shown. If you choose a different name for your device, you will also need to use that name throughout this article and update the device name in the sample applications before you run them.
@@ -73,11 +72,11 @@ The simulated device application connects to a device-specific endpoint on your 
 
 1. Open your local terminal window, navigate to the root folder of the sample Node.js project. Then navigate to the **simulated-device** folder.
 
-1. Open the **SimulatedDevice.js** file in a text editor of your choice.
+2. Open the **SimulatedDevice.js** file in a text editor of your choice.
 
 Replace the value of the `connectionString` variable with the device connection string you made a note of previously. Then save your changes to **SimulatedDevice.js** file.
 
-2. In the local terminal window, run the following commands to install the required libraries and run the simulated device application:
+3. In the local terminal window, run the following commands to install the required libraries and run the simulated device application:
 
     ```cmd/sh
     npm install
