@@ -1,3 +1,4 @@
+
 Download the sample Node.js project from https://github.com/Azure-Samples/azure-iot-samples-node/archive/master.zip and extract the ZIP archive.
 # Quickstart: Send telemetry from a device to an IoT hub to Azure Database for PostgreSQL 
 
@@ -23,3 +24,29 @@ Download the sample Node.js project from https://github.com/Azure-Samples/azure-
 
 ## Create an IoT hub
 Use the [Azure Portal to create IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal).
+
+## Register a device
+A device must be registered with your IoT hub before it can connect. In this QuickStart, you use the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) or [Azure Cloud shell](https://azure.microsoft.com/en-us/features/cloud-shell/) to register a simulated device.
+
+1.	 Run the following commands in Azure Cloud Shell to add the IoT Hub CLI extension and to create the device identity. 
+
+**YourIoTHubName**: Replace this placeholder below with the name you choose for your IoT hub.
+**MyNodeDevice**: This is the name given for the registered device. Use MyNodeDevice as shown. If you choose a different name for your device, you will also need to use that name throughout this article and update the device name in the sample applications before you run them.
+
+```cmd/sh
+az extension add --name azure-cli-iot-ext
+az iot hub device-identity create --hub-name YourIoTHubName --device-id MyNodeDevice
+```
+
+2.	Run the following commands in Azure Cloud Shell to get the _device connection string_ for the device you just registered:
+YourIoTHubName: Replace this placeholder below with the name you choose for your IoT hub.
+az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table
+              Make a note of the device connection string, which looks like:
+HostName={YourIoTHubName}.azuredevices.net;DeviceId=MyNodeDevice;SharedAccessKey={YourSharedAccessKey}
+You use this value later in the quickstart.
+3.	You also need a _service connection string_ to enable the back-end application to connect to your IoT hub in order to retrieve the messages. The following command retrieves the service connection string for your IoT hub:
+	YourIoTHubName: Replace this placeholder below with the name you choose for your IoT hub.
+az iot hub show-connection-string --hub-name YourIoTHubName --output table
+Make a note of the service connection string, which looks like:
+HostName={YourIoTHubName}.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey={YourSharedAccessKey}`
+You use this value later in the QuickStart. The service connection string is different from the device connection string.
