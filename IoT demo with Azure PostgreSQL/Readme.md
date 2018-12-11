@@ -69,26 +69,6 @@ Make a note of the **service connection string**, which looks like:
 
 You use this value later in the QuickStart. The service connection string is different from the device connection string.
 
-## Send simulated telemetry
-
-The simulated device application connects to a device-specific endpoint on your IoT hub and sends simulated temperature and humidity telemetry.
-
-1. Open your local terminal window, navigate to the root folder of the sample Node.js project. Then navigate to the **simulated-device** folder.
-
-2. Open the **SimulatedDevice.js** file in a text editor of your choice.
-   Replace the value of the `connectionString` variable with the device connection string you made a note of previously. Then save your    changes to **SimulatedDevice.js** file.
-
-3. In the local terminal window, run the following commands to install the required libraries and run the simulated device application:
-
-    ```cmd/sh
-    npm install
-    node SimulatedDevice.js
-    ```
-
-   The following screenshot shows the output as the simulated device application sends telemetry to your IoT hub:
-
-    ![Run the simulated device](Images/simulateddevice.png)
-
 ## Create a Azure Database for PostgreSQL Server
 Use [Azure portal](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-portal) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-azure-cli) to provision a new Azure Database for PostgreSQL server. 
 
@@ -121,8 +101,51 @@ $BODY$;
 
 ## Create Azure Function 
 Create an JavaScript Azure function with EventHub trigger bindings using [Azure Portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-event-hubs).
-Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the connection string to connect to the Iot Hub service.
+Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the `connectionString` with the **service connection string** to connect to the Iot Hub service.
 
  ![Configure Connection IoT Hub in Azure function](Images/azurefunction.png)
 
-Use the sample Javascript [index.js](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/azure%20function/index.js) sample to create the function. The function is triggered for each incoming message stream in Iot Hub. It extracts the json message stream and inserts the data into PostgreSQL database iotdata created earlier hosted on Azure Database for PostgreSQL service.
+Use the Javascript [index.js](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/azure%20function/index.js) sample to create the function. The function is triggered for each incoming message stream in IoT Hub. It extracts the json message stream and inserts the data into PostgreSQL database iotdata created earlier hosted on Azure Database for PostgreSQL service.
+
+## Running End-to-End demo to send IoT telemetry to Azure Database for PostgreSQL
+
+## Send IoT telemetry
+The simulated device application connects to a device-specific endpoint on your IoT hub and sends simulated temperature and humidity telemetry.
+
+1. Open your local terminal window, navigate to the root folder of the sample Node.js project. Then navigate to the **simulated-device** folder.
+
+2. Open the **SimulatedDevice.js** file in a text editor of your choice.
+   Replace the value of the `connectionString` variable with the **device connection string** you made a note of previously. Then save your    changes to **SimulatedDevice.js** file.
+
+3. In the local terminal window, run the following commands to install the required libraries and run the simulated device application:
+
+    ```cmd/sh
+    npm install
+    node SimulatedDevice.js
+    ```
+
+   The following screenshot shows the output as the simulated device application sends telemetry to your IoT hub:
+
+    ![Run the simulated device](Images/simulateddevice.png)
+
+
+To simulate multiple devices, register multiple devices as shown earlier and save the **device connection string**, make multiple copies of SimultedDevice.js to SimultedDevice1.js, SimultedDevice2.js, SimultedDevice3.js and SimultedDevice4.js and update the SimulatedDevice*.js file with respective device connection string. Open new terminal window to run and simulate telemetry from each device.
+
+# Analyze IoT data in Azure Database for PostgreSQL server
+
+Once the device telemetry is emited and assuming the configuration of IoT hub, azure function and Azure Database for PostgreSQL is correct, the data would start flowing in the workflow and stored in iotdata table in PostgreSQL database. One can execute following queries from pgadmin or psql to analyze the IoT telemetry data.
+
+```cmd/sh
+SELECT deviceid, count(*) from iotdata
+group by deviceid;
+
+SELECT  * from iotdata
+where get_temp('temperature',data)>30
+limit 10;
+
+SELECT 
+deviceid, 
+iotdata.data ->> 'humidity' as humidity
+from iotdata
+where deviceid = 1
+```
