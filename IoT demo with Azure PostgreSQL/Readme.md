@@ -1,5 +1,3 @@
-
-Download the sample Node.js project from https://github.com/Azure-Samples/azure-iot-samples-node/archive/master.zip and extract the ZIP archive.
 # Quickstart: Send telemetry from a device to an IoT hub to Azure Database for PostgreSQL 
 
 ![alt text](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/Images/IotTelemetry.png "IoT hub telemetry to Azure Database for PostgreSQL")
@@ -7,8 +5,6 @@ Download the sample Node.js project from https://github.com/Azure-Samples/azure-
 IoTHub is an Azure service that enables you to ingest high volumes of telemetry from your IoT devices into the cloud for storage or processing. PostgreSQL is an established open source database with strong native JSON capabilities, and the plv8 extension further enhances JSON processing capabilities by integrating the JavaScript v8 engine with SQL. Azure Database for PostgreSQL with plv8 extension can be leveraged as persistent layer for IoT telemetry stream for storage, processing and reporting. 
 In this QuickStart, you send telemetry from a simulated device application, through IoT Hub, to Azure Database for PostgreSQL where you store, process and analyze the telemetry information. 
 The QuickStart uses Node.js applications to send telemetry to IoTHub. Before you run the application, you create an IoT hub and register a device with the hub.
-
-[!INCLUDE [cloud-shell-try-it.md](../../includes/cloud-shell-try-it.md)]
 
 If you don’t have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 
@@ -24,15 +20,13 @@ Download the sample Node.js project from https://github.com/Azure-Samples/azure-
 
 ## Create an IoT hub
 Use the [Azure Portal to create IoT Hub](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-create-through-portal).
+
 ## Register a device
 A device must be registered with your IoT hub before it can connect. In this QuickStart, you use the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) or [Azure Cloud shell](https://azure.microsoft.com/en-us/features/cloud-shell/) to register a simulated device.
 
 1.	 Run the following commands in Azure Cloud Shell to add the IoT Hub CLI extension and to create the device identity. 
 **YourIoTHubName**: Replace this placeholder below with the name you choose for your IoT hub.
 
-Create Azure Function 
-Create an Azure function with EventHub trigger bindings using Azure Portal
-Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the connection string to connect to the Iot Hub service.
 **MyNodeDevice**: This is the name given for the registered device. Use MyNodeDevice as shown. If you choose a different name for your device, you will also need to use that name throughout this article and update the device name in the sample applications before you run them.
 
 ```cmd/sh
@@ -47,7 +41,6 @@ az iot hub device-identity create --hub-name YourIoTHubName --device-id MyNodeDe
 ```cmd/sh
 az iot hub device-identity show-connection-string --hub-name YourIoTHubName --device-id MyNodeDevice --output table
 ```
-
 
 Make a note of the **device connection string**, which looks like:
 
