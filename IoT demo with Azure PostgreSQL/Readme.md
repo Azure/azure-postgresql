@@ -30,6 +30,9 @@ A device must be registered with your IoT hub before it can connect. In this Qui
 1.	 Run the following commands in Azure Cloud Shell to add the IoT Hub CLI extension and to create the device identity. 
 **YourIoTHubName**: Replace this placeholder below with the name you choose for your IoT hub.
 
+Create Azure Function 
+Create an Azure function with EventHub trigger bindings using Azure Portal
+Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the connection string to connect to the Iot Hub service.
 **MyNodeDevice**: This is the name given for the registered device. Use MyNodeDevice as shown. If you choose a different name for your device, you will also need to use that name throughout this article and update the device name in the sample applications before you run them.
 
 ```cmd/sh
@@ -85,3 +88,8 @@ The simulated device application connects to a device-specific endpoint on your 
 
     ![Run the simulated device](Images/simulateddevice.png)
 
+## Create Azure Function 
+Create an Azure function with EventHub trigger bindings using [Azure Portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-event-hubs).
+Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the connection string to connect to the Iot Hub service.
+
+ ![Configure Connection IoT Hub in Azure function](Images/azurefunction.png)
