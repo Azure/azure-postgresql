@@ -91,7 +91,9 @@ The simulated device application connects to a device-specific endpoint on your 
 
 ## Create a Azure Database for PostgreSQL Server
 Use [Azure portal](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-portal) or the [Azure CLI](https://docs.microsoft.com/en-us/azure/postgresql/quickstart-create-server-database-azure-cli) to provision a new Azure Database for PostgreSQL server. 
-After the server is provisioned, connect to the server using “pgadmin” or “psql” with the server admin user role and create a new database called iotdemo on the server
+
+## Create a PostgreSQL database in the server
+After the server is provisioned, connect to the server using “pgadmin” or “psql” with the server admin user role and create a new database called iotdemo on the server and a table called iotdata to store the IoT telemetry data. The iotdata table contains a column called data with jsonc datatype to store the incoming IoT stream from IotHub in json format. In the database, we enable plv8 extension and create a sample plv8 function useful for querying to extract a temperature column from the json documents.
 
 ```cmd/sh
 CREATE DATABASE iotdemo;
@@ -104,13 +106,23 @@ CREATE TABLE public.iotdata
 CREATE INDEX iot_temp_index
     ON public.iotdata USING btree
     (((data ->> 'temperature'::text)::double precision));
+CREATE EXTENSION plv8;
+CREATE OR REPLACE FUNCTION public.get_temp(
+	temperature text,
+	data jsonb)
+    RETURNS numeric
+    LANGUAGE 'plv8'
+    COST 100
+    IMMUTABLE STRICT 
+AS $BODY$
+return data[temperature];
+$BODY$;
 ```
 
-
-
-
 ## Create Azure Function 
-Create an Azure function with EventHub trigger bindings using [Azure Portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-event-hubs).
+Create an JavaScript Azure function with EventHub trigger bindings using [Azure Portal](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-event-hubs).
 Once the Eventhub trigger function is created, click on Integrate tab on the blade and specify the connection string to connect to the Iot Hub service.
 
  ![Configure Connection IoT Hub in Azure function](Images/azurefunction.png)
+
+Use the sample Javascript [index.js](azure function/index.js) sample to create the function. The function is triggered for each incoming message stream in Iot Hub. It extracts the json message stream and inserts the data into PostgreSQL database iotdata created earlier hosted on Azure Database for PostgreSQL service.
