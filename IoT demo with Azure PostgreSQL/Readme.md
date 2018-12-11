@@ -125,4 +125,4 @@ Once the Eventhub trigger function is created, click on Integrate tab on the bla
 
  ![Configure Connection IoT Hub in Azure function](Images/azurefunction.png)
 
-Use the sample Javascript [index.js](azure function/index.js) sample to create the function. The function is triggered for each incoming message stream in Iot Hub. It extracts the json message stream and inserts the data into PostgreSQL database iotdata created earlier hosted on Azure Database for PostgreSQL service.
+Use the sample Javascript [index.js](https://github.com/savjani/azure-postgresql/blob/master/IoT%20demo%20with%20Azure%20PostgreSQL/azure%20function/index.js) sample to create the function. The function is triggered for each incoming message stream in Iot Hub. It extracts the json message stream and inserts the data into PostgreSQL database iotdata created earlier hosted on Azure Database for PostgreSQL service.
