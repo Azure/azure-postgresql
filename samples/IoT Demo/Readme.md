@@ -1,6 +1,6 @@
 # Quickstart: Send telemetry from a device to an IoT hub to Azure Database for PostgreSQL 
 
-![alt text](https://github.com/savjani/azure-postgresql/blob/master/samples/IoT%20demo%20with%20Azure%20PostgreSQL/Images/IotTelemetry.png "IoT hub telemetry to Azure Database for PostgreSQL")
+![alt text](https://github.com/savjani/azure-postgresql/blob/master/samples/IoT%20demo%20with%20Azure%20PostgreSQL/Images/IotTelemetry.png" IoT hub telemetry to Azure Database for PostgreSQL")
 
 Azure IoT Hub is an managed Azure service that enables you to ingest high volumes of telemetry from your IoT devices into the cloud for storage or processing. PostgreSQL is an established open source database with strong native JSON capabilities, and the plv8 extension further enhances JSON processing capabilities by integrating the JavaScript v8 engine with SQL. Azure Database for PostgreSQL with plv8 extension can be leveraged as persistent layer for IoT telemetry stream for storage, processing and analytics. 
 In this QuickStart, you send telemetry from a simulated device application, through IoT Hub and Azure function, to Azure Database for PostgreSQL where you store, process and analyze the telemetry information. The QuickStart uses Node.js applications to send telemetry to IoTHub. Before you run the application, 
