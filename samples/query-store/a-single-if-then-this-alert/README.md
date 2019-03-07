@@ -3,13 +3,13 @@ Azure Database for PostgreSQL Query Store records how your queries do over time.
 such as long running queries or blocked processes. The following example intends give you a starting point for a near real time monitoring and alerting
 mechanism.
 
-If you don't make any changes to the script or the function code itself and only provide the required parameters to DeployFunction script, here is what you will get:
-* A function app
-* A function called PingMyDatabase that is time triggered every 1 minute
-* An alert condition that looks for any query that has a mean execution time of longer than 5 seconds since the last time query store data is flushed to the disk
-* An email when an alert condition is met with an attached list of all of the processes that was running on the instance as well as the list of long running queries
-* A keyvault that contains two secrets named pgConnectionString and senderSecret that holds the connection string to your database and password to your sender email account
-* An identity for your function app with access to a Get policy on your secrets for this keyvault
+If you don't make any changes to the script or the function code itself and only provide the required parameters to DeployFunction script, here is what you will get:  
+* A function app  
+* A function called PingMyDatabase that is time triggered every 1 minute  
+* An alert condition that looks for any query that has a mean execution time of longer than 5 seconds since the last time query store data is flushed to the disk  
+* An email when an alert condition is met with an attached list of all of the processes that was running on the instance as well as the list of long running queries  
+* A keyvault that contains two secrets named pgConnectionString and senderSecret that holds the connection string to your database and password to your sender email account  
+* An identity for your function app with access to a Get policy on your secrets for this keyvault  
 
 ## Prerequisites
 * [Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
@@ -108,14 +108,14 @@ Your connection string is most likely malformed. Please ensure that it is in the
 If you are seeing below error, you will need to do one of the following:
 
 *in your Azure Database for PostgreSQL instance's Connection Security section, add a firewall rule for the possible list of ip addresses for your function app 
-which can be observed from your FunctionApp's Platform Features>Properties>Outbound IP Addresses & Additional Outbound IP Addresses
-*in your Azure Database for PostgreSQL instance's Connection Security section, turn on "Allow access to Azure Services" option
-*if your Azure Database for PostgreSQL instance is a part of your VNET, you can configure VNET access from your FunctionApp's Platform Features>Networking>VNET Integration
+which can be observed from your FunctionApp's Platform Features>Properties>Outbound IP Addresses & Additional Outbound IP Addresses  
+*in your Azure Database for PostgreSQL instance's Connection Security section, turn on "Allow access to Azure Services" option  
+*if your Azure Database for PostgreSQL instance is a part of your VNET, you can configure VNET access from your FunctionApp's Platform Features>Networking>VNET Integration  
 
 
->2019-03-07T20:03:00.153 [Information] Opening connection
->2019-03-07T20:03:00.528 [Error] Executed 'PingMyDatabase' (Failed, Id=4be53a4e-b00a-4303-807d-c8a92fb26a52)
->28000: no pg_hba.conf entry for host "xxx.xxx.xxx.xxx", user "xxx", database "azure_sys", SSL on
+>2019-03-07T20:03:00.153 [Information] Opening connection  
+>2019-03-07T20:03:00.528 [Error] Executed 'PingMyDatabase' (Failed, Id=4be53a4e-b00a-4303-807d-c8a92fb26a52)  
+>28000: no pg_hba.conf entry for host "xxx.xxx.xxx.xxx", user "xxx", database "azure_sys", SSL on  
 
 ### I want to change stuff
 You can go to portal and locate your function app. In order to change app settings, locate FunctionAppSettings, click Manage Application Settings and save your settings after your changes
