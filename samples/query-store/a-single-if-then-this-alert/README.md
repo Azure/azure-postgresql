@@ -107,10 +107,10 @@ Your connection string is most likely malformed. Please ensure that it is in the
 #### no pg_hba.conf entry for host...
 If you are seeing below error, you will need to do one of the following:
 
-*in your Azure Database for PostgreSQL instance's Connection Security section, add a firewall rule for the possible list of ip addresses for your function app 
+* in your Azure Database for PostgreSQL instance's Connection Security section, add a firewall rule for the possible list of ip addresses for your function app 
 which can be observed from your FunctionApp's Platform Features>Properties>Outbound IP Addresses & Additional Outbound IP Addresses  
-*in your Azure Database for PostgreSQL instance's Connection Security section, turn on "Allow access to Azure Services" option  
-*if your Azure Database for PostgreSQL instance is a part of your VNET, you can configure VNET access from your FunctionApp's Platform Features>Networking>VNET Integration  
+* in your Azure Database for PostgreSQL instance's Connection Security section, turn on "Allow access to Azure Services" option  
+* if your Azure Database for PostgreSQL instance is a part of your VNET, you can configure VNET access from your FunctionApp's Platform Features>Networking>VNET Integration  
 
 
 >2019-03-07T20:03:00.153 [Information] Opening connection  
