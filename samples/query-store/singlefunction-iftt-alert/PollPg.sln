@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PollPg", "PollPg\PollPg.csproj", "{F5687A69-DC49-495D-9E91-64436E7F565D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EEAB46A0-5639-4F81-AD57-EFAAED169110}"
+	ProjectSection(SolutionItems) = preProject
+		DeployFunction.ps1 = DeployFunction.ps1
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm", "arm", "{DB235CDC-A413-417D-988A-02D2BEEFCA72}"
+	ProjectSection(SolutionItems) = preProject
+		arm\azuredeploy.json = arm\azuredeploy.json
+		arm\azuredeploy.parameters.json = arm\azuredeploy.parameters.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{954BF8D2-76A9-471E-B822-15D24FD86919}"
+	ProjectSection(SolutionItems) = preProject
+		assets\qsmonitoring.png = assets\qsmonitoring.png
+		assets\qsmonitoring_troubleshooting_1.png = assets\qsmonitoring_troubleshooting_1.png
+		assets\qsmonitoring_troubleshooting_2.png = assets\qsmonitoring_troubleshooting_2.png
+		assets\qsmonitoring_troubleshooting_3.png = assets\qsmonitoring_troubleshooting_3.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "logs", "logs", "{83A23FF1-3384-41A2-9463-FEAEF1B52634}"
+	ProjectSection(SolutionItems) = preProject
+		logs\qsmonitoring20190207140106.txt = logs\qsmonitoring20190207140106.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5687A69-DC49-495D-9E91-64436E7F565D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5687A69-DC49-495D-9E91-64436E7F565D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5687A69-DC49-495D-9E91-64436E7F565D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5687A69-DC49-495D-9E91-64436E7F565D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DB235CDC-A413-417D-988A-02D2BEEFCA72} = {EEAB46A0-5639-4F81-AD57-EFAAED169110}
+		{954BF8D2-76A9-471E-B822-15D24FD86919} = {EEAB46A0-5639-4F81-AD57-EFAAED169110}
+		{83A23FF1-3384-41A2-9463-FEAEF1B52634} = {EEAB46A0-5639-4F81-AD57-EFAAED169110}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {15F3F322-E915-497E-93C2-E90EF17C5D56}
+	EndGlobalSection
+EndGlobal
