@@ -1,0 +1,16 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "KeyVaultUri": "https://yourkeyvault.vault.azure.net/",
+    "MAIL_TO": "___@live.com",
+    "CronTimerInterval": "0 */1 * * * *",
+    "SENDER_ACCOUNT": "___@outlook.com",
+    "SENDER_ACCOUNT_SECRET_NAME": "senderSecret",
+    "CONNECTION_STRING_SECRET_NAME": "env1",
+    "SMTP_SERVER": "smtp.office365.com",
+    "SENDMAILIF_QUERYRETURNSRESULTS": "select * from query_store.qs_view;",
+    "LIST_OF_QUERIESWITHSUPPORTINGDATA": "{\"LONG_QUERY_PSQL_STRING\":\"SELECT datname as Database, pid as Process_ID, usename as Username, query,client_hostname,state, now() - query_start as Query_Duration, now() - backend_start as Session_Duration FROM pg_stat_activity WHERE age(clock_timestamp(),query_start) > interval '{0} minutes' AND state like 'active' AND usename NOT like 'postgres' ORDER BY 1 desc;\",\"LIST_OF_PROCESSES\":\"select now()-query_start as Running_Since,pid,client_hostname,client_addr, usename, state, left(query,60) as query_text from pg_stat_activity;\"}"
+  }
+}

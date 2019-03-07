@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)\packages\</RestorePackagesPath>
+  </PropertyGroup>
+  <Import Project="$(RestorePackagesPath)msbuildtasks\*\tools\MSBuild.Community.Tasks.Targets" />
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="echo outdir is $(OutDir)" />
+    <Exec Command="echo solutiondir is $(SolutionDir)" />    
+    <Exec Command="echo MSBuildThisFileDirectory dir is $(MSBuildThisFileDirectory)" />
+    <Exec Command="echo $(MSBuildToolsPath)" />
+    <Exec Command="echo $(MSBuildExtensionsPath)" />
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.0.3" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.26" />
+    <PackageReference Include="MSBuildTasks" Version="1.5.0.235" />
+    <PackageReference Include="Npgsql" Version="4.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FunctionDeploymentFiles Include="$(MSBuildThisFileDirectory)\Alert.cs" />
+    <FunctionDeploymentFiles Include="$(MSBuildThisFileDirectory)\host.json" />
+    <FunctionDeploymentFiles Include="$(MSBuildThisFileDirectory)\local.settings.json" />
+    <FunctionDeploymentFiles Include="$(MSBuildThisFileDirectory)\PollPg.csproj" />
+  </ItemGroup>
+  <Target Name="Zip" AfterTargets="Build">
+    <Zip Files="@(FunctionDeploymentFiles)" ZipFileName="$(MSBuildThisFileDirectory)zip\Alert.zip" WorkingDirectory="$(MSBuildThisFileDirectory)zip\" ZipLevel="9" />
+  </Target>
+</Project>
