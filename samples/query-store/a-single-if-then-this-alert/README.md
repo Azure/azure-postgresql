@@ -15,9 +15,6 @@ If you don't make any changes to the script or the function code itself and only
 * [Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 * [Install AzureRM](https://www.powershellgallery.com/packages/AzureRM.Resources/6.7.3)
 
-## Getting started
-You can clone this repo and make changes to the function code as you wish or you can just deploy via the scripts provided by making the minimum changes that fits to
-your environment. 
 
 1. If you choose to deploy with the scripts provided, you will first need to provide some additional information asked by DeployFunction.ps1 script 
 In addition, you can update your cron interval, if and then queries before running this script where it says 'SET VALUES AS APPROPRIATE' before you run this statement. 
@@ -115,7 +112,8 @@ which can be observed from your FunctionApp's Platform Features>Properties>Outbo
 
 >2019-03-07T20:03:00.153 [Information] Opening connection  
 >2019-03-07T20:03:00.528 [Error] Executed 'PingMyDatabase' (Failed, Id=4be53a4e-b00a-4303-807d-c8a92fb26a52)  
->28000: no pg_hba.conf entry for host "xxx.xxx.xxx.xxx", user "xxx", database "azure_sys", SSL on  
+>28000: no pg_hba.conf entry for host "xxx.xxx.xxx.xxx", user "xxx", database "azure_sys", SSL on  
+
 
 ### I want to change stuff
 You can go to portal and locate your function app. In order to change app settings, locate FunctionAppSettings, click Manage Application Settings and save your settings after your changes
