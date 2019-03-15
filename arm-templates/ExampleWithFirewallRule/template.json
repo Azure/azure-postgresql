@@ -39,7 +39,7 @@
             "type": "string"
         },
         "firewallRuleName": {
-            "defaultValue": "AllowAll",
+            "defaultValue": "AllowThis",
             "minLength": 1,
             "maxLength": 128,
             "type": "string"
