@@ -39,7 +39,7 @@
             "value": "Disabled"
         },
         "firewallRuleName": {
-            "value": "AllowAll"
+            "value": "AllowThis"
         },
         "firewallStartIpAddress": {
             "value": "131.107.160.81"
