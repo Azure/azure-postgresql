@@ -17,7 +17,8 @@ module.exports = async function (context, eventHubMessages) {
     context.log(query);
     client.connect();
     client.query(query);
-    context.log('insert completed successfully!');
+    await client.end();
+    context.log('insert completed successfully!');	
     /*
     client.connect(err => {
         if (err) throw err;
