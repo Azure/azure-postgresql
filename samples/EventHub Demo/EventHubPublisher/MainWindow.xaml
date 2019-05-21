@@ -1,0 +1,19 @@
+﻿<Window x:Class="EventHubPublisher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EventHubPublisher"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Label Content="Database Name: " HorizontalAlignment="Left" Margin="56,55,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label Content="ecompoc" HorizontalAlignment="Left" Margin="185,55,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.485,-0.038"/>
+        <Label Content="Table Name:" HorizontalAlignment="Left" Margin="326,55,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label Content="Products" HorizontalAlignment="Left" Margin="423,55,0,0" VerticalAlignment="Top"/>
+        <Label Content="Status" HorizontalAlignment="Left" Margin="627,55,0,0" VerticalAlignment="Top" Name="labelStatus" />
+        <Button Content="Start" HorizontalAlignment="Left" Margin="67,109,0,0" VerticalAlignment="Top" Width="75" Name="startButton" Click="startButton_Click" Height="27"/>
+        <Button Content="Stop" HorizontalAlignment="Left" Margin="176,109,0,0" VerticalAlignment="Top" Width="75" Name="stopButton" Click="stopButton_Click" Height="27"/>
+        <TextBox IsReadOnly="True" Text="No Notifications" HorizontalAlignment="Left" Margin="47,168,0,0" VerticalAlignment="Top" Height="192" Width="593" Name="labelNotifications" TextWrapping="Wrap" />
+    </Grid>
+</Window>
