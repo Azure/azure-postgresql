@@ -138,5 +138,5 @@ done
 azure logout -u "$SUBSCRIPTION_ID"
 
 # Visit Master Server Replication Page
-echo "Master and Replicas Creation Succesfull !!"
+echo "Master and Replicas Creation Successful !!"
 echo "Master Server : https://portal.azure.com/#resource/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.DBforPostgreSQL/servers/$SERVER_NAME/replication"

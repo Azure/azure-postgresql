@@ -221,5 +221,5 @@ rm -f "$SOURCE_DATABASE_NAME.dump"
 azure logout -u "$TARGET_SUBSCRIPTION_ID"
 
 # Visit Target Server
-echo "Migration Succesfull !!"
+echo "Migration Successful !!"
 echo "Target Server : https://portal.azure.com/#resource/subscriptions/$TARGET_SUBSCRIPTION_ID/resourceGroups/$TARGET_RESOURCE_GROUP_NAME/providers/Microsoft.DBforPostgreSQL/servers/$TARGET_SERVER_NAME/overview"
