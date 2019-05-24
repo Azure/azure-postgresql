@@ -129,9 +129,8 @@ az postgres server configuration set --name "azure.replication_support" --server
 az postgres server restart --name "$SERVER_NAME"
 
 # Create Replicas
-for i in {1..$NUMBER_OF_REPLICAS}
-do
-  az postgres server replica create --name "$SERVER_NAME-replica-$i" --source-server "$SERVER_NAME" --no-wait
+for ((i=1; i<=NUMBER_OF_REPLICAS; i++)); do
+  az postgres server replica create --name "$SERVER_NAME-replica-$i" --source-server "$SERVER_NAME"
 done
 
 # Logout
