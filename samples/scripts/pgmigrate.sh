@@ -1,8 +1,21 @@
 #!/bin/bash
 #
 # PURPOSE
-# Migrate Azure Database for PostgreSQL Server from Basic to General Purpose/Memory Optimized
+# Migrate Azure Database for PostgreSQL Server from Basic Pricing Tier to General Purpose/Memory Optimized Pricing Tier
 # 
+# DESCRIPTION
+# Pricing tiers in Azure Database for PostgreSQL - Single Server
+# https://docs.microsoft.com/en-us/azure/postgresql/concepts-pricing-tiers
+# 
+# Currently modifying pricing tier (to and from Basic) is not yet supported. 
+# This script helps in migrating an existing database from Basic Pricing Tier to 
+# General Purpose/Memory Optimized Pricing Tier. 
+# This script uses pg_dump to extract a PostgreSQL database into a dump file
+# and pg_restore to restore the PostgreSQL database from an archive file created by pg_dump.
+#
+# Migrate your PostgreSQL database using dump and restore
+# https://docs.microsoft.com/en-us/azure/postgresql/howto-migrate-using-dump-and-restore
+#
 # PREREQUISITES
 # Azure CLI (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 # postgresql-client tools - pg_dump and pg_restore (https://www.postgresql.org/download/linux)
@@ -34,7 +47,20 @@ function usage()
 {
     echo ""
     echo "PURPOSE"
-    echo "Migrate Azure Database for PostgreSQL Server database from Basic Pricing Tier to General Purpose/Memory Optimized"
+    echo "Migrate Azure Database for PostgreSQL Server from Basic Pricing Tier to General Purpose/Memory Optimized Pricing Tier"
+    echo ""
+    echo "DESCRIPTION"
+    echo "Pricing tiers in Azure Database for PostgreSQL - Single Server"
+    echo "https://docs.microsoft.com/en-us/azure/postgresql/concepts-pricing-tiers"
+    echo ""
+    echo "Currently modifying pricing tier (to and from Basic) is not yet supported."
+    echo "This script helps in migrating an existing database from Basic Pricing Tier to"
+    echo "General Purpose/Memory Optimized Pricing Tier."
+    echo "This script uses pg_dump to extract a PostgreSQL database into a dump file"
+    echo "and pg_restore to restore the PostgreSQL database from an archive file created by pg_dump."
+    echo ""
+    echo "Migrate your PostgreSQL database using dump and restore"
+    echo "https://docs.microsoft.com/en-us/azure/postgresql/howto-migrate-using-dump-and-restore"
     echo ""
     echo "PREREQUISITES"
     echo "Azure CLI (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)"

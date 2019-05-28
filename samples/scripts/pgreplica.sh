@@ -2,7 +2,14 @@
 #
 # PURPOSE
 # Create Azure Database for PostgreSQL Server Master and Replica Servers
-# 
+#
+# DESCRIPTION
+# This script 
+# 1. Creates a Master Server
+# 2. Sets the azure.replication_support parameter to REPLICA on the master server
+# 3. Restarts the master server for the parameter change to take effect 
+# 4. Creates Read Replicas
+#
 # PREREQUISITES
 # Azure CLI (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 # 
@@ -27,6 +34,13 @@ function usage()
     echo ""
     echo "PURPOSE"
     echo "Create Azure Database for PostgreSQL Server Master and Replica Servers"
+    echo ""
+    echo "DESCRIPTION"
+    echo "This script "
+    echo " 1. Creates a Master Server"
+    echo " 2. Sets the azure.replication_support parameter to REPLICA on the master server"
+    echo " 3. Restarts the master server for the parameter change to take effect"
+    echo " 4. Creates Read Replicas"
     echo ""
     echo "PREREQUISITES"
     echo "Azure CLI (https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)"
