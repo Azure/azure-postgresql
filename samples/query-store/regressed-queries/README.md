@@ -1,4 +1,4 @@
-# Identifying Regressed Queries with Azure Database for PostgreSQL Intelligent Performance
+﻿# Identifying Regressed Queries with Azure Database for PostgreSQL Intelligent Performance
  
 ## Introduction
 One of the challenges associated with monitoring and alerting is to filter out noise from the signal. Nobody wants to receive a midnight call by an automated alert for an issue that turns out to be a false positive. Nor do we want to lose hours sorting through issues to locate a starting point from which to triage. At any point, if you suffer from a slowdown in your workload, one way to digest the overall problem space is to review your top regressed queries using a dash of statistics. Doing so gives you a chance to rule out differences that are more likely to be “coincidental” so that you can concentrate on issues that are statistically significant. 
