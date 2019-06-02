@@ -21,7 +21,7 @@ You need to ensure below server settings for data collection to start.
 * Set pg_qs.query_capture_mode to top or all
 * Set pgms_wait_sampling.query_capture_mode to all
  
-<b>Please note that the supported versions are 9.6 and above
+<b>Please note that the supported versions are 9.6 and above</b>
 
 ## Install required libraries
 * Click on 'Install Packages' at the top of the notebook
@@ -50,9 +50,9 @@ You can play with the parameters to adjust your sensitivity but the output shoul
 * Is autovacuum catching up properly to clean your bloat? There are a number of settings that controls how and when a worker starts and stops working on reclaiming dead tuples on pages. Having excessive bloat might impact what can be fit into memory and reduce your workload's effectiveness.
 * Are you hitting cache while querying your tables? If your queries are increasingly reading from disk, there sure is a missed opportunity for you to optimize performance.
 * Do you have proper indices? Perhaps a deployment caused an index to unintentionally drop or maybe application users are interested in your tables with a brand new perspective. Make sure to use [Intelligent Performance Index Advisor](https://docs.microsoft.com/en-us/azure/postgresql/concepts-performance-recommendations) to see if there are indices you can benefit from.
-* Has your datasize drastically changed? Perhaps your baseline expectations should adjust to your new data size. Nonetheless, it's great to keep track of this.
-* Has your locks been at steady state or has there been any changes? Are there any significant differences? Locate the root cause for to get that performance win!
-* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhapse it's not your database engine that is the issue?
+* Has your data size or number of records drastically changed? Perhaps your baseline expectations should adjust to your new data size. Nonetheless, it's great to keep track of this.
+* Have the locks been at steady state or has there been any changes? Are there any significant differences? Locate the root cause to get that performance win!
+* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhapse it's not your database engine that is the issue.
 * Could you be running this query elsewhere? Is this a read-only query? May be you should route this query to a replica to improve overall workload performance.
 
-Well, there are quite a number of a follow-up questions that are not limited to above. This is only one of the first steps in your detective work. Good luck and let us know how you improved this notebook!
+Well, there are quite a number of follow-up questions that can lead you to your next step. This is only one of the first possible steps in your detective work. Good luck and let us know how you improved this notebook!
