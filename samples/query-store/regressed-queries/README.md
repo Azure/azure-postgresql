@@ -43,7 +43,7 @@ You will need to update the parameters indicated by the following based on your 
 * > percent_change_threshold is a constant that can help you single out only percent changes above this value
 * > output_file_path is a local path to output your results if there is any significant changes
 * > host is in format similar to "yourserver.postgres.database.azure.com" and can be located at the overview blade of your instance in Azure portal
-* > user should be similar to "youruser@yourdb" format
+* > user should be similar to "youruser@yourserver" format
 
 ### Run your notebook
 You are now ready to run your notebook. Azure Data Studio lets you run all of the cells in your notebook by clicking on 'Run Cells' at the top of your notebook. If there is an error during execution, you should be able to see a descriptive message right below the cell that will help you fix your issue. You can also run your notebook cell by cell. To do so, locate the run button to the top left of each cell and click.
@@ -56,7 +56,7 @@ You can play with the parameters to adjust your sensitivity but the output shoul
 * Do you have proper indices? Perhaps a deployment caused an index to unintentionally drop or maybe application users are interested in your tables with a brand new perspective. Make sure to use [Intelligent Performance Index Advisor](https://docs.microsoft.com/en-us/azure/postgresql/concepts-performance-recommendations) to see if there are indices you can benefit from.
 * Has your data size or number of records drastically changed? Perhaps your baseline expectations should adjust to your new data size. Nonetheless, it's great to keep track of this.
 * Have the locks been at steady state or has there been any changes? Are there any significant differences? Locate the root cause to get that performance win!
-* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhapse it's not your database engine that is the issue.
+* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhaps it's not your database engine that is the issue.
 * Could you be running this query elsewhere? Is this a read-only query? May be you should route this query to a replica to improve overall workload performance.
 
 Well, there are quite a number of follow-up questions that can lead you to your next step. This is only one of the first possible steps in your detective work. Good luck and let us know how you improved this notebook!
