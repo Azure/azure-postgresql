@@ -15,17 +15,18 @@ In his blog post [Operationalizing your PostgreSQL database health checks using 
 * Run your notebook
 
 ## Configure your database
-You need to ensure below server settings for data collection to start.
-* Go into Server parameters parameters blade on Azure portal
+[Query Store](https://docs.microsoft.com/en-us/azure/postgresql/concepts-query-store) in Azure Database for PostgreSQL shows you how each of your queries perform over time. To enable it, you will first need to configure your server parameters as follows.
+
+* Go into Server parameters blade on Azure portal
 * Set pg_qs.track_utility to on
-* Set pg_qs.query_capture_mode to top or all
+* Set pg_qs.query_capture_mode to top
 * Set pgms_wait_sampling.query_capture_mode to all
  
 <b>Please note that the supported versions are 9.6 and above</b>
 
 ## Install required libraries
 * Click on 'Install Packages' at the top of the notebook
-* Run '.\python.exe -m pip install -r full_path_to_the_requirements_file\requirements.txt in terminal window
+* Run '.\python.exe -m pip install -r full_path_to_the_requirements_file\requirements.txt' in terminal window
 
 ## Update your parameters
 You will need to update the parameters indicated by the following based on your needs before you run your notebook.
@@ -37,12 +38,15 @@ You will need to update the parameters indicated by the following based on your 
 ### What do these parameters mean?
 * > baseline_period_start & baseline_period_end identify a window of measurements where you think the performance can be baselined
 * > current_period_start & current_period_end identify the window of measurements that you want to compare against your baseline
-* > significance_level is also commonly known as alpha in hypothesis testing. [It](https://en.wikipedia.org/wiki/Statistical_significance) is a measure of probability rejecting the null hypothesis while it is true. The typical value is 0.05.
+* > significance_level is also commonly known as alpha in hypothesis testing. [Significance level](https://en.wikipedia.org/wiki/Statistical_significance) is a measure of probability rejecting the null hypothesis while it is true. The typical value is 0.05.
 * > directional_preference is a parameter to indicate direction of interest. You should choose 1 for increase, -1 for decrease and 0 for any direction of change between baseline and current period.
 * > percent_change_threshold is a constant that can help you single out only percent changes above this value
 * > output_file_path is a local path to output your results if there is any significant changes
-* > host is in format similar to "yourdb.postgres.database.azure.com" and can be located at the overview blade of your instance in Azure portal
+* > host is in format similar to "yourserver.postgres.database.azure.com" and can be located at the overview blade of your instance in Azure portal
 * > user should be similar to "youruser@yourdb" format
+
+### Run your notebook
+You are now ready to run your notebook. Azure Data Studio lets you run all of the cells in your notebook by clicking on 'Run Cells' at the top of your notebook. If there is an error during execution, you should be able to see a descriptive message right below the cell that will help you fix your issue. You can also run your notebook cell by cell. To do so, locate the run button to the top left of each cell and click.
 
 ### I ran the notebook, now what?
 You can play with the parameters to adjust your sensitivity but the output should give you regressed query candidates, if your directional_preference is +1. Once you identified your regressed queries, your next step is to understand why your queries actually regressed. There can be a number of reasons why you would experience regression in PostgreSQL. Here are a few usual suspects for you:
@@ -52,7 +56,7 @@ You can play with the parameters to adjust your sensitivity but the output shoul
 * Do you have proper indices? Perhaps a deployment caused an index to unintentionally drop or maybe application users are interested in your tables with a brand new perspective. Make sure to use [Intelligent Performance Index Advisor](https://docs.microsoft.com/en-us/azure/postgresql/concepts-performance-recommendations) to see if there are indices you can benefit from.
 * Has your data size or number of records drastically changed? Perhaps your baseline expectations should adjust to your new data size. Nonetheless, it's great to keep track of this.
 * Have the locks been at steady state or has there been any changes? Are there any significant differences? Locate the root cause to get that performance win!
-* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhaps it's not your database engine that is the issue.
+* What's the network latency? Have you run a 'select 1' to see what the network latency is? Perhapse it's not your database engine that is the issue.
 * Could you be running this query elsewhere? Is this a read-only query? May be you should route this query to a replica to improve overall workload performance.
 
 Well, there are quite a number of follow-up questions that can lead you to your next step. This is only one of the first possible steps in your detective work. Good luck and let us know how you improved this notebook!
