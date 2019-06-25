@@ -244,7 +244,7 @@ az postgres server firewall-rule delete -g "$TARGET_RESOURCE_GROUP_NAME" -s "$TA
 rm -f "$SOURCE_DATABASE_NAME.dump"
 
 # Logout
-azure logout -u "$TARGET_SUBSCRIPTION_ID"
+az logout -u "$TARGET_SUBSCRIPTION_ID"
 
 # Visit Target Server
 echo "Migration Successful !!"
