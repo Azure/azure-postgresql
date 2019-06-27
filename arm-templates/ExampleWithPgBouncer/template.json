@@ -389,7 +389,7 @@
         },
         "psqlCommand": {
             "type": "string",
-            "value": "[concat('psql \"host=', reference(variables('publicIPAddressName')).dnsSettings.fqdn, '.postgres.database.azure.com port=5432 dbname=postgres user=', parameters('pgUsername'), '@', parameters('serverName'), ' password=', parameters('pgPassword'), '\"' )]"
+            "value": "[concat('psql \"host=', reference(variables('publicIPAddressName')).dnsSettings.fqdn, ' port=5432 dbname=postgres user=', parameters('pgUsername'), '@', parameters('serverName'), ' password=', parameters('pgPassword'), '\"' )]"
         }
     }
 }
