@@ -15,3 +15,4 @@ sed -i "s/SERVERNAME/$SERVERNAME/g" /etc/pgbouncer/pgbouncer.ini
 service pgbouncer restart
 update-rc.d pgbouncer defaults
 netstat -tulpn | grep "pgbouncer"
+sleep 60
