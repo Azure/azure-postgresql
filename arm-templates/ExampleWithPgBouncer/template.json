@@ -65,7 +65,7 @@
         },
         "version": {
             "type": "string",
-            "defaultValue": 11,
+            "defaultValue": "10",
             "metadata": {
                 "description": "PostgreSQL Version"
             }
@@ -99,7 +99,7 @@
         },
         "authenticationType": {
             "type": "string",
-            "defaultValue": "sshPublicKey",
+            "defaultValue": "password",
             "allowedValues": [
                 "sshPublicKey",
                 "password"
