@@ -371,7 +371,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('bash configure-pgbouncer.sh \"', parameters('serverName'), '\"', parameters('pgUsername'), '\"', parameters('pgPassword'), '\"')]"
+                            "commandToExecute": "[concat('bash configure-pgbouncer.sh \"', parameters('serverName'), '\" \"', parameters('pgUsername'), '\" \"', parameters('pgPassword'), '\"')]"
                         }
                     }
                 }

@@ -3,6 +3,7 @@
 SERVERNAME=$1
 USERNAME=$2
 PASSWORD=$3
+apt-get install dialog apt-utils -y
 apt-get -y update
 apt-get -y install pgbouncer
 echo "\"$USERNAME@$SERVERNAME\" \"$PASSWORD\"" > /etc/pgbouncer/userlist.txt
