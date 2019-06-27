@@ -2,14 +2,14 @@
     "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "pgUsername": {
+        "postgresUsername": {
             "type": "string",
-            "defaultValue": "azureuser",
+            "defaultValue": "pguser",
             "metadata": {
                 "description": "User name for the PostgreSQL Server."
             }
         },
-        "pgPassword": {
+        "postgresPassword": {
             "type": "securestring",
             "metadata": {
                 "description": "Password for the PostgreSQL Server."
@@ -156,8 +156,8 @@
             "properties": {
                 "sslEnforcement": "Enabled",
                 "version": "[parameters('version')]",
-                "administratorLogin": "[parameters('pgUsername')]",
-                "administratorLoginPassword": "[parameters('pgPassword')]",
+                "administratorLogin": "[parameters('postgresUsername')]",
+                "administratorLoginPassword": "[parameters('postgresPassword')]",
                 "storageProfile": {
                     "storageMB": "[parameters('skuSizeMB')]",
                     "backupRetentionDays": "[parameters('backupRetentionDays')]",
@@ -371,7 +371,7 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('bash configure-pgbouncer.sh \"', parameters('serverName'), '\" \"', parameters('pgUsername'), '\" \"', parameters('pgPassword'), '\"')]"
+                            "commandToExecute": "[concat('bash configure-pgbouncer.sh \"', parameters('serverName'), '\" \"', parameters('postgresUsername'), '\" \"', parameters('postgresPassword'), '\"')]"
                         }
                     }
                 }
@@ -389,7 +389,7 @@
         },
         "psqlCommand": {
             "type": "string",
-            "value": "[concat('psql \"host=', reference(variables('publicIPAddressName')).dnsSettings.fqdn, ' port=5432 dbname=postgres user=', parameters('pgUsername'), '@', parameters('serverName'), '\"' )]"
+            "value": "[concat('psql \"host=', reference(variables('publicIPAddressName')).dnsSettings.fqdn, ' port=5432 dbname=postgres user=', parameters('postgresUsername'), '@', parameters('serverName'), '\"' )]"
         }
     }
 }
