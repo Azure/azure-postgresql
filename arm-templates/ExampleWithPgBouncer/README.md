@@ -7,7 +7,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This template deploys [Azure Database for PostgreSQL Server](https://docs.microsoft.com/en-us/azure/postgresql/overview) and [Ubuntu VM](http://releases.ubuntu.com/19.04/). Ubuntu VM is configured with [PgBouncer](https://pgbouncer.github.io/) to manage [connection pooling](https://en.wikipedia.org/wiki/Connection_pool) with the deployed Azure Database for PostgreSQL Server. 
+This ARM template deploys [Azure Database for PostgreSQL Server](https://docs.microsoft.com/en-us/azure/postgresql/overview) and [Ubuntu VM](http://releases.ubuntu.com/19.04/). Ubuntu VM is configured with [PgBouncer](https://pgbouncer.github.io/) to manage [connection pooling](https://en.wikipedia.org/wiki/Connection_pool) with the deployed Azure Database for PostgreSQL Server. 
 
 ## Benefits of Connection Pooling
 
