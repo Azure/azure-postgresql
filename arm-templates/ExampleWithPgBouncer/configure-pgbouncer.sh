@@ -4,7 +4,7 @@ SERVERNAME=$1
 USERNAME=$2
 PASSWORD=$3
 export DEBIAN_FRONTEND=noninteractive
-rm /var/lib/apt/lists/* -vf
+rm /var/lib/apt/lists/* -vrf
 apt-get -y update
 apt-get -y install pgbouncer
 echo "\"$USERNAME@$SERVERNAME\" \"$PASSWORD\"" > /etc/pgbouncer/userlist.txt
