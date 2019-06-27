@@ -148,7 +148,7 @@ for ((i=1; i<=NUMBER_OF_REPLICAS; i++)); do
 done
 
 # Logout
-azure logout -u "$SUBSCRIPTION_ID"
+az logout -u "$SUBSCRIPTION_ID"
 
 # Visit Master Server Replication Page
 echo "Master and Replicas Creation Successful !!"
