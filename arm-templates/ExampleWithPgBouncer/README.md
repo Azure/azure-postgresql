@@ -15,17 +15,17 @@ PgBouncer is a lightweight connection pooler that can be installed on the virtua
 
 
 
-Once you have deployed the ARM Template, you will be able to see the hostname, sshCommand and psqlCommand as part of Outputs : 
+Once you have deployed the ARM Template, you will be able to see the hostname, sshCommand and psqlCommand as part of Deployment Outputs
 
 
-![Outputs](https://raw.githubusercontent.com/Azure/azure-postgresql/master/arm-templates/ExampleWithPgBouncer/outputs.jpg)
+![Deployment Outputs](https://raw.githubusercontent.com/Azure/azure-postgresql/master/arm-templates/ExampleWithPgBouncer/outputs.jpg)
 
 
-hostname is the Public DNS name for the Ubuntu VM hosting pgbouncer
+`hostname` is the Public DNS for the Ubuntu VM hosting pgbouncer
 
-sshCommand provides the ssh command to connect to the Ubuntu VM hosting pgbouncer
+`sshCommand` provides the ssh command to connect to the Ubuntu VM hosting pgbouncer
 
-psqlcommand provides the psql command to connect the PostgreSQL Server 
+`psqlCommand` provides the psql command to connect the PostgreSQL Server 
 
 
 ```
@@ -35,7 +35,7 @@ psql "host={dnsLabelPrefix}.{region}.cloudapp.azure.com port=5432 dbname={your_d
 Example : 
 
 ```
-psql "host=pgbouncervm.westus.cloudapp.azure.com port=5432 dbname=postgres user=azureuser@pgserver"
+psql "host=pgubuntu.westus.cloudapp.azure.com port=5432 dbname=postgres user=pguser@pgbouncerserver"
 ```
 
 
