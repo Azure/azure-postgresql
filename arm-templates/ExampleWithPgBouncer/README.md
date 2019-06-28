@@ -24,7 +24,7 @@ In PostgreSQL, establishing a connection is an expensive operation. This is attr
 
 ## Deployment and Connectivity
 
-Click on the **Deploy** Button to deploy the ARM Template **template.json**
+Click on the **Deploy to Azure** button above to deploy the ARM Template **template.json**
 
 Once you have deployed the ARM Template **successfully without any errors**, you will be able to see the hostname, sshCommand and psqlCommand as part of Deployment Outputs
 
