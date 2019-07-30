@@ -184,7 +184,7 @@
             "resources": [
                 {
                     "name": "virtualNetworkRules",
-                    "type": "Microsoft.DBforPostgreSQL/servers/virtualNetworkRules",
+                    "type": "virtualNetworkRules",
                     "apiVersion": "2017-12-01",
                     "properties": {
                         "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('existingVnetName'),  parameters('existingSubnetName'))]",
