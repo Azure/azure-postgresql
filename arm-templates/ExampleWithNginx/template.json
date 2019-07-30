@@ -1,0 +1,313 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "postgresUsername": {
+            "type": "string",
+            "defaultValue": "pguser",
+            "metadata": {
+                "description": "User name for the PostgreSQL Server."
+            }
+        },
+        "postgresPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the PostgreSQL Server."
+            }
+        },
+        "serverName": {
+            "type": "string",
+            "metadata": {
+                "description": "Server Name"
+            }
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of vCores"
+            }
+        },
+        "skuFamily": {
+            "type": "string",
+            "defaultValue": "Gen5",
+            "metadata": {
+                "description": "Hardware Generation"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "GP_Gen5_2",
+            "metadata": {
+                "description": "SKU Name"
+            }
+        },
+        "skuSizeMB": {
+            "type": "int",
+            "defaultValue": 51200,
+            "metadata": {
+                "description": "Storage Size"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "GeneralPurpose",
+            "metadata": {
+                "description": "SKU Tier"
+            }
+        },
+        "version": {
+            "type": "string",
+            "defaultValue": "10",
+            "metadata": {
+                "description": "PostgreSQL Version"
+            }
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 7,
+            "metadata": {
+                "description": "Backup Retention in Days"
+            }
+        },
+        "geoRedundantBackup": {
+            "type": "string",
+            "defaultValue": "Disabled",
+            "metadata": {
+                "description": "Geo Redundant Backup"
+            }
+        },
+        "existingVnetResourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the resourceGroup for the existing virtual network to deploy resources."
+            }
+        },
+        "existingVnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "vName of the existing virtual network to deploy the resources."
+            }
+        },
+        "existingSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the existing subnet to deploy the resources."
+            }
+        },
+        "privateIPAddress": {
+            "type": "string",
+            "default": "10.0.0.5",
+            "metadata": {
+                "description": "Private IP address of the Nginx VM"
+            }
+        },
+        "vmUsername": {
+            "type": "string",
+            "defaultValue": "sshuser",
+            "metadata": {
+                "description": "User name for the Virtual Machine."
+            }
+        },
+        "dnsLabelPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
+            }
+        },
+        "authenticationType": {
+            "type": "string",
+            "defaultValue": "password",
+            "allowedValues": [
+                "sshPublicKey",
+                "password"
+            ],
+            "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "vmPasswordOrKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+            }
+        }
+    },
+    "variables": {
+        "imagePublisher": "Canonical",
+        "imageOffer": "UbuntuServer",
+        "ubuntuOSVersion": "19.04",
+        "nicName": "[concat(parameters('dnsLabelPrefix'), 'VMNic')]",
+        "storageAccountName": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]",
+        "storageAccountSkuName": "Standard_LRS",
+        "storageAccountSkuType": "Standard",
+        "storageAccountKind": "Storage",
+        "vmName": "[parameters('dnsLabelPrefix')]",
+        "vmSize": "Standard_D3_v2",
+        "scriptsUri": "[uri(deployment().properties.templateLink.uri, '.')]",
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[concat('/home/', parameters('vmUsername'), '/.ssh/authorized_keys')]",
+                        "keyData": "[parameters('vmPasswordOrKey')]"
+                    }
+                ]
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]",
+                "size": "[parameters('skuSizeMB')]",
+                "family": "[parameters('skuFamily')]"
+            },
+            "kind": "",
+            "name": "[parameters('serverName')]",
+            "apiVersion": "2017-12-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sslEnforcement": "Enabled",
+                "version": "[parameters('version')]",
+                "administratorLogin": "[parameters('postgresUsername')]",
+                "administratorLoginPassword": "[parameters('postgresPassword')]",
+                "storageProfile": {
+                    "storageMB": "[parameters('skuSizeMB')]",
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                }
+            },
+            "resources": [
+                {
+                    "name": "virtualNetworkRules",
+                    "type": "Microsoft.DBforPostgreSQL/servers/virtualNetworkRules",
+                    "apiVersion": "2017-12-01",
+                    "properties": {
+                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('existingVnetName'),  parameters('existingSubnetName'))]",
+                        "ignoreMissingVnetServiceEndpoint": true
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('serverName'))]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "apiVersion": "2017-06-01",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[variables('storageAccountSkuName')]",
+                "tier": "[variables('storageAccountSkuType')]"
+            },
+            "kind": "[variables('storageAccountKind')]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "apiVersion": "2016-09-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "primary": true,
+                "enableAcceleratedNetworking": true,
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId(parameters('existingVnetResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubNetName'))]"
+                            },
+                            "privateIPAddress": "[parameters('privateIPAddress')]",
+                            "privateIPAllocationMethod": "Static"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('vmName')]",
+            "apiVersion": "2017-03-30",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+                "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('serverName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[variables('vmName')]",
+                    "adminUsername": "[parameters('vmUsername')]",
+                    "adminPassword": "[parameters('vmPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('ubuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": [
+                        {
+                            "diskSizeGB": 1023,
+                            "lun": 0,
+                            "createOption": "Empty"
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob)]"
+                    }
+                }
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "CustomScriptExtension",
+                    "apiVersion": "2017-03-30",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[concat(variables('scriptsUri'), 'configure-nginx.sh')]"
+                            ]
+                        },
+                        "protectedSettings": {
+                            "commandToExecute": "[concat('bash configure-nginx.sh \"', parameters('serverName'), '\"')]"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
