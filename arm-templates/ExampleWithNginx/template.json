@@ -183,7 +183,7 @@
             },
             "resources": [
                 {
-                    "name": "virtualNetworkRules",
+                    "name": "[concat('Allow', parameters('existingVnetName'))]",
                     "type": "virtualNetworkRules",
                     "apiVersion": "2017-12-01",
                     "properties": {
