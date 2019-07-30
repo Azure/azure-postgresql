@@ -97,7 +97,6 @@
         },
         "privateIPAddress": {
             "type": "string",
-            "default": "10.0.0.5",
             "metadata": {
                 "description": "Private IP address of the Nginx VM"
             }
