@@ -9,4 +9,4 @@
 </a>
 
 
-This ARM template deploys [Azure Database for PostgreSQL Server](https://docs.microsoft.com/en-us/azure/postgresql/overview) and [Ubuntu VM](http://releases.ubuntu.com/19.04/). The Ubuntu VM hosts [NGINX](https://www.nginx.com/) and forwards traffic received on port 5432 to the Azure Database for PostgreSQL Server port 5432. 
+This ARM template deploys [Azure Database for PostgreSQL Server](https://docs.microsoft.com/en-us/azure/postgresql/overview) and [Ubuntu VM](http://releases.ubuntu.com/19.04/) in a customer VNET. The Ubuntu VM acts as a TCP Proxy (using [NGINX](https://www.nginx.com/)) and forwards traffic received on port 5432 to the Azure Database for PostgreSQL Server port 5432. This configuration will help customers setup a private 
