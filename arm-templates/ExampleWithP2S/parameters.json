@@ -2,14 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "dnsLabelPrefix": {
+            "value": "p2sdemo"
+        },
         "postgresUsername": {
             "value": "pguser"
         },
         "postgresPassword": {
-            "value": null
-        },
-        "serverName": {
-            "value": null
+            "value": "GEN-PASSWORD"
         },
         "skuCapacity": {
             "value": 2
@@ -35,29 +35,35 @@
         "geoRedundantBackup": {
             "value": "Disabled"
         },
-        "existingVnetResourceGroupName": {
-            "value": "existingVnetRG"
+        "vnetAddressPrefix": {
+            "value": "192.168.100.0/24"
         },
-        "existingVnetName": {
-            "value": "existingVnet"
+        "gatewaySubnetPrefix": {
+            "value": "192.168.100.16/28"
         },
-        "existingSubnetName": {
-            "value": "existingSubnet"
+        "gatewaySku": {
+            "value": "Basic"
+        },
+        "vpnClientAddressPoolPrefix": {
+            "value": "172.18.0.0/24"
+        },
+        "clientRootCertName": {
+            "value": "P2SRootCert"
+        },
+        "clientRootCertData": {
+            "value": "MIICPzCCAaygAwIBAgIQG4WTVfGKqLxMRtKuPFJ4cDAJBgUrDgMCHQUAMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTAeFw0xMTA2MDkyMzA0NDBaFw0zOTEyMzEyMzU5NTlaMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAtPSIGf2+yUDyT8aLB6sZBg2jXKRKfFS+VnM8JX1JxR2bHb5J8vUy8O6WCwcpxqCHpSV2PIXEWNBM2ozGjcaBzMCi53Q+EQvdaGwF7LJHKSL9Iv//uFlkGoKdz6r8yL9HebTH+F6OvIQ8qNxHKtZgRhqB0gMv0dS/qigGmLcDenUCAwEAAaNkMGIwYAYDVR0BBFkwV4AQkVkBKQrptsuAIFPicVM+haExMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZYIQG4WTVfGVqLxMRtKuPFJ4cDAJBgUrDgMCHQUAA4GBAElx6ydJNP8EjIbgppSY39lJKnMWBVqP8u0HXuNc3LkGUTBu0CYNhhR+MM969uX2ykiUkENeGUHykThWJdoAp+yyPWK+/OT9poE5cvNyX5W8ql4vRgeGMew1VQzTHCSx+ZvXtKeSa31Kgf7ZeXQ/3mty1MQUKilCIZPHXqx5GILl"
         },
         "privateIPAddress": {
-            "value": "10.0.0.5"
+            "value": "192.168.100.5"
         },
         "vmUsername": {
             "value": "sshuser"
-        },
-        "dnsLabelPrefix": {
-            "value": "pgnginxvm"
         },
         "authenticationType": {
             "value": "password"
         },
         "vmPasswordOrKey": {
-            "value": null
+            "value": "GEN-PASSWORD"
         }
     }
 }

@@ -2,6 +2,14 @@
     "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "dnsLabelPrefix": {
+            "type": "string",
+            "maxLength": 10,
+            "defaultValue": "p2sdemo",
+            "metadata": {
+                "description": "Unique DNS Name Prefix for all the resources"
+            }
+        },
         "postgresUsername": {
             "type": "string",
             "defaultValue": "pguser",
@@ -13,12 +21,6 @@
             "type": "securestring",
             "metadata": {
                 "description": "Password for the PostgreSQL Server."
-            }
-        },
-        "serverName": {
-            "type": "string",
-            "metadata": {
-                "description": "Server Name"
             }
         },
         "skuCapacity": {
@@ -77,26 +79,51 @@
                 "description": "Geo Redundant Backup"
             }
         },
-        "existingVnetResourceGroupName": {
+        "vnetAddressPrefix": {
             "type": "string",
+            "defaultValue": "192.168.100.0/24",
             "metadata": {
-                "description": "Name of the resourceGroup for the existing virtual network to deploy resources."
+                "description": "Address space for the VNet."
             }
         },
-        "existingVnetName": {
+        "gatewaySubnetPrefix": {
             "type": "string",
+            "defaultValue": "192.168.100.16/28",
             "metadata": {
-                "description": "vName of the existing virtual network to deploy the resources."
+                "description": "The prefix for the GatewaySubnet where the VirtualNetworkGateway will be deployed. This must be at least /29."
             }
         },
-        "existingSubnetName": {
+        "gatewaySku": {
             "type": "string",
+            "defaultValue": "Basic",
             "metadata": {
-                "description": "Name of the existing subnet to deploy the resources."
+                "description": "The Sku of the Gateway. This must be one of Basic, Standard or HighPerformance."
+            }
+        },
+        "vpnClientAddressPoolPrefix": {
+            "type": "string",
+            "defaultValue": "172.18.0.0/24",
+            "metadata": {
+                "description": "The IP address range from which VPN clients will receive an IP address when connected. Range specified must not overlap with on-premise network."
+            }
+        },
+        "clientRootCertName": {
+            "type": "string",
+            "defaultValue": "P2SRootCert",
+            "metadata": {
+                "description": "The name of the client root certificate used to authenticate VPN clients. This is a common name used to identify the root cert."
+            }
+        },
+        "clientRootCertData": {
+            "type": "string",
+            "defaultValue": "MIICPzCCAaygAwIBAgIQG4WTVfGKqLxMRtKuPFJ4cDAJBgUrDgMCHQUAMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTAeFw0xMTA2MDkyMzA0NDBaFw0zOTEyMzEyMzU5NTlaMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAtPSIGf2+yUDyT8aLB6sZBg2jXKRKfFS+VnM8JX1JxR2bHb5J8vUy8O6WCwcpxqCHpSV2PIXEWNBM2ozGjcaBzMCi53Q+EQvdaGwF7LJHKSL9Iv//uFlkGoKdz6r8yL9HebTH+F6OvIQ8qNxHKtZgRhqB0gMv0dS/qigGmLcDenUCAwEAAaNkMGIwYAYDVR0BBFkwV4AQkVkBKQrptsuAIFPicVM+haExMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZYIQG4WTVfGVqLxMRtKuPFJ4cDAJBgUrDgMCHQUAA4GBAElx6ydJNP8EjIbgppSY39lJKnMWBVqP8u0HXuNc3LkGUTBu0CYNhhR+MM969uX2ykiUkENeGUHykThWJdoAp+yyPWK+/OT9poE5cvNyX5W8ql4vRgeGMew1VQzTHCSx+ZvXtKeSa31Kgf7ZeXQ/3mty1MQUKilCIZPHXqx5GILl",
+            "metadata": {
+                "description": "Client root certificate data used to authenticate VPN clients."
             }
         },
         "privateIPAddress": {
             "type": "string",
+            "defaultValue": "192.168.100.5",
             "metadata": {
                 "description": "Private IP address of the Nginx VM"
             }
@@ -106,12 +133,6 @@
             "defaultValue": "sshuser",
             "metadata": {
                 "description": "User name for the Virtual Machine."
-            }
-        },
-        "dnsLabelPrefix": {
-            "type": "string",
-            "metadata": {
-                "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
             }
         },
         "authenticationType": {
@@ -137,13 +158,16 @@
         "imageOffer": "UbuntuServer",
         "ubuntuOSVersion": "19.04",
         "nicName": "[concat(parameters('dnsLabelPrefix'), 'VMNic')]",
+        "postgresServerName": "[concat(parameters('dnsLabelPrefix'), 'PG')]",
+        "virtualNetworkName": "[concat(parameters('dnsLabelPrefix'), 'VNET')]",
+        "gatewayName": "[concat(parameters('dnsLabelPrefix'), 'GW')]",
         "storageAccountName": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]",
         "storageAccountSkuName": "Standard_LRS",
-        "storageAccountSkuType": "Standard",
         "storageAccountKind": "Storage",
-        "vmName": "[parameters('dnsLabelPrefix')]",
+        "vmName": "[concat(parameters('dnsLabelPrefix'), 'NGINX')]",
         "vmSize": "Standard_D3_v2",
         "scriptsUri": "[uri(deployment().properties.templateLink.uri, '.')]",
+        "gatewaySubnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'GatewaySubnet')]",
         "linuxConfiguration": {
             "disablePasswordAuthentication": true,
             "ssh": {
@@ -158,6 +182,83 @@
     },
     "resources": [
         {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('virtualNetworkName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetAddressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('gatewaySubnetPrefix')]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Sql",
+                                    "locations": [
+                                        "[resourceGroup().location]"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "name": "[variables('gatewayName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('gatewaySubnetRef')]"
+                            }
+                        },
+                        "name": "vnetGatewayConfig"
+                    }
+                ],
+                "sku": {
+                    "name": "[parameters('gatewaySku')]",
+                    "tier": "[parameters('gatewaySku')]"
+                },
+                "gatewayType": "Vpn",
+                "vpnType": "RouteBased",
+                "enableBgp": "false",
+                "vpnClientConfiguration": {
+                    "vpnClientProtocols": [
+                        "OpenVPN",
+                        "IkeV2"
+                    ],
+                    "vpnClientAddressPool": {
+                        "addressPrefixes": [
+                            "[parameters('vpnClientAddressPoolPrefix')]"
+                        ]
+                    },
+                    "vpnClientRootCertificates": [
+                        {
+                            "name": "[parameters('clientRootCertName')]",
+                            "properties": {
+                                "PublicCertData": "[parameters('clientRootCertData')]"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
             "type": "Microsoft.DBforPostgreSQL/servers",
             "sku": {
                 "name": "[parameters('skuName')]",
@@ -167,9 +268,12 @@
                 "family": "[parameters('skuFamily')]"
             },
             "kind": "",
-            "name": "[parameters('serverName')]",
+            "name": "[variables('postgresServerName')]",
             "apiVersion": "2017-12-01",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
             "properties": {
                 "sslEnforcement": "Enabled",
                 "version": "[parameters('version')]",
@@ -183,15 +287,15 @@
             },
             "resources": [
                 {
-                    "name": "[concat('Allow', parameters('existingVnetName'))]",
+                    "name": "[concat('Allow', variables('virtualNetworkName'))]",
                     "type": "virtualNetworkRules",
                     "apiVersion": "2017-12-01",
                     "properties": {
-                        "virtualNetworkSubnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', parameters('existingVnetName'),  parameters('existingSubnetName'))]",
+                        "virtualNetworkSubnetId": "[variables('gatewaySubnetRef')]",
                         "ignoreMissingVnetServiceEndpoint": true
                     },
                     "dependsOn": [
-                        "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('serverName'))]"
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
                     ]
                 }
             ]
@@ -199,11 +303,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageAccountName')]",
-            "apiVersion": "2017-06-01",
+            "apiVersion": "2019-04-01",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "[variables('storageAccountSkuName')]",
-                "tier": "[variables('storageAccountSkuType')]"
+                "name": "[variables('storageAccountSkuName')]"
             },
             "kind": "[variables('storageAccountKind')]",
             "properties": {}
@@ -211,8 +314,11 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[variables('nicName')]",
-            "apiVersion": "2016-09-01",
+            "apiVersion": "2019-04-01",
             "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
             "properties": {
                 "primary": true,
                 "enableAcceleratedNetworking": true,
@@ -221,7 +327,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[resourceId(parameters('existingVnetResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubNetName'))]"
+                                "id": "[variables('gatewaySubnetRef')]"
                             },
                             "privateIPAddress": "[parameters('privateIPAddress')]",
                             "privateIPAllocationMethod": "Static"
@@ -233,12 +339,12 @@
         {
             "type": "Microsoft.Compute/virtualMachines",
             "name": "[variables('vmName')]",
-            "apiVersion": "2017-03-30",
+            "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-                "[concat('Microsoft.DBforPostgreSQL/servers/', parameters('serverName'))]"
+                "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -286,7 +392,7 @@
                 {
                     "type": "extensions",
                     "name": "CustomScriptExtension",
-                    "apiVersion": "2017-03-30",
+                    "apiVersion": "2019-03-01",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
@@ -302,11 +408,17 @@
                             ]
                         },
                         "protectedSettings": {
-                            "commandToExecute": "[concat('bash configure-nginx.sh \"', parameters('serverName'), '\"')]"
+                            "commandToExecute": "[concat('bash configure-nginx.sh \"', variables('postgresServerName'), '\"')]"
                         }
                     }
                 }
             ]
         }
-    ]
+    ],
+    "outputs": {
+        "psqlCommand": {
+            "type": "string",
+            "value": "[concat('psql \"host=', parameters('privateIPAddress'), ' port=5432 dbname=postgres user=', parameters('postgresUsername'), '@', variables('postgresServerName'), '\"' )]"
+        }
+    }
 }
