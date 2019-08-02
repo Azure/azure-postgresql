@@ -93,13 +93,6 @@
                 "description": "The prefix for the GatewaySubnet where the VirtualNetworkGateway will be deployed. This must be at least /29."
             }
         },
-        "gatewaySku": {
-            "type": "string",
-            "defaultValue": "Basic",
-            "metadata": {
-                "description": "The Sku of the Gateway. This must be one of Basic, Standard or HighPerformance."
-            }
-        },
         "vpnClientAddressPoolPrefix": {
             "type": "string",
             "defaultValue": "172.18.0.0/24",
@@ -123,7 +116,7 @@
         },
         "privateIPAddress": {
             "type": "string",
-            "defaultValue": "192.168.100.5",
+            "defaultValue": "192.168.100.20",
             "metadata": {
                 "description": "Private IP address of the Nginx VM"
             }
@@ -231,8 +224,8 @@
                     }
                 ],
                 "sku": {
-                    "name": "[parameters('gatewaySku')]",
-                    "tier": "[parameters('gatewaySku')]"
+                    "name": "HighPerformance",
+                    "tier": "HighPerformance"
                 },
                 "gatewayType": "Vpn",
                 "vpnType": "RouteBased",
