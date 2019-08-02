@@ -29,13 +29,13 @@ Once you have deployed the ARM Template **successfully without any errors**, you
 
 
 ```
-psql "host={privateIPAddress} port=5432 dbname={your_database} user={your_username}"
+psql "host={privateIPAddress} port=5432 dbname={your_database} user={your_username} sslmode=require"
 ```
 
 Example : 
 
 ```
-psql "host=10.3.0.5 port=5432 dbname=postgres user=pguser@p2sdemoPG"
+psql "host=10.3.0.5 port=5432 dbname=postgres user=pguser@p2sdemoPG sslmode=require"
 ```
 
 ## Contribution 

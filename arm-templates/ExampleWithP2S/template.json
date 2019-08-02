@@ -417,7 +417,7 @@
     "outputs": {
         "psqlCommand": {
             "type": "string",
-            "value": "[concat('psql \"host=', parameters('privateIPAddress'), ' port=5432 dbname=postgres user=', parameters('postgresUsername'), '@', variables('postgresServerName'), '\"' )]"
+            "value": "[concat('psql \"host=', parameters('privateIPAddress'), ' port=5432 dbname=postgres user=', parameters('postgresUsername'), '@', variables('postgresServerName'), ' sslmode=require\"' )]"
         }
     }
 }
