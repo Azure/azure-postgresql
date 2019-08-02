@@ -164,9 +164,6 @@
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
         "gatewayName": "[concat(parameters('dnsLabelPrefix'), 'GW')]",
         "gatewayPublicIPName": "[concat(parameters('dnsLabelPrefix'), 'pip')]",
-        "storageAccountName": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]",
-        "storageAccountSkuName": "Standard_LRS",
-        "storageAccountKind": "Storage",
         "vmName": "[concat(parameters('dnsLabelPrefix'), 'NGINX')]",
         "vmSize": "Standard_D3_v2",
         "scriptsUri": "[uri(deployment().properties.templateLink.uri, '.')]",
@@ -323,17 +320,6 @@
             ]
         },
         {
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[variables('storageAccountName')]",
-            "apiVersion": "2019-04-01",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "[variables('storageAccountSkuName')]"
-            },
-            "kind": "[variables('storageAccountKind')]",
-            "properties": {}
-        },
-        {
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[variables('nicName')]",
             "apiVersion": "2019-04-01",
@@ -364,7 +350,6 @@
             "apiVersion": "2019-03-01",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
                 "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
             ],
@@ -405,8 +390,7 @@
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
-                        "enabled": true,
-                        "storageUri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob)]"
+                        "enabled": false
                     }
                 }
             },
