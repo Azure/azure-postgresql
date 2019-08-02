@@ -163,6 +163,7 @@
         "subnetName": "default",
         "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
         "gatewayName": "[concat(parameters('dnsLabelPrefix'), 'GW')]",
+        "gatewayPublicIPName": "[concat(parameters('dnsLabelPrefix'), 'pip')]",
         "storageAccountName": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]",
         "storageAccountSkuName": "Standard_LRS",
         "storageAccountKind": "Storage",
@@ -220,10 +221,20 @@
         },
         {
             "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('gatewayPublicIPName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },
+        {
+            "apiVersion": "2019-04-01",
             "type": "Microsoft.Network/virtualNetworkGateways",
             "name": "[variables('gatewayName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('gatewayPublicIPName'))]",
                 "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
             ],
             "properties": {
@@ -233,6 +244,9 @@
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
                                 "id": "[variables('gatewaySubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('gatewayPublicIPName'))]"
                             }
                         },
                         "name": "vnetGatewayConfig"
