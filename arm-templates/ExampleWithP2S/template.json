@@ -81,14 +81,21 @@
         },
         "vnetAddressPrefix": {
             "type": "string",
-            "defaultValue": "192.168.100.0/24",
+            "defaultValue": "10.3.0.0/16",
             "metadata": {
                 "description": "Address space for the VNet."
             }
         },
+        "defaultSubnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.3.0.0/24",
+            "metadata": {
+                "description": "The prefix for the default subnet where the NGINX VM and PostgreSQL Server will be deployed."
+            }
+        },
         "gatewaySubnetPrefix": {
             "type": "string",
-            "defaultValue": "192.168.100.16/28",
+            "defaultValue": "10.3.200.0/29",
             "metadata": {
                 "description": "The prefix for the GatewaySubnet where the VirtualNetworkGateway will be deployed. This must be at least /29."
             }
@@ -116,7 +123,7 @@
         },
         "privateIPAddress": {
             "type": "string",
-            "defaultValue": "192.168.100.20",
+            "defaultValue": "10.3.0.5",
             "metadata": {
                 "description": "Private IP address of the Nginx VM"
             }
@@ -153,6 +160,8 @@
         "nicName": "[concat(parameters('dnsLabelPrefix'), 'VMNic')]",
         "postgresServerName": "[concat(parameters('dnsLabelPrefix'), 'PG')]",
         "virtualNetworkName": "[concat(parameters('dnsLabelPrefix'), 'VNET')]",
+        "subnetName": "default",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
         "gatewayName": "[concat(parameters('dnsLabelPrefix'), 'GW')]",
         "storageAccountName": "[concat(parameters('dnsLabelPrefix'), uniquestring(resourceGroup().id))]",
         "storageAccountSkuName": "Standard_LRS",
@@ -187,9 +196,9 @@
                 },
                 "subnets": [
                     {
-                        "name": "GatewaySubnet",
+                        "name": "[variables('subnetName')]",
                         "properties": {
-                            "addressPrefix": "[parameters('gatewaySubnetPrefix')]",
+                            "addressPrefix": "[parameters('defaultSubnetPrefix')]",
                             "serviceEndpoints": [
                                 {
                                     "service": "Microsoft.Sql",
@@ -198,6 +207,12 @@
                                     ]
                                 }
                             ]
+                        }
+                    },
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('gatewaySubnetPrefix')]"
                         }
                     }
                 ]
@@ -284,7 +299,7 @@
                     "type": "virtualNetworkRules",
                     "apiVersion": "2017-12-01",
                     "properties": {
-                        "virtualNetworkSubnetId": "[variables('gatewaySubnetRef')]",
+                        "virtualNetworkSubnetId": "[variables('subnetRef')]",
                         "ignoreMissingVnetServiceEndpoint": true
                     },
                     "dependsOn": [
@@ -320,7 +335,7 @@
                         "name": "ipconfig1",
                         "properties": {
                             "subnet": {
-                                "id": "[variables('gatewaySubnetRef')]"
+                                "id": "[variables('subnetRef')]"
                             },
                             "privateIPAddress": "[parameters('privateIPAddress')]",
                             "privateIPAllocationMethod": "Static"
