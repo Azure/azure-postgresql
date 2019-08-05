@@ -1,0 +1,423 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "dnsLabelPrefix": {
+            "type": "string",
+            "maxLength": 10,
+            "defaultValue": "p2sdemo",
+            "metadata": {
+                "description": "Unique DNS Name Prefix for all the resources"
+            }
+        },
+        "postgresUsername": {
+            "type": "string",
+            "defaultValue": "pguser",
+            "metadata": {
+                "description": "User name for the PostgreSQL Server."
+            }
+        },
+        "postgresPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the PostgreSQL Server."
+            }
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of vCores"
+            }
+        },
+        "skuFamily": {
+            "type": "string",
+            "defaultValue": "Gen5",
+            "metadata": {
+                "description": "Hardware Generation"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "GP_Gen5_2",
+            "metadata": {
+                "description": "SKU Name"
+            }
+        },
+        "skuSizeMB": {
+            "type": "int",
+            "defaultValue": 51200,
+            "metadata": {
+                "description": "Storage Size"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "GeneralPurpose",
+            "metadata": {
+                "description": "SKU Tier"
+            }
+        },
+        "version": {
+            "type": "string",
+            "defaultValue": "10",
+            "metadata": {
+                "description": "PostgreSQL Version"
+            }
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 7,
+            "metadata": {
+                "description": "Backup Retention in Days"
+            }
+        },
+        "geoRedundantBackup": {
+            "type": "string",
+            "defaultValue": "Disabled",
+            "metadata": {
+                "description": "Geo Redundant Backup"
+            }
+        },
+        "vnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.3.0.0/16",
+            "metadata": {
+                "description": "Address space for the VNet."
+            }
+        },
+        "defaultSubnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.3.0.0/24",
+            "metadata": {
+                "description": "The prefix for the default subnet where the NGINX VM and PostgreSQL Server will be deployed."
+            }
+        },
+        "gatewaySubnetPrefix": {
+            "type": "string",
+            "defaultValue": "10.3.200.0/29",
+            "metadata": {
+                "description": "The prefix for the GatewaySubnet where the VirtualNetworkGateway will be deployed. This must be at least /29."
+            }
+        },
+        "vpnClientAddressPoolPrefix": {
+            "type": "string",
+            "defaultValue": "172.18.0.0/24",
+            "metadata": {
+                "description": "The IP address range from which VPN clients will receive an IP address when connected. Range specified must not overlap with on-premise network."
+            }
+        },
+        "clientRootCertName": {
+            "type": "string",
+            "defaultValue": "P2SRootCert",
+            "metadata": {
+                "description": "The name of the client root certificate used to authenticate VPN clients. This is a common name used to identify the root cert."
+            }
+        },
+        "clientRootCertData": {
+            "type": "string",
+            "defaultValue": "MIICPzCCAaygAwIBAgIQG4WTVfGKqLxMRtKuPFJ4cDAJBgUrDgMCHQUAMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTAeFw0xMTA2MDkyMzA0NDBaFw0zOTEyMzEyMzU5NTlaMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAtPSIGf2+yUDyT8aLB6sZBg2jXKRKfFS+VnM8JX1JxR2bHb5J8vUy8O6WCwcpxqCHpSV2PIXEWNBM2ozGjcaBzMCi53Q+EQvdaGwF7LJHKSL9Iv//uFlkGoKdz6r8yL9HebTH+F6OvIQ8qNxHKtZgRhqB0gMv0dS/qigGmLcDenUCAwEAAaNkMGIwYAYDVR0BBFkwV4AQkVkBKQrptsuAIFPicVM+haExMC8xLTArBgNVBAMTJFN5ZG5leUF6dXJlQXV0aGVudGljYXRpb25DZXJ0aWZpY2F0ZYIQG4WTVfGVqLxMRtKuPFJ4cDAJBgUrDgMCHQUAA4GBAElx6ydJNP8EjIbgppSY39lJKnMWBVqP8u0HXuNc3LkGUTBu0CYNhhR+MM969uX2ykiUkENeGUHykThWJdoAp+yyPWK+/OT9poE5cvNyX5W8ql4vRgeGMew1VQzTHCSx+ZvXtKeSa31Kgf7ZeXQ/3mty1MQUKilCIZPHXqx5GILl",
+            "metadata": {
+                "description": "Client root certificate data used to authenticate VPN clients."
+            }
+        },
+        "privateIPAddress": {
+            "type": "string",
+            "defaultValue": "10.3.0.5",
+            "metadata": {
+                "description": "Private IP address of the Nginx VM"
+            }
+        },
+        "vmUsername": {
+            "type": "string",
+            "defaultValue": "sshuser",
+            "metadata": {
+                "description": "User name for the Virtual Machine."
+            }
+        },
+        "authenticationType": {
+            "type": "string",
+            "defaultValue": "password",
+            "allowedValues": [
+                "sshPublicKey",
+                "password"
+            ],
+            "metadata": {
+                "description": "Type of authentication to use on the Virtual Machine. SSH key is recommended."
+            }
+        },
+        "vmPasswordOrKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "SSH Key or password for the Virtual Machine. SSH key is recommended."
+            }
+        }
+    },
+    "variables": {
+        "imagePublisher": "Canonical",
+        "imageOffer": "UbuntuServer",
+        "ubuntuOSVersion": "19.04",
+        "nicName": "[concat(parameters('dnsLabelPrefix'), 'VMNic')]",
+        "postgresServerName": "[concat(parameters('dnsLabelPrefix'), 'PG')]",
+        "virtualNetworkName": "[concat(parameters('dnsLabelPrefix'), 'VNET')]",
+        "subnetName": "default",
+        "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
+        "gatewayName": "[concat(parameters('dnsLabelPrefix'), 'GW')]",
+        "gatewayPublicIPName": "[concat(parameters('dnsLabelPrefix'), 'pip')]",
+        "vmName": "[concat(parameters('dnsLabelPrefix'), 'NGINX')]",
+        "vmSize": "Standard_D3_v2",
+        "scriptsUri": "[uri(deployment().properties.templateLink.uri, '.')]",
+        "gatewaySubnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), 'GatewaySubnet')]",
+        "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+                "publicKeys": [
+                    {
+                        "path": "[concat('/home/', parameters('vmUsername'), '/.ssh/authorized_keys')]",
+                        "keyData": "[parameters('vmPasswordOrKey')]"
+                    }
+                ]
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('virtualNetworkName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetAddressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('defaultSubnetPrefix')]",
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Sql",
+                                    "locations": [
+                                        "[resourceGroup().location]"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('gatewaySubnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('gatewayPublicIPName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },
+        {
+            "apiVersion": "2019-04-01",
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "name": "[variables('gatewayName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('gatewayPublicIPName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('gatewaySubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('gatewayPublicIPName'))]"
+                            }
+                        },
+                        "name": "vnetGatewayConfig"
+                    }
+                ],
+                "sku": {
+                    "name": "HighPerformance",
+                    "tier": "HighPerformance"
+                },
+                "gatewayType": "Vpn",
+                "vpnType": "RouteBased",
+                "enableBgp": "false",
+                "vpnClientConfiguration": {
+                    "vpnClientProtocols": [
+                        "OpenVPN",
+                        "IkeV2"
+                    ],
+                    "vpnClientAddressPool": {
+                        "addressPrefixes": [
+                            "[parameters('vpnClientAddressPoolPrefix')]"
+                        ]
+                    },
+                    "vpnClientRootCertificates": [
+                        {
+                            "name": "[parameters('clientRootCertName')]",
+                            "properties": {
+                                "PublicCertData": "[parameters('clientRootCertData')]"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]",
+                "size": "[parameters('skuSizeMB')]",
+                "family": "[parameters('skuFamily')]"
+            },
+            "kind": "",
+            "name": "[variables('postgresServerName')]",
+            "apiVersion": "2017-12-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "sslEnforcement": "Enabled",
+                "version": "[parameters('version')]",
+                "administratorLogin": "[parameters('postgresUsername')]",
+                "administratorLoginPassword": "[parameters('postgresPassword')]",
+                "storageProfile": {
+                    "storageMB": "[parameters('skuSizeMB')]",
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                }
+            },
+            "resources": [
+                {
+                    "name": "[concat('Allow', variables('virtualNetworkName'))]",
+                    "type": "virtualNetworkRules",
+                    "apiVersion": "2017-12-01",
+                    "properties": {
+                        "virtualNetworkSubnetId": "[variables('subnetRef')]",
+                        "ignoreMissingVnetServiceEndpoint": true
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "apiVersion": "2019-04-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "primary": true,
+                "enableAcceleratedNetworking": true,
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAddress": "[parameters('privateIPAddress')]",
+                            "privateIPAllocationMethod": "Static"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('vmName')]",
+            "apiVersion": "2019-03-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+                "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgresServerName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[variables('vmName')]",
+                    "adminUsername": "[parameters('vmUsername')]",
+                    "adminPassword": "[parameters('vmPasswordOrKey')]",
+                    "linuxConfiguration": "[if(equals(parameters('authenticationType'), 'password'), json('null'), variables('linuxConfiguration'))]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('ubuntuOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": false
+                    }
+                }
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "CustomScriptExtension",
+                    "apiVersion": "2019-03-01",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Extensions",
+                        "type": "CustomScript",
+                        "typeHandlerVersion": "2.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[concat(variables('scriptsUri'), 'configure-nginx.sh')]"
+                            ]
+                        },
+                        "protectedSettings": {
+                            "commandToExecute": "[concat('bash configure-nginx.sh \"', variables('postgresServerName'), '\"')]"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {
+        "psqlCommand": {
+            "type": "string",
+            "value": "[concat('psql \"host=', parameters('privateIPAddress'), ' port=5432 dbname=postgres user=', parameters('postgresUsername'), '@', variables('postgresServerName'), ' sslmode=require\"' )]"
+        }
+    }
+}
