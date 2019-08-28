@@ -8,35 +8,40 @@
         "administratorLoginPassword": {
             "type": "securestring"
         },
-        "location": {
-            "type": "string"
-        },
         "serverName": {
             "type": "string"
         },
         "skuCapacity": {
-            "type": "int"
+            "type": "int",
+            "defaultValue": 2
         },
         "skuFamily": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Gen5"
         },
         "skuName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "GP_Gen5_2"
         },
         "skuSizeMB": {
-            "type": "int"
+            "type": "int",
+            "defaultValue": 51200
         },
         "skuTier": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "GeneralPurpose"
         },
         "version": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "9.6"
         },
         "backupRetentionDays": {
-            "type": "int"
+            "type": "int",
+            "defaultValue": 7
         },
         "geoRedundantBackup": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "Disabled"
         }
     },
     "resources": [
@@ -52,7 +57,7 @@
             "kind": "",
             "name": "[parameters('serverName')]",
             "apiVersion": "2017-12-01",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "version": "[parameters('version')]",
                 "administratorLogin": "[parameters('administratorLogin')]",
