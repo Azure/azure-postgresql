@@ -78,7 +78,7 @@
             ],
             "properties": {
                 "level": "CanNotDelete",
-                "notes": "['PostgreSQL Server ', concat(parameters('serverName'), ' should not be deleted.')]"
+                "notes": "[concat('PostgreSQL Server ', parameters('serverName'), ' should not be deleted.')]"
             }
         }
     ]
