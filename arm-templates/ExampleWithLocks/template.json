@@ -72,7 +72,7 @@
         {
             "type": "Microsoft.DBforPostgreSQL/servers/providers/locks",
             "apiVersion": "2016-09-01",
-            "name": "[concat(parameters('serverName'), 'CanNotDeleteLock')]",
+            "name": "[concat(parameters('serverName'), '/Microsoft.Authorization/serverLock')]",
             "dependsOn": [
                 "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
             ],
