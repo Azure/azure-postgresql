@@ -21,13 +21,13 @@
             "value": "GP_Gen5_2"
         },
         "skuSizeMB": {
-            "value": 5120
+            "value": 51200
         },
         "skuTier": {
             "value": "GeneralPurpose"
         },
         "version": {
-            "value": "9.6"
+            "value": "10"
         },
         "backupRetentionDays": {
             "value": 7
