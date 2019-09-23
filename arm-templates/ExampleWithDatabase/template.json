@@ -1,0 +1,98 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "administratorLogin": {
+      "type": "string"
+    },
+    "administratorLoginPassword": {
+      "type": "securestring"
+    },
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "skuCapacity": {
+      "type": "int"
+    },
+    "skuFamily": {
+      "type": "string"
+    },
+    "skuName": {
+      "type": "string"
+    },
+    "skuSizeMB": {
+      "type": "int"
+    },
+    "skuTier": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "backupRetentionDays": {
+      "type": "int"
+    },
+    "geoRedundantBackup": {
+      "type": "string"
+    },
+    "databases": {
+      "type":"object"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-12-01",
+      "kind": "",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "properties": {
+        "version": "[parameters('version')]",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "storageProfile": {
+          "storageMB": "[parameters('skuSizeMB')]",
+          "backupRetentionDays": "[parameters('backupRetentionDays')]",
+          "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+        }
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "[parameters('skuTier')]",
+        "capacity": "[parameters('skuCapacity')]",
+        "size": "[parameters('skuSizeMB')]",
+        "family": "[parameters('skuFamily')]"
+      },
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "resources": [
+       {
+          "type": "Microsoft.DBforPostgreSQL/servers/databases",
+          "apiversion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('databases').properties[0].name)]",
+          "dependsOn": [
+              "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
+          ],
+          "properties": {
+              "charset": "[parameters('databases').properties[0].charset]",
+              "collation": "[parameters('databases').properties[0].collation]"
+          }
+        },
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/databases",
+          "apiversion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('databases').properties[1].name)]",
+          "dependsOn": [
+              "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
+          ],
+          "properties": {
+            "charset": "[parameters('databases').properties[1].charset]",
+            "collation": "[parameters('databases').properties[1].collation]"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": {}
+}
