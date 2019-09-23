@@ -49,7 +49,7 @@
                     {
                         "name": "sampledb2",
                         "charset": "SQL_ASCII",
-                        "collation": "English_United States.1252"
+                        "collation": "fr-FR"
                     }
                 ]
             }
