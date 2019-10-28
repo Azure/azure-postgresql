@@ -42,9 +42,9 @@
             "value": {
                 "properties": [
                     {
-                        "name": "AllowAll",
-                        "startIpAddress": "0.0.0.0",
-                        "endIpAddress": "255.255.255.255"
+                        "name": "AllowRange",
+                        "startIpAddress": "128.0.0.0",
+                        "endIpAddress": "191.255.255.255"
                     },
                     {
                         "name": "AllowOnlyOne",
