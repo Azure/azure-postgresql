@@ -211,6 +211,9 @@ export PGDATABASE=$SOURCE_DATABASE_NAME
 # Create a dump file of the source db
 pg_dump -Fc -v --host="$SOURCE_SERVER_NAME.postgres.database.azure.com" --username="$SOURCE_USERNAME@$SOURCE_SERVER_NAME" --file="$SOURCE_DATABASE_NAME.dump"
 
+# Delete source firewall rule after dump
+az postgres server firewall-rule delete -g "$SOURCE_RESOURCE_GROUP_NAME" -s "$SOURCE_SERVER_NAME" -n "$FIREWALLRULENAME" --yes
+
 # check that filesize of dump file is greater than 0
 if ! [ -s "$SOURCE_DATABASE_NAME.dump" ]; then
   echo 'Error during pg_dump' >&2
@@ -238,8 +241,7 @@ export PGDATABASE=$TARGET_DATABASE_NAME
 # Restore the database using source database dump file
 pg_restore -v --no-owner --host="$TARGET_SERVER_NAME.postgres.database.azure.com" --port=5432 --username="$TARGET_USERNAME@$TARGET_SERVER_NAME" "$SOURCE_DATABASE_NAME.dump"
 
-# Delete firewall rules and local dump file
-az postgres server firewall-rule delete -g "$SOURCE_RESOURCE_GROUP_NAME" -s "$SOURCE_SERVER_NAME" -n "$FIREWALLRULENAME" --yes
+# Delete target firewall rule and local dump file
 az postgres server firewall-rule delete -g "$TARGET_RESOURCE_GROUP_NAME" -s "$TARGET_SERVER_NAME" -n "$FIREWALLRULENAME" --yes
 rm -f "$SOURCE_DATABASE_NAME.dump"
 
