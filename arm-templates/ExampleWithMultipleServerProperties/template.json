@@ -1,0 +1,136 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "administratorLogin": {
+      "type": "string"
+    },
+    "administratorLoginPassword": {
+      "type": "securestring"
+    },
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "skuCapacity": {
+      "type": "int"
+    },
+    "skuFamily": {
+      "type": "string"
+    },
+    "skuName": {
+      "type": "string"
+    },
+    "skuSizeMB": {
+      "type": "int"
+    },
+    "skuTier": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "backupRetentionDays": {
+      "type": "int"
+    },
+    "geoRedundantBackup": {
+      "type": "string"
+    },
+    "firewallRules": {
+      "type": "object"
+    },
+    "virtualNetworkRules": {
+      "type": "object"
+    },
+    "serverConfigurations": {
+      "type": "object"
+    },
+    "databases": {
+      "type": "object"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "apiVersion": "2017-12-01",
+      "kind": "",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "properties": {
+        "version": "[parameters('version')]",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "storageProfile": {
+          "storageMB": "[parameters('skuSizeMB')]",
+          "backupRetentionDays": "[parameters('backupRetentionDays')]",
+          "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+        }
+      },
+      "sku": {
+        "name": "[parameters('skuName')]",
+        "tier": "[parameters('skuTier')]",
+        "capacity": "[parameters('skuCapacity')]",
+        "size": "[parameters('skuSizeMB')]",
+        "family": "[parameters('skuFamily')]"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+          "apiVersion": "2017-12-01",
+          "location": "[parameters('location')]",
+          "name": "[concat(parameters('serverName'), '/', parameters('firewallRules').name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "[parameters('firewallRules').startIpAddress]",
+            "endIpAddress": "[parameters('firewallRules').endIpAddress]"
+          }
+        },
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/virtualNetworkRules",
+          "apiVersion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('virtualNetworkRules').name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]",
+            "[resourceId('Microsoft.DBforPostgreSQL/servers/firewallRules', parameters('serverName'), parameters('firewallRules').name)]"
+          ],
+          "properties": {
+            "virtualNetworkSubnetId": "[concat(parameters('virtualNetworkRules').virtualNetworksExternalid, parameters('virtualNetworkRules').virtualNetworkSubnetId)]",
+            "ignoreMissingVnetServiceEndpoint": "[parameters('virtualNetworkRules').ignoreMissingVnetServiceEndpoint]"
+          }
+        },
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/configurations",
+          "apiVersion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('serverConfigurations').configurations[0].name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]",
+            "[resourceId('Microsoft.DBforPostgreSQL/servers/virtualNetworkRules', parameters('serverName'), parameters('virtualNetworkRules').name)]"
+          ],
+          "properties": {
+            "value": "[parameters('serverConfigurations').configurations[0].value]",
+            "source": "[parameters('serverConfigurations').configurations[0].source]"
+          }
+        },
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/databases",
+          "apiversion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('databases').name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]",
+            "[resourceId('Microsoft.DBforPostgreSQL/servers/configurations', parameters('serverName'), parameters('serverConfigurations').configurations[0].name)]"
+          ],
+          "properties": {
+            "charset": "[parameters('databases').charset]",
+            "collation": "[parameters('databases').collation]"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": {
+  }
+}
