@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmUsername": {
+            "type": "string"
+        },	
+		"vmPassword": {
+            "type": "securestring"
+        },
+        "pgUsername": {
+            "type": "string"
+        },
+        "pgPassword": {
+             "type": "securestring"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "linkedTemplate1",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate1.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "vmUsername":{
+                        "value": "[parameters('vmUsername')]"
+                    },
+                    "vmPassword":{
+                        "value": "[parameters('vmPassword')]"
+                    },
+                    "pgUsername":{
+                        "value": "[parameters('pgUsername')]"
+                    },
+                    "pgPassword":{
+                        "value": "[parameters('pgPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "name": "linkedTemplate2",
+            "dependsOn": [
+                "linkedTemplate1"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate2.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "privateEndpointNetworkInterface":{
+                        "value": "[reference('linkedTemplate1').outputs.privateEndpointNetworkInterface.value]"
+                    },
+                    "aRecord":{
+                        "value": "[reference('linkedTemplate1').outputs.aRecord.value]"
+                    }
+                }
+            }
+        }
+    ]
+}
