@@ -1,0 +1,274 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmUsername": {
+            "type": "string"
+        },	
+		"vmPassword": {
+            "type": "securestring"
+        },
+        "pgUsername": {
+            "type": "string"
+        },
+        "pgPassword": {
+             "type": "securestring"
+        }
+    },
+	"variables": {
+        "networkSecurityGroupName": "[concat('PL-Client-NSG-',uniqueString(resourceGroup().id))]",
+		"virtualNetworkName": "[concat('PL-Client-VNET-',uniqueString(resourceGroup().id))]",
+		"addressPrefix": "10.1.0.0/16",
+        "subnetName1": "subnet1",
+        "subnetPrefix1": "10.1.1.0/24",
+		"subnetName2": "subnet2",
+        "subnetPrefix2": "10.1.2.0/24",
+		"subnetName3": "subnet3",
+        "subnetPrefix3": "10.1.3.0/24",
+		"gatewaySubnetName": "GatewaySubnet",
+        "gatewaySubnetPrefix": "10.1.250.0/24",
+        "publicIPName1": "[concat('PL-Client-Public-IP-',uniqueString(resourceGroup().id))]",
+        "networkInterfaceName1": "[concat('PL-Client-NIC-',uniqueString(resourceGroup().id))]",
+        "virtualMachineName1": "[concat('VM', uniqueString(resourceGroup().id))]",
+        "privateZoneName": "privatelink.postgres.database.azure.com",
+        "postgreSqlServerName": "[concat('pg-',uniqueString(resourceGroup().id))]",
+        "postgreSqlServerResourceId": "[resourceId(resourceGroup().name,'Microsoft.DBforPostgreSQL/servers', variables('postgreSqlServerName'))]",
+        "groupId": "postgresqlServer",
+        "privateEndpointName": "[concat('MyPrivateEndpointPostgreSql-',uniqueString(resourceGroup().id))]",
+        "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+        "subnet1Ref": "[concat(variables('vnetId'), '/subnets/', variables('subnetName1'))]",
+        "subnet2Ref": "[concat(variables('vnetId'), '/subnets/', variables('subnetName2'))]"             
+    },
+	"resources": [
+		{
+            "name": "[variables('networkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2017-09-01",
+            "location": "[resourceGroup().location]",
+			"properties": {
+                "securityRules": [
+                    {
+                        "name": "RDPAccess",
+                        "properties": {
+                            "priority": 1000,
+                            "sourceAddressPrefix": "Internet",
+                            "protocol": "Tcp",
+                            "destinationPortRange": "3389",
+                            "access": "Allow",
+                            "direction": "Inbound",
+                            "sourcePortRange": "*",
+							"destinationAddressPrefix": "VirtualNetwork"
+                        }
+                    }						
+                ]
+            }
+        },
+		{
+            "name": "[variables('virtualNetworkName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-04-01",
+            "location": "[resourceGroup().location]",
+			"dependsOn": [
+				"[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('addressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName1')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetPrefix1')]",
+							"networkSecurityGroup" : { 
+								"id" : "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]" 
+							},
+							"privateEndpointNetworkPolicies": "Disabled",
+							"privateLinkServiceNetworkPolicies": "Disabled"
+                        }
+                    },
+					{
+                        "name": "[variables('subnetName2')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetPrefix2')]",
+							"privateEndpointNetworkPolicies": "Disabled",
+							"privateLinkServiceNetworkPolicies": "Disabled"
+                        }
+                    },
+					{
+                        "name": "[variables('subnetName3')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetPrefix3')]",
+							"privateEndpointNetworkPolicies": "Disabled",
+							"privateLinkServiceNetworkPolicies": "Disabled"
+                        }
+                    },
+					{
+                        "name": "[variables('gatewaySubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('gatewaySubnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+			"apiVersion": "2015-06-15",
+			"type": "Microsoft.Network/publicIPAddresses",
+			"name": "[variables('publicIPName1')]",
+			"location": "[resourceGroup().location]",
+			"properties": {
+				"publicIPAllocationMethod": "Static"
+			}
+		},
+		{
+            "name": "[variables('networkInterfaceName1')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2017-09-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPName1'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnet1Ref')]"
+                            },
+							"primary" : true,
+                            "privateIPAllocationMethod": "Dynamic",
+							"publicIPAddress": {
+								"id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPName1'))]"
+							}							
+                        }
+                    }
+                ]
+            }
+        },		
+		{
+            "name": "[variables('virtualMachineName1')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2016-04-30-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName1'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[variables('virtualMachineName1')]",
+                    "adminUsername": "[parameters('vmUsername')]",
+                    "adminPassword": "[parameters('vmPassword')]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS2_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName1'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[variables('privateZoneName')]",
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2018-09-01",
+            "location": "global",
+			"properties": {                
+            }
+        },
+		{
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2018-09-01",
+            "name": "[concat(variables('privateZoneName'), '/myvnetlink')]",
+            "location": "global",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones', variables('privateZoneName'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[variables('vnetId')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "sku": {
+              "name": "GP_Gen5_2",
+              "tier": "GeneralPurpose",
+              "capacity": 2,
+              "size": "51200",
+              "family": "Gen5"
+            },
+            "kind": "",
+            "name": "[variables('postgreSqlServerName')]",
+            "apiVersion": "2017-12-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "version": "10",
+              "administratorLogin": "[parameters('pgUsername')]",
+              "administratorLoginPassword": "[parameters('pgPassword')]",
+              "storageProfile": {
+                "storageMB": 51200,
+                "backupRetentionDays": 7,
+                "geoRedundantBackup": "Disabled"
+              }
+            }
+        },
+        {
+            "name": "[variables('privateEndpointName')]",
+            "type": "Microsoft.Network/privateEndpoints",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
+                "[concat('Microsoft.DBforPostgreSQL/servers/', variables('postgreSqlServerName'))]"
+            ],
+            "apiVersion": "2019-04-01",
+            "location": "[resourceGroup().location]",
+			"properties": {
+                "subnet": {
+					"id": "[variables('subnet2Ref')]"
+				},
+				"privateLinkServiceConnections": [
+                    {
+                        "name": "MyConnection",
+                        "properties": {
+                            "privateLinkServiceId": "[variables('postgreSqlServerResourceId')]",
+                            "groupIds": [ "[variables('groupId')]" ],
+                            "requestMessage": ""
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+		"privateEndpointNetworkInterface": {
+		  "type": "string",
+		  "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('privateEndpointName'))).networkInterfaces[0].id]"
+        },
+        "aRecord": {
+            "type": "string",
+            "value": "[concat(variables('privateZoneName'), '/', variables('postgreSqlServerName'))]"
+        }      
+	}
+}

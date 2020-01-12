@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aRecord": {
+            "type": "string"
+        },
+        "privateEndpointNetworkInterface": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones/A",
+            "apiVersion": "2018-09-01",
+            "name": "[parameters('aRecord')]",
+            "properties": {
+                "ttl": 300,
+                "aRecords": [
+                    {
+                        "ipv4Address": "[reference(parameters('privateEndpointNetworkInterface'), '2019-09-01').ipConfigurations[0].properties.privateIPAddress]"
+                    }
+                ]
+            }
+        }
+    ]
+}

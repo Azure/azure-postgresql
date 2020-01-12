@@ -1,0 +1,38 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+		"privateEndpointName": {
+            "type": "string"
+        },
+		"postgreSqlServerResourceId": {
+            "type": "string"
+        },
+		"subnetId": {
+            "type": "string"
+        }
+    },
+	"resources": [
+		{
+            "name": "[parameters('privateEndpointName')]",
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2019-04-01",
+            "location": "[resourceGroup().location]",
+			"properties": {
+                "subnet": {
+					"id": "[parameters('subnetId')]"
+				},
+				"privateLinkServiceConnections": [
+                    {
+                        "name": "MyConnection",
+                        "properties": {
+                            "privateLinkServiceId": "[parameters('postgreSqlServerResourceId')]",
+                            "groupIds": [ "postgresqlServer" ],
+                            "requestMessage": ""
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
