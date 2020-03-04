@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "administratorLogin": {
+      "value": null
+    },
+    "administratorLoginPassword": {
+      "value": null
+    },
+    "location": {
+      "value": null
+    },
+    "serverName": {
+      "value": "ServerName"
+    },
+    "skuCapacity": {
+      "value": 2
+    },
+    "skuFamily": {
+      "value": "Gen5"
+    },
+    "skuName": {
+      "value": "GP_Gen5_2"
+    },
+    "skuSizeMB": {
+      "value": 5120
+    },
+    "skuTier": {
+      "value": "GeneralPurpose"
+    },
+    "version": {
+      "value": "10.0"
+    },
+    "backupRetentionDays": {
+      "value": 7
+    },
+    "geoRedundantBackup": {
+      "value": "Disabled"
+    },
+    "keyVaultName": {
+      "value": null
+    },
+    "keyVaultResourceGroupName": {
+      "value": null
+    },
+    "keyName": {
+      "value": null
+    },
+    "keyVersion": {
+      "value": null
+    }
+  }
+}
