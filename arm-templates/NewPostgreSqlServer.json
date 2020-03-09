@@ -49,6 +49,7 @@
         "version": "[parameters('version')]",
         "administratorLogin": "[parameters('administratorLogin')]",
         "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "minimumTlsVersion": "TLSEnforcementDisabled",
         "storageProfile": {
           "storageMB": "[parameters('skuSizeMB')]",
           "backupRetentionDays": "[parameters('backupRetentionDays')]",
