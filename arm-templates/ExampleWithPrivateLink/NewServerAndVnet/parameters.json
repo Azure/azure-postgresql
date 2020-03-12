@@ -4,15 +4,15 @@
     "parameters": {
         "vmUsername": {
             "value": "azureuser"
-        },	
-		"vmPassword": {
+        },
+        "vmPassword": {
             "value": "GEN-PASSWORD"
         },
         "pgUsername": {
             "value": "pguser"
         },
         "pgPassword": {
-             "value": "GEN-PASSWORD"
+            "value": "GEN-PASSWORD"
         }
     }
 }

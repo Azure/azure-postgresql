@@ -5,10 +5,10 @@
         "privateEndpointName": {
             "value": "MyPrivateEndpoint"
         },
-		"postgreSqlServerResourceId": {
+        "postgreSqlServerResourceId": {
             "value": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.DBforPostgreSQL/servers/mypgserver"
         },
-		"subnetId": {
+        "subnetId": {
             "value": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNET/subnets/mysubnet"
         }
     }
