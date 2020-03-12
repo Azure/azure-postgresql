@@ -4,15 +4,15 @@
     "parameters": {
         "vmUsername": {
             "type": "string"
-        },	
-		"vmPassword": {
+        },
+        "vmPassword": {
             "type": "securestring"
         },
         "pgUsername": {
             "type": "string"
         },
         "pgPassword": {
-             "type": "securestring"
+            "type": "securestring"
         }
     },
     "variables": {},
@@ -27,17 +27,17 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate1.json')]",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters":{
-                    "vmUsername":{
+                "parameters": {
+                    "vmUsername": {
                         "value": "[parameters('vmUsername')]"
                     },
-                    "vmPassword":{
+                    "vmPassword": {
                         "value": "[parameters('vmPassword')]"
                     },
-                    "pgUsername":{
+                    "pgUsername": {
                         "value": "[parameters('pgUsername')]"
                     },
-                    "pgPassword":{
+                    "pgPassword": {
                         "value": "[parameters('pgPassword')]"
                     }
                 }
@@ -56,11 +56,11 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'linkedTemplate2.json')]",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters":{
-                    "privateEndpointNetworkInterface":{
+                "parameters": {
+                    "privateEndpointNetworkInterface": {
                         "value": "[reference('linkedTemplate1').outputs.privateEndpointNetworkInterface.value]"
                     },
-                    "aRecord":{
+                    "aRecord": {
                         "value": "[reference('linkedTemplate1').outputs.aRecord.value]"
                     }
                 }
