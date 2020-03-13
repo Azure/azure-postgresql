@@ -32,8 +32,11 @@
         "backupRetentionDays": {
             "value": 7
         },
+        "sslEnforcement": {
+            "value": "Enabled"
+        },
         "geoRedundantBackup": {
-            "value": "Disabled"
+            "value": "Enabled"
         },
         "publicNetworkAccess": {
             "value": "Enabled"

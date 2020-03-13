@@ -70,9 +70,24 @@
                 "description": "Backup Retention in Days"
             }
         },
+        "sslEnforcement": {
+            "type": "string",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Enabled",
+            "metadata": {
+                "description": "SSL Enforcement"
+            }
+        },
         "geoRedundantBackup": {
             "type": "string",
-            "defaultValue": "Disabled",
+            "allowedValues": [
+                "Enabled",
+                "Disabled"
+            ],
+            "defaultValue": "Enabled",
             "metadata": {
                 "description": "Geo Redundant Backup"
             }
@@ -82,7 +97,7 @@
             "allowedValues": [
                 "Enabled",
                 "Disabled"
-              ],
+            ],
             "defaultValue": "Enabled",
             "metadata": {
                 "description": "Public Network Access"
@@ -105,7 +120,7 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
-                "sslEnforcement": "Enabled",
+                "sslEnforcement": "[parameters('sslEnforcement')]",
                 "version": "[parameters('version')]",
                 "administratorLogin": "[parameters('postgresUsername')]",
                 "administratorLoginPassword": "[parameters('postgresPassword')]",
