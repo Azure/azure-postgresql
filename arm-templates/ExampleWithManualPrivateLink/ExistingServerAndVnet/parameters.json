@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpointName": {
+            "value": "MyPrivateEndpoint"
+        },
+        "postgreSqlServerResourceId": {
+            "value": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.DBforPostgreSQL/servers/mypgserver"
+        },
+        "subnetId": {
+            "value": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNET/subnets/mysubnet"
+        },
+        "requestMessage" : {
+            "value": "Please approve"
+        }
+    }
+}
