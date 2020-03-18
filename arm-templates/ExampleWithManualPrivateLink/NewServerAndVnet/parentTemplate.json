@@ -13,6 +13,9 @@
         },
         "pgPassword": {
             "type": "securestring"
+        },
+        "requestMessage": {
+            "type": "string"
         }
     },
     "variables": {},
@@ -39,6 +42,9 @@
                     },
                     "pgPassword": {
                         "value": "[parameters('pgPassword')]"
+                    },
+                    "requestMessage": {
+                        "value": "[parameters('requestMessage')]"
                     }
                 }
             }

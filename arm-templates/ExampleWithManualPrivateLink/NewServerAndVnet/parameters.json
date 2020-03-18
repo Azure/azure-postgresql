@@ -13,6 +13,9 @@
         },
         "pgPassword": {
             "value": "GEN-PASSWORD"
+        },
+        "requestMessage": {
+            "value": "Please approve"
         }
     }
 }
