@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "settingName": {
+            "type": "String"
+        },        
+        "serverName": {
+            "type": "String"
+        },
+        "workspaceId": {
+          "type": "String"
+        },
+        "storageAccountId": {
+          "type": "String"
+        },
+        "eventHubAuthorizationRuleId": {
+          "type": "String"
+        },
+        "eventHubName": {
+          "type": "String"
+        }
+    },
+    "resources": [
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
+          "apiVersion": "2017-05-01-preview",
+          "name": "[concat(parameters('serverName'),'/microsoft.insights/', parameters('settingName'))]",
+          "dependsOn": [],
+          "properties": {
+            "workspaceId": "[parameters('workspaceId')]",
+            "logs": [
+              {
+                "category": "PostgreSQLLogs",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreRuntimeStatistics",
+                "enabled": true
+              },
+              {
+                "category": "QueryStoreWaitStatistics",
+                "enabled": true
+              }
+            ],
+            "metrics": [
+              {
+                "category": "AllMetrics",
+                "enabled": true
+              }
+            ]
+          }
+        }
+    ]
+}
