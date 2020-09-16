@@ -1,4 +1,4 @@
-# Azure Database for PostgreSQL with CanNotDelete Lock
+# Azure Database for PostgreSQL with CPU Metric Alert
 
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-postgresql%2Fmaster%2Farm-templates%ExampleWithMetricAlert%2Ftemplate.json" target="_blank">
@@ -8,7 +8,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This ARM template CPU metrics alert with threshold 80% for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview) and trigger an email action when the alert is detected.
+This ARM template CPU metric alert with threshold 80% for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview) and trigger an email action when the alert is detected.
 
 **NOTE** : 
 
