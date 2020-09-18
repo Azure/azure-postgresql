@@ -8,7 +8,7 @@
     <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
-This ARM template CPU metric alert with threshold 80% for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview) and trigger an email action when the alert is detected.
+This ARM template creates CPU metric alert with threshold 80% for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview) and trigger an email action when the alert is detected.
 
 **NOTE** : 
 

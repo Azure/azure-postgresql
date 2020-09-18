@@ -1,55 +1,87 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "settingName": {
-            "type": "String"
-        },        
-        "serverName": {
-            "type": "String"
-        },
-        "workspaceId": {
-          "type": "String"
-        },
-        "storageAccountId": {
-          "type": "String"
-        },
-        "eventHubAuthorizationRuleId": {
-          "type": "String"
-        },
-        "eventHubName": {
-          "type": "String"
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serverName": {
+      "type": "String"
     },
-    "resources": [
+    "location": {
+      "type": "string"
+    },
+    "serverConfigurations": {
+      "type": "object"
+    },
+    "settingName": {
+      "type": "String"
+    },
+    "storageAccountId": {
+      "type": "String"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "apiVersion": "2017-12-01",
+      "name": "[parameters('serverName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+      },
+      "resources": [
         {
-          "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
-          "apiVersion": "2017-05-01-preview",
-          "name": "[concat(parameters('serverName'),'/microsoft.insights/', parameters('settingName'))]",
-          "dependsOn": [],
+          "type": "Microsoft.DBforPostgreSQL/servers/configurations",
+          "apiVersion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('serverConfigurations').configurations[0].name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]"
+          ],
           "properties": {
-            "workspaceId": "[parameters('workspaceId')]",
-            "logs": [
-              {
-                "category": "PostgreSQLLogs",
-                "enabled": true
-              },
-              {
-                "category": "QueryStoreRuntimeStatistics",
-                "enabled": true
-              },
-              {
-                "category": "QueryStoreWaitStatistics",
-                "enabled": true
-              }
-            ],
-            "metrics": [
-              {
-                "category": "AllMetrics",
-                "enabled": true
-              }
-            ]
+            "value": "[parameters('serverConfigurations').configurations[0].value]"
+          }
+        },
+        {
+          "type": "Microsoft.DBforPostgreSQL/servers/configurations",
+          "apiVersion": "2017-12-01",
+          "name": "[concat(parameters('serverName'), '/', parameters('serverConfigurations').configurations[1].name)]",
+          "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', parameters('serverName'))]",
+            "[resourceId('Microsoft.DBforPostgreSQL/servers/configurations', parameters('serverName'), parameters('serverConfigurations').configurations[0].name)]"
+          ],
+          "properties": {
+            "value": "[parameters('serverConfigurations').configurations[1].value]"
           }
         }
-    ]
+      ]
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
+      "apiVersion": "2017-05-01-preview",
+      "name": "[concat(parameters('serverName'),'/microsoft.insights/', parameters('settingName'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforPostgreSQL/servers/configurations', parameters('serverName'), parameters('serverConfigurations').configurations[1].name)]"
+      ],
+      "properties": {
+        "storageAccountId": "[parameters('storageAccountId')]",
+        "logs": [
+          {
+            "category": "PostgreSQLLogs",
+            "enabled": true
+          },
+          {
+            "category": "QueryStoreRuntimeStatistics",
+            "enabled": true
+          },
+          {
+            "category": "QueryStoreWaitStatistics",
+            "enabled": true
+          }
+        ],
+        "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true
+          }
+        ]
+      }
+    }
+  ]
 }

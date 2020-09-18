@@ -9,4 +9,8 @@
 </a>
 
 
-This ARM template deploys [diagnostic settings in Azure Monitor](https://docs.microsoft.com/azure/azure-monitor/samples/resource-manager-diagnostic-settings) for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview) and send logs and metrics to workspace, storageAccount, and eventHub.
+This ARM template enables query store and deploys [diagnostic settings in Azure Monitor](https://docs.microsoft.com/azure/azure-monitor/samples/resource-manager-diagnostic-settings) for [Azure Database for PostgreSQL Server](https://docs.microsoft.com/azure/postgresql/overview), and send logs and metrics to Azure Monitor Logs workspace, storage account, and Event Hub.
+
+**NOTE**:
+
+For query Store logs, you need to first turn on [Query store parameters](https://docs.microsoft.com/azure/postgresql/concepts-query-store#enabling-query-store).
