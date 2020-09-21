@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serverName": {
+      "value": "my server name"
+    },
+    "location": {
+      "value": "location of my server"
+    },
+    "serverConfigurations": {
+      "value": {
+        "configurations": [
+          {
+            "name": "pg_qs.query_capture_mode",
+            "value": "TOP"
+          },
+          {
+            "name": "pgms_wait_sampling.query_capture_mode",
+            "value": "ALL"
+          }
+        ]
+      }
+    },
+    "settingName": {
+      "value": "my setting name"
+    },
+    "workspaceId": {
+      "value": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/MyResourceGroup/providers/microsoft.operationalinsights/workspaces/MyWorkspace"
+    },
+    "storageAccountId": {
+      "value": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/MyResourceGroup/providers/Microsoft.Storage/storageAccounts/mystorageaccount"
+    },
+    "eventHubAuthorizationRuleId": {
+      "value": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/MyResourceGroup/providers/Microsoft.EventHub/namespaces/MyNameSpace/authorizationrules/RootManageSharedAccessKey"
+    },
+    "eventHubName": {
+      "value": "my-eventhub"
+    }
+  }
+}
