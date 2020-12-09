@@ -21,7 +21,7 @@ DATABASES={
 
 ## Build your Docker image
 
-You can build a docker image using [Dockerfile] (./code/Dockerfile).  Deploy your docker image to Docher hub or Azure Container registry.
+You can build a docker image using [Dockerfile](./code/Dockerfile).  Deploy your docker image to Docher hub or Azure Container registry.
 
 ```
 docker build --tag myapp:latest . 
