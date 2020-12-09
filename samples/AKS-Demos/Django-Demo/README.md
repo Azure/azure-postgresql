@@ -3,7 +3,7 @@
 **NOTE: Azure Database for Flexible Server is in preview.**
 
 You can use the application in [code](./Code) folder to install a sample Django application on AKS with MySQL Flexible server tutorial. The settings.py file is using **env** variables for database information
-The code snippet below is reading the database host , username and password from the Django Kubernetes manifest](/django.yaml) file.
+The code snippet below is reading the database host , username and password from the [Django Kubernetes manifest](/django.yaml) file.
 
 ```
 DATABASES={
