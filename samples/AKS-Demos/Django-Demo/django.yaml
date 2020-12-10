@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: testdjango4
+  name: django
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: testdjango4
+      app: django
   template:
     metadata:
       labels:
-        app: testdjango4
+        app: django
     spec:
       containers:
-      - name: testdjango4
-        image: mksuni/django-aks-app:latest
+      - name: django
+        image: [account/image-name]:[tag-name]
         ports:
         - containerPort: 8000
         env: 
         - name: DATABASE_HOST
-          value: "server174634945.postgres.database.azure.com"
+          value: "SERVERNAME.postgres.database.azure.com"
         - name: DATABASE_USER
-          value: "fluidCod6"
+          value: "USERNAME"
         - name: DATABASE_PASSWORD
-          value: "JJeQNRTqeENZJLj7fiY0DA"
+          value: "YOURPASSWORD"
         - name: DATABASE_NAME
           value: "postgres"
       affinity:
@@ -33,17 +33,16 @@ spec:
                 matchExpressions:
                   - key: "app"
                     operator: In
-                    values:
-                    - testdjango4
+                    values: django
               topologyKey: "kubernetes.io/hostname"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: python-svc3
+  name: python-svc
 spec:
   type: LoadBalancer
   ports:
     - port: 8000
   selector:
-    app: testdjango4
+    app: django
