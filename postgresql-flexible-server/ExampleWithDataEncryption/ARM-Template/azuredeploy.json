@@ -1,0 +1,377 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "type": "String",
+            "metadata": {
+                "description": "Server Name for Azure database for PostgreSQL Flexible Server"
+            }
+        },
+        "dnsZoneName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name for DNS Private Zone"
+            }
+        },
+        "dnsZoneFqdn": {
+            "defaultValue": "[format('{0}.private.postgres.database.azure.com', parameters('dnsZoneName'))]",
+            "type": "String",
+            "metadata": {
+                "description": "Fully Qualified DNS Private Zone"
+            }
+        },
+        "administratorLogin": {
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Database administrator login name"
+            }
+        },
+        "administratorLoginPassword": {
+            "minLength": 8,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Database administrator password"
+            }
+        },
+        "skuName": {
+            "defaultValue": "Standard_D2ds_v4",
+            "type": "String",
+            "metadata": {
+                "description": "Azure database for PostgreSQL sku name "
+            }
+        },
+        "StorageSizeGB": {
+            "defaultValue": 32,
+            "type": "Int",
+            "metadata": {
+                "description": "Azure database for PostgreSQL storage Size "
+            }
+        },
+        "SkuTier": {
+            "defaultValue": "GeneralPurpose",
+            "allowedValues": [
+                "GeneralPurpose",
+                "MemoryOptimized",
+                "Burstable"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Azure database for PostgreSQL pricing tier"
+            }
+        },
+        "postgresqlVersion": {
+            "defaultValue": "14",
+            "allowedValues": [
+                "11",
+                "12",
+                "13",
+                "14"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "PostgreSQL version"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "backupRetentionDays": {
+            "defaultValue": 7,
+            "type": "Int",
+            "metadata": {
+                "description": "PostgreSQL Server backup retention days"
+            }
+        },
+        "geoRedundantBackup": {
+            "defaultValue": "Disabled",
+            "type": "String",
+            "metadata": {
+                "description": "Geo-Redundant Backup setting"
+            }
+        },
+        "virtualNetworkName": {
+            "defaultValue": "azure_postgresql_vnet",
+            "type": "String",
+            "metadata": {
+                "description": "Virtual Network Name"
+            }
+        },
+        "subnetName": {
+            "defaultValue": "azure_postgresql_subnet",
+            "type": "String",
+            "metadata": {
+                "description": "Subnet Name"
+            }
+        },
+        "vnetAddressPrefix": {
+            "defaultValue": "10.0.0.0/24",
+            "type": "String",
+            "metadata": {
+                "description": "Virtual Network Address Prefix"
+            }
+        },
+        "postgresqlSubnetPrefix": {
+            "defaultValue": "10.0.0.0/28",
+            "type": "String",
+            "metadata": {
+                "description": "Subnet Address Prefix"
+            }
+        },
+        "userAssignedIdentityName": {
+            "defaultValue": "azure_postgresql_userassignedidentity_1",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the managed identity resource"
+            }
+        },
+        "keyVaultName": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the key vault."
+            }
+        },
+        "keyName": {
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the name of the key in key vault."
+            }
+        },
+        "tenantId": {
+            "defaultValue": "[subscription().tenantId]",
+            "type": "String",
+            "metadata": {
+                "description": "Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet."
+            }
+        },
+        "keysPermissions": {
+            "defaultValue": [
+                "get",
+                "list",
+                "wrapKey",
+                "unwrapKey"
+            ],
+            "type": "Array",
+            "metadata": {
+                "description": "Specifies the permissions to keys in the vault. Valid values are: all, encrypt, decrypt, wrapKey, unwrapKey, sign, verify, get, list, create, update, import, delete, backup, restore, recover, and purge."
+            }
+        },
+        "secretsPermissions": {
+            "defaultValue": [
+                "list"
+            ],
+            "type": "Array",
+            "metadata": {
+                "description": "Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge."
+            }
+        },
+        "keyOps": {
+            "defaultValue": [
+                "decrypt",
+                "encrypt",
+                "sign",
+                "unwrapKey",
+                "verify",
+                "wrapKey"
+            ],
+            "type": "Array",
+            "metadata": {
+                "description": "String array containing any of: decrypt, encrypt, import, release, sign, unwrapKey, verify, wrapKey"
+            }
+        },
+        "haMode": {
+            "defaultValue": "Disabled",
+            "allowedValues": [
+                "Disabled",
+                "ZoneRedundant",
+                "SameZone"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "High Availability Mode"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2021-05-01",
+            "name": "[format('{0}/{1}', parameters('virtualNetworkName'), parameters('subnetName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[parameters('postgresqlSubnetPrefix')]",
+                "delegations": [
+                    {
+                        "name": "dlg-Microsoft.DBforPostgreSQL-flexibleServers",
+                        "properties": {
+                            "serviceName": "Microsoft.DBforPostgreSQL/flexibleServers"
+                        }
+                    }
+                ],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2023-01-31",
+            "name": "[parameters('userAssignedIdentityName')]",
+            "location": "[parameters('location')]"
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-02-01",
+            "name": "[parameters('keyVaultName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName'))]"
+            ],
+            "properties": {
+                "tenantId": "[parameters('tenantId')]",
+                "accessPolicies": [
+                    {
+                        "objectId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName')), '2023-01-31').principalId]",
+                        "tenantId": "[parameters('tenantId')]",
+                        "permissions": {
+                            "keys": "[parameters('keysPermissions')]",
+                            "secrets": "[parameters('secretsPermissions')]"
+                        }
+                    }
+                ],
+                "enablePurgeProtection": true,
+                "enableSoftDelete": true,
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/keys",
+            "apiVersion": "2022-07-01",
+            "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('keyName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                },
+                "keyOps": "[parameters('keyOps')]",
+                "keySize": 2048,
+                "kty": "RSA"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2021-05-01",
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetAddressPrefix')]"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "2020-06-01",
+            "name": "[parameters('dnsZoneFqdn')]",
+            "location": "global"
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "2020-06-01",
+            "name": "[format('{0}/{1}', parameters('dnsZoneFqdn'), parameters('virtualNetworkName'))]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('dnsZoneFqdn'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "registrationEnabled": false,
+                "virtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "2022-12-01",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/privateDnsZones', parameters('dnsZoneFqdn'))]",
+                "[resourceId('Microsoft.KeyVault/vaults/keys', parameters('keyVaultName'), parameters('keyName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName'))]",
+                "[resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('dnsZoneFqdn'), parameters('virtualNetworkName'))]"
+            ],
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('SkuTier')]"
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName')))]": {}
+                }
+            },
+            "properties": {
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "storage": {
+                    "storageSizeGB": "[parameters('StorageSizeGB')]"
+                },
+                "createMode": "Default",
+                "version": "[parameters('postgresqlVersion')]",
+                "backup": {
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                },
+                "highAvailability": {
+                    "mode": "[parameters('haMode')]"
+                },
+                "network": {
+                    "delegatedSubnetResourceId": "[format('{0}/subnets/{1}', reference(resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('dnsZoneFqdn'), parameters('virtualNetworkName')), '2020-06-01').virtualNetwork.id, parameters('subnetName'))]",
+                    "privateDnsZoneArmResourceId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('dnsZoneFqdn'))]"
+                },
+                "dataEncryption": {
+                    "type": "AzureKeyVault",
+                    "primaryUserAssignedIdentityId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('userAssignedIdentityName'))]",
+                    "primaryKeyURI": "[reference(resourceId('Microsoft.KeyVault/vaults/keys', parameters('keyVaultName'), parameters('keyName')), '2022-07-01').keyUriWithVersion]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "postgreSQLHostname": {
+            "type": "String",
+            "value": "[format('{0}.{1}', parameters('serverName'), parameters('dnsZoneFqdn'))]"
+        },
+        "postgreSQLSubnetId": {
+            "type": "String",
+            "value": "[format('{0}/subnets/{1}', reference(resourceId('Microsoft.Network/privateDnsZones/virtualNetworkLinks', parameters('dnsZoneFqdn'), parameters('virtualNetworkName')), '2020-06-01').virtualNetwork.id, parameters('subnetName'))]"
+        },
+        "vnetId": {
+            "type": "String",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
+        },
+        "privateDnsId": {
+            "type": "String",
+            "value": "[resourceId('Microsoft.Network/privateDnsZones', parameters('dnsZoneFqdn'))]"
+        },
+        "privateDnsName": {
+            "type": "String",
+            "value": "[parameters('dnsZoneFqdn')]"
+        }
+    }
+}
