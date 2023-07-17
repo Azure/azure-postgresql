@@ -1,0 +1,14 @@
+# Instructions for CODEOWNERS file format and automatic build failure notifications:
+# https://github.com/Azure/azure-sdk/blob/main/docs/policies/opensource.md#codeowners
+
+#########
+# Specification
+#########
+
+#########
+# Codeowner assignments are made from the _last_ matching entry in CODEOWNERS, so catch-all entries must come first
+#########
+/postgresql-flexible-server/** @Azure/azure-sdk-write-postgresql
+/postgresql-server/** @Azure/azure-sdk-write-postgresql
+
+/CODEOWNERS @Azure/azure-sdk-write-postgresql
