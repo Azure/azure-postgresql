@@ -1,0 +1,111 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetServerName": {
+            "type": "String",
+            "metadata": {
+                "description": "Target Azure database for PostgreSQL Flexible Server name to which data will be migrated"
+            }
+        },
+        "migrationName": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the migration from the source server to target server"
+            }
+        },
+        "sourceServerResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "ResourceID of the source server to be migrated"
+            }
+        },
+        "sourceServerLoginName": {
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Login name for the source server"
+            }
+        },
+        "sourceServerLoginPassword": {
+            "minLength": 8,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Login password for the source server"
+            }
+        },
+        "targetServerLoginName": {
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "Login name for the target server"
+            }
+        },
+        "targetServerLoginPassword": {
+            "minLength": 8,
+            "type": "SecureString",
+            "metadata": {
+                "description": "Login password for the target server"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "dbNamesToMigrate": {
+            "defaultValue": [],
+            "type": "Array",
+            "metadata": {
+                "description": "String array containing the names of databases to be migrated from source server to target server."
+            }
+        },
+        "migrationMode": {
+            "defaultValue": "Disabled",
+            "allowedValues": [
+                "Offline",
+                "Online"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Mode of migration. This can be either Offline or Online"
+            }
+        },
+        "overwriteDbsInTarget": {
+            "defaultValue": "True",
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Indicates whether to overwrite DB in Target. Allowed values: \"True\" or \"False\""
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers/migrations",
+            "apiVersion": "2023-03-01-preview",
+            "name": "[concat(parameters('targetServerName'), '/', parameters('migrationName'))]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sourceDbServerResourceId": "[parameters('sourceServerResourceId')]",
+                "dbsToMigrate": "[parameters('dbNamesToMigrate')]",
+                "secretParameters": {
+                    "adminCredentials": {
+                        "sourceServerPassword": "[parameters('sourceServerLoginPassword')]",
+                        "targetServerPassword": "[parameters('targetServerLoginPassword')]"
+                    },
+                    "sourceServerUsername": "[parameters('sourceServerLoginName')]",
+                    "targetServerUsername": "[parameters('targetServerLoginName')]"
+                },
+                "migrationMode": "[parameters('migrationMode')]",
+                "overwriteDbsInTarget": "[parameters('overwriteDbsInTarget')]"
+            }
+        }
+    ],
+    "outputs": {}
+}
