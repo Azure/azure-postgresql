@@ -1,0 +1,32 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "targetPostgreSQLVersion": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "api": "2022-12-01"
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('api')]",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+      "properties": {
+        "createMode": "Update",
+        "version": "[parameters('targetPostgreSQLVersion')]"
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
