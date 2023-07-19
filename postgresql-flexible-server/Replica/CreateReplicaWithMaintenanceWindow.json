@@ -1,0 +1,91 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "sourceServerId": {
+      "type": "string"
+    },
+    "vmName": {
+      "type": "string",
+      "defaultValue": "Standard_D4ds_v4"
+    },
+    "serverEdition": {
+      "type": "string",
+      "defaultValue": "GeneralPurpose"
+    },
+    "storageSizeGB": {
+      "type": "int",
+      "defaultValue": 8192
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "apiVersion": {
+      "type": "string",
+      "defaultValue": "2022-12-01"
+    }
+  },
+  "variables": {
+
+  },
+  "resources": [
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "kind": "",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "properties": {
+        "createMode": "Replica",
+        "SourceServerResourceId": "[parameters('sourceServerId')]",
+        "Storage": {
+          "StorageSizeGB": "[parameters('storageSizeGB')]"
+        }
+      },
+      "sku": {
+        "name": "[parameters('vmName')]",
+        "tier": "[parameters('serverEdition')]"
+      },
+      "tags": "[parameters('tags')]",
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-08-01",
+      "name": "['updateMaintenanceWindow']",
+      "dependsOn": [
+        "[concat('Microsoft.DBforPostgreSQL/flexibleServers/', parameters('serverName'))]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "resources": [
+            {
+      "apiVersion": "[parameters('apiVersion')]",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+      "properties": {
+        "createMode": "Update",
+        "maintenanceWindow": {
+    		"dayOfWeek": 1,
+		"startHour": 19,
+    		"startMinute": 0,
+    		"customWindow": "Enabled"
+	}
+      }
+    }
+          ]
+        }
+      }
+    }
+  ]
+}
