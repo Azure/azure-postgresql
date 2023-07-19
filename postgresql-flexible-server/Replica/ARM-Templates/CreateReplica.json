@@ -1,0 +1,66 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "sourceServerId": {
+      "type": "string"
+    },
+    "vmName": {
+      "type": "string",
+      "defaultValue": "Standard_D4ds_v4"
+    },
+    "serverEdition": {
+      "type": "string",
+	  "defaultValue": "GeneralPurpose"
+    },
+    "storageSizeGB": {
+      "type": "int",
+	  "defaultValue": 256
+    },
+    "availabilityZone": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "apiVersion": {
+      "type": "string",
+      "defaultValue": "2022-12-01"
+    },
+    "iopsTier": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "kind": "",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "properties": {
+        "createMode": "Replica",
+        "SourceServerResourceId": "[parameters('sourceServerId')]",
+        "Storage": {
+          "StorageSizeGB": "[parameters('storageSizeGB')]",
+          "tier": "[parameters('iopsTier')]"
+        },
+        "availabilityZone": "[parameters('availabilityZone')]"
+      },
+      "sku": {
+        "name": "[parameters('vmName')]",
+        "tier": "[parameters('serverEdition')]"
+      },
+      "tags": "[parameters('tags')]",
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers"
+    }
+  ]
+}
