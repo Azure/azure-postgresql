@@ -1,0 +1,46 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "serverName": {
+      "type": "string"
+    },
+    "haMode": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "availabilityZone": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "standbyAvailabilityZone": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "apiVersion": {
+      "type": "string",
+      "defaultValue": "2022-12-01"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "apiVersion": "[parameters('apiVersion')]",
+      "location": "[parameters('location')]",
+      "name": "[parameters('serverName')]",
+      "properties": {
+        "createMode": "Update",
+        "availabilityZone": "[parameters('availabilityZone')]",
+        "highAvailability": {
+          "mode": "[parameters('haMode')]",
+          "standbyAvailabilityZone": "[parameters('standbyAvailabilityZone')]"
+        }
+      },
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers"
+    }
+  ]
+}
