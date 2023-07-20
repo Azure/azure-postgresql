@@ -1,0 +1,150 @@
+// This template deploys a flexible server with AAD auth enabled and password auth enabled.
+// Pre-requisties:
+// 1. Need to have a User, Group or ServicePrincipal (User Managed Identity) details like Object ID, Tenant ID, Principal Name and Principal Type
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "serverName": {
+            "type": "String"
+        },
+        "serverEdition": {
+            "defaultValue": "GeneralPurpose",
+            "type": "String"
+        },
+        "vmName": {
+            "defaultValue": "Standard_D2ds_v4",
+            "type": "String"
+        },
+        "storageSizeGB": {
+            "type": "Int"
+        },
+        "haEnabled": {
+            "defaultValue": "Disabled",
+            "type": "String"
+        },
+        "availabilityZone": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "standbyAvailabilityZone": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "version": {
+            "type": "String"
+        },
+        "backupRetentionDays": {
+            "type": "Int"
+        },
+        "geoRedundantBackup": {
+            "type": "String"
+        },
+        "tags": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "apiVersion": {
+            "defaultValue": "2022-12-01",
+            "type": "String"
+        },
+        "aadObjectId": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "aadTenantId": {
+            "defaultValue": "[subscription().tenantId]",
+            "type": "String"
+        },
+        "aadPrincipalName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "aadPrincipalType": {
+            "defaultValue": "",
+            "allowedValues": [
+                "Unknown",
+                "User",
+                "Group",
+                "ServicePrincipal"
+            ],
+            "type": "String"
+        },
+        "firewallRules": {
+          "type": "object",
+          "defaultValue": {}
+        }
+    },
+    "variables": {
+      "firewallRules": "[parameters('firewallRules').rules]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "sku": {
+                "name": "[parameters('vmName')]",
+                "tier": "[parameters('serverEdition')]"
+            },
+            "properties": {
+                "createMode": "Default",
+                "availabilityZone": "[parameters('availabilityZone')]",
+                "Backup": {
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                },
+                "highAvailability": {
+                    "mode": "[parameters('haEnabled')]",
+                    "standbyAvailabilityZone": "[parameters('standbyAvailabilityZone')]"
+                },
+                "authConfig": {
+                    "tenantId": "[subscription().tenantId]",
+                    "activeDirectoryAuth": "Enabled",
+                    "passwordAuth": "Disabled"
+                },
+                "Storage": {
+                    "StorageSizeGB": "[parameters('storageSizeGB')]"
+                },
+                "version": "[parameters('version')]"
+            }
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers/administrators",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[concat(parameters('serverName'),'/', parameters('aadObjectId'))]",
+            "dependsOn": [
+                "[concat('Microsoft.DBforPostgreSQL/flexibleServers/', parameters('serverName'))]"
+            ],
+            "properties": {
+                "tenantId": "[parameters('aadTenantId')]",
+                "principalName": "[parameters('aadPrincipalName')]",
+                "principalType": "[parameters('aadPrincipalType')]"
+            }
+        },
+        {
+          "condition": "[greater(length(variables('firewallRules')), 0)]",
+          "copy": {
+              "count": "[if(greater(length(variables('firewallRules')), 0), length(variables('firewallRules')), 1)]",
+              "mode": "Serial",
+              "name": "firewallRulesIterator"
+          },
+          "dependsOn": [
+              "[concat('Microsoft.DBforPostgreSQL/flexibleServers/', parameters('serverName'))]",
+              "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers/administrators', parameters('serverName'), parameters('aadObjectId'))]"
+          ],
+          "type": "Microsoft.DBforPostgreSQL/flexibleServers/firewallRules",
+          "name": "[concat(parameters('serverName'),'/',variables('firewallRules')[copyIndex()].name)]",
+          "apiVersion": "[parameters('apiVersion')]",
+          "properties": {
+              "StartIpAddress": "[variables('firewallRules')[copyIndex()].startIPAddress]",
+              "EndIpAddress": "[variables('firewallRules')[copyIndex()].endIPAddress]"
+          }
+        }
+    ]
+}

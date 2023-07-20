@@ -1,0 +1,106 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "serverName": {
+            "type": "String"
+        },
+        "serverEdition": {
+            "defaultValue": "GeneralPurpose",
+            "type": "String"
+        },
+        "vmName": {
+            "defaultValue": "Standard_D2ds_v4",
+            "type": "String"
+        },
+        "storageSizeGB": {
+            "type": "Int"
+        },
+        "haEnabled": {
+            "defaultValue": "Disabled",
+            "type": "String"
+        },
+        "availabilityZone": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "standbyAvailabilityZone": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "version": {
+            "type": "String"
+        },
+        "backupRetentionDays": {
+            "type": "Int"
+        },
+        "geoRedundantBackup": {
+            "type": "String"
+        },
+        "tags": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "apiVersion": {
+            "defaultValue": "2022-12-01",
+            "type": "String"
+        },
+        "firewallRules": {
+            "defaultValue": {},
+            "type": "Object"
+        }
+    },
+    "variables": {
+        "firewallRules": "[parameters('firewallRules').rules]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "sku": {
+                "name": "[parameters('vmName')]",
+                "tier": "[parameters('serverEdition')]"
+            },
+            "properties": {
+                "createMode": "Default",
+                "availabilityZone": "[parameters('availabilityZone')]",
+                "Backup": {
+                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                },
+                "highAvailability": {
+                    "mode": "[parameters('haEnabled')]",
+                    "standbyAvailabilityZone": "[parameters('standbyAvailabilityZone')]"
+                },
+                "Storage": {
+                    "StorageSizeGB": "[parameters('storageSizeGB')]"
+                },
+                "version": "[parameters('version')]"
+            }
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers/firewallRules",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[concat(parameters('serverName'),'/',variables('firewallRules')[copyIndex()].name)]",
+            "dependsOn": [
+                "[concat('Microsoft.DBforPostgreSQL/flexibleServers/', parameters('serverName'))]"
+            ],
+            "properties": {
+                "StartIpAddress": "[variables('firewallRules')[copyIndex()].startIPAddress]",
+                "EndIpAddress": "[variables('firewallRules')[copyIndex()].endIPAddress]"
+            },
+            "copy": {
+                "name": "firewallRulesIterator",
+                "count": "[if(greater(length(variables('firewallRules')), 0), length(variables('firewallRules')), 1)]",
+                "mode": "Serial"
+            },
+            "condition": "[greater(length(variables('firewallRules')), 0)]"
+        }
+    ]
+}
