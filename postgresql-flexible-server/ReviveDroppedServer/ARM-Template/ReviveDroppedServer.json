@@ -1,0 +1,27 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"location": {
+			"type": "String"
+		},
+		"serverName": {
+			"type": "String"
+		},
+		"droppedServerResourceId": {
+			"type": "String"
+		}
+	},
+	"resources": [
+		{
+			"type": "Microsoft.DBforPostgreSQL/flexibleServers",
+			"apiVersion": "2023-03-01-preview",
+			"name": "[parameters('serverName')]",
+			"location": "[parameters('location')]",
+			"properties": {
+				"createMode": "ReviveDropped",
+				"SourceServerResourceId": "[parameters('droppedServerResourceId')]"
+			}
+		}
+	]
+}
