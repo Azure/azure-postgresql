@@ -1,0 +1,77 @@
+// This template allows us to update user assigned identity or keys used for Data encryption for Azure Database for PostgreSQL Flexible Server.
+// If the server is geo-backup enabled you need to pass both primary and geo-backup user assigned identity and primary and geo-backup key URIs.
+// The key vault having the primary key must be in same location as source server. 
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "type": "String",
+            "metadata": {
+                "description": "Server Name for Azure database for PostgreSQL Flexible Server"
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "type": "String",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "apiVersion": {
+            "defaultValue": "2023-03-01-preview",
+            "type": "string"
+        },
+        "primaryIdentityResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the user assigned identity for server location"
+            }
+        },
+        "primaryKeyURI": {
+            "type": "String",
+            "metadata": {
+                "description": "Key URI for Azure Key Vault in source server location which has desired access policy defined for the primaryIdentityResourceId to allow key permissions Get, List, WrapKey, UnwrapKey"
+            }
+        },
+        "geoBackupIdentityResourceId": {
+            "type": "String",
+            "metadata": {
+                "description": "Name of the user assigned identity for geo-backup location"
+            }
+        },
+        "geoBackupKeyURI": {
+            "type": "String",
+            "metadata": {
+                "description": "Key URI for Azure Key Vault in geo-backup location which has desired access policy defined for the geoIdentityResourceId to allow key permissions Get, List, WrapKey, UnwrapKey"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[format('{0}', parameters('primaryIdentityResourceId'))]": {},
+                    "[format('{0}', parameters('geoBackupIdentityResourceId'))]": {}
+                }
+            },
+            "properties": {
+                "createMode": "Update",
+                "dataEncryption": {
+                    "type": "AzureKeyVault",
+                    "primaryUserAssignedIdentityId": "[parameters('primaryIdentityResourceId')]",
+                    "primaryKeyURI": "[parameters('primaryKeyURI')]",
+                    "geoBackupUserAssignedIdentityId": "[parameters('geoBackupIdentityResourceId')]",
+                    "geoBackupKeyURI": "[parameters('geoBackupKeyURI')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

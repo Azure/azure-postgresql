@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Template to create a flexible server and configure server parameters"
+    },
+    "parameters": {
+        "serverName": {
+            "type": "String"
+        },
+        "serverParameters": {
+            "type": "Array",
+            "defaultValue": [
+                {
+                    "name": "application_name",
+                    "value": "test",
+                    "source": "user-override"
+                },
+                {
+                    "name": "array_nulls",
+                    "value": "OFF",
+                    "source": "user-override"
+                },
+                {
+                    "name": "auto_explain.log_format",
+                    "value": "JSON",
+                    "source": "user-override"
+                }
+            ]
+        }
+    },
+    "variables": {
+        "api": "2022-12-01"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers/configurations",
+            "name": "[concat(parameters('serverName'),'/',parameters('serverParameters')[copyIndex()].name)]",
+            "apiVersion": "[variables('api')]",
+            "properties": {
+                "value": "[parameters('serverParameters')[copyIndex()].value]",
+                "source": "[parameters('serverParameters')[copyIndex()].source]"
+            },
+            "copy": {
+                "name": "serverParametersIterator",
+                "count": "[if(greater(length(parameters('serverParameters')), 0), length(parameters('serverParameters')), 1)]",
+                "mode": "serial"
+            }
+        }
+    ]
+}

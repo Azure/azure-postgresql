@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "GeoRestore a PostgreSQL flexible server with Public access."
+    },
+    "parameters": {
+        "location": {
+            "type": "String"
+        },
+        "serverName": {
+            "type": "String"
+        },
+        "sourceServerId": {
+            "type": "String"
+        },
+        "restorePointInTime": {
+            "type": "string"
+        },
+        "availabilityZone": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "geoRedundantBackup": {
+            "type": "String"
+        },
+        "tags": {
+            "defaultValue": {},
+            "type": "Object"
+        },
+        "apiVersion": {
+            "defaultValue": "2022-12-01",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+            "apiVersion": "[parameters('apiVersion')]",
+            "name": "[parameters('serverName')]",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('tags')]",
+            "properties": {
+                "createMode": "GeoRestore",
+                "SourceServerResourceId": "[parameters('sourceServerId')]",
+                "pointInTimeUTC": "[parameters('restorePointInTime')]",
+                "backup": {
+                    "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
+                },
+                "availabilityZone": "[parameters('availabilityZone')]"
+            }
+        }
+    ]
+}

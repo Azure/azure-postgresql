@@ -1,6 +1,9 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
+  "metadata": {
+      "description": "Update maintenance window for a PostgreSQL flexible server"
+  },
   "parameters": {
     "location": {
       "type": "string"
@@ -21,11 +24,11 @@
       "properties": {
         "createMode": "Update",
         "maintenanceWindow": {
-    		"dayOfWeek": 1,
-		"startHour": 19,
-    		"startMinute": 0,
-    		"customWindow": "Enabled"
-	}
+          "dayOfWeek": 1,
+          "startHour": 19,
+          "startMinute": 0,
+          "customWindow": "Enabled"
+	      }
       }
     }
   ],

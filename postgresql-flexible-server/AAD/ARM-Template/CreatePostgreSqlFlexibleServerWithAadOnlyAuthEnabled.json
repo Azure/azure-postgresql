@@ -1,9 +1,13 @@
-// This template deploys a flexible server with AAD auth enabled and password auth enabled.
-// Pre-requisties:
-// 1. Need to have a User, Group or ServicePrincipal (User Managed Identity) details like Object ID, Tenant ID, Principal Name and Principal Type
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+      "description": "This template deploys a flexible server with AAD auth enabled and password auth enabled."
+      /*
+      // Pre-requisties:
+      // 1. Need to have a User, Group or ServicePrincipal (User Managed Identity) details like Object ID, Tenant ID, Principal Name and Principal Type
+      */
+    },
     "parameters": {
         "location": {
             "type": "String"

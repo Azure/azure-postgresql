@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "metadata": {
-        "description": "This template deploys a PostgreSQL flexible server with Private Access."
+        "description": "Restore a PostgreSQL flexible server with Private access."
         /*
         // Pre-requisties:
         // 1. Create a vnet and subnet. Make sure that the subnet used is delegated to Microsoft.DBforPostgreSQL/flexibleServers
@@ -19,40 +19,15 @@
         "serverName": {
             "type": "String"
         },
-        "administratorLogin": {
-          "type": "string"
-        },
-        "administratorLoginPassword": {
-          "type": "securestring"
-        },
-        "serverEdition": {
-            "defaultValue": "GeneralPurpose",
+        "sourceServerId": {
             "type": "String"
         },
-        "vmName": {
-            "defaultValue": "Standard_D2ds_v4",
-            "type": "String"
-        },
-        "storageSizeGB": {
-            "type": "Int"
-        },
-        "haEnabled": {
-            "defaultValue": "Disabled",
-            "type": "String"
+        "restorePointInTime": {
+            "type": "string"
         },
         "availabilityZone": {
             "defaultValue": "",
             "type": "String"
-        },
-        "standbyAvailabilityZone": {
-            "defaultValue": "",
-            "type": "String"
-        },
-        "version": {
-            "type": "String"
-        },
-        "backupRetentionDays": {
-            "type": "Int"
         },
         "geoRedundantBackup": {
             "type": "String"
@@ -80,31 +55,18 @@
             "name": "[parameters('serverName')]",
             "location": "[parameters('location')]",
             "tags": "[parameters('tags')]",
-            "sku": {
-                "name": "[parameters('vmName')]",
-                "tier": "[parameters('serverEdition')]"
-            },
             "properties": {
-                "createMode": "Default",
-                "administratorLogin": "[parameters('administratorLogin')]",
-                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
-                "availabilityZone": "[parameters('availabilityZone')]",
-                "Backup": {
-                    "backupRetentionDays": "[parameters('backupRetentionDays')]",
+                "createMode": "PointInTimeRestore",
+                "SourceServerResourceId": "[parameters('sourceServerId')]",
+                "pointInTimeUTC": "[parameters('restorePointInTime')]",
+                "backup": {
                     "geoRedundantBackup": "[parameters('geoRedundantBackup')]"
                 },
-                "highAvailability": {
-                    "mode": "[parameters('haEnabled')]",
-                    "standbyAvailabilityZone": "[parameters('standbyAvailabilityZone')]"
-                },
+                "availabilityZone": "[parameters('availabilityZone')]",
                 "Network": {
                   "delegatedSubnetResourceId": "[parameters('delegatedSubnetResourceId')]",
                   "privateDnsZoneArmResourceId": "[parameters('privateDnsZoneResourceId')]"
-                },
-                "Storage": {
-                    "StorageSizeGB": "[parameters('storageSizeGB')]"
-                },
-                "version": "[parameters('version')]"
+                }
             }
         }
     ]

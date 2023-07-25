@@ -1,6 +1,9 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Template to create a migration from source Azure database for PostgreSQL Single Server to target Azure database for PostgreSQL Flexible Server"
+    },
     "parameters": {
         "targetServerName": {
             "type": "String",
