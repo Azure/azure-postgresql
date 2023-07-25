@@ -1,0 +1,64 @@
+// THis template allows us to Manage Azure Database for PostgreSQL Flexible Server
+// It allows us to:
+// 1. Scale Compute
+// 2. Scale Storage
+// 3. Manage Backup Retention
+// 4. Manage Storage Autogrow
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+        "type": "string"
+        },
+        "serverName": {
+            "type": "string"
+        },
+        "serverEdition": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "storageSizeGB": {
+            "type": "int",
+            "defaultValue": 0
+        },
+        "storageAutogrow": {
+            "type": "string",
+            "defaultValue": "Disabled"
+        },
+        "backupRetentionDays": {
+            "type": "int",
+            "defaultValue": 0
+        },
+        "vmName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "apiVersion": {
+            "type": "string",
+            "defaultValue": "2022-12-01"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+      {
+        "apiVersion": "[parameters('apiVersion')]",
+        "location": "[parameters('location')]",
+        "name": "[parameters('serverName')]",
+        "properties": {
+          "createMode": "Update",
+          "Storage": {
+            "StorageSizeGB": "[parameters('storageSizeGB')]",
+            "Autogrow": "[parameters('storageAutogrow')]"
+          },
+          "Backup": {
+            "backupRetentionDays": "[parameters('backupRetentionDays')]"
+          }
+        },
+        "sku": "[if(or(empty(parameters('vmName')), empty(parameters('serverEdition'))), json('null'), json(concat('{\"name\": \"', parameters('vmName'), '\",\"tier\": \"', parameters('serverEdition'), '\"}')))]",
+        "type": "Microsoft.DBforPostgreSQL/flexibleServers"
+      }
+    ]
+  }
+  

@@ -1,0 +1,118 @@
+// This template allows to add diagnostic setting for PostgreSQL FLexible Server
+{    
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "settingName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the diagnostic setting."
+        }
+      },
+      "serverName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the PostgreSQL flexible server."
+        }
+      },
+      "workspaceId": {
+        "type": "string",
+        "metadata": {
+          "description": "The resource Id of the workspace."
+        },
+        "defaultValue": ""
+      },
+      "storageAccountId": {
+        "type": "string",
+        "metadata": {
+          "description": "The resource Id of the storage account."
+        },
+        "defaultValue": ""
+      },
+      "eventHubAuthorizationRuleId": {
+        "type": "string",
+        "metadata": {
+          "description": "The resource Id of the event hub authorization rule."
+        },
+        "defaultValue": ""
+      },
+      "eventHubName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name of the event hub."
+        },
+        "defaultValue": ""
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "apiVersion": "2021-05-01-preview",
+        "scope": "[format('Microsoft.DBforPostgreSQL/flexibleServers/{0}', parameters('serverName'))]",
+        "name": "[parameters('settingName')]",
+        "properties": {
+            "workspaceId": "[if(empty(parameters('workspaceId')), json('null'), parameters('workspaceId'))]",
+            "storageAccountId": "[if(empty(parameters('storageAccountId')), json('null'), parameters('storageAccountId'))]",
+            "eventHubAuthorizationRuleId": "[if(empty(parameters('eventHubAuthorizationRuleId')), json('null'), parameters('eventHubAuthorizationRuleId'))]",
+            "eventHubName": "[if(empty(parameters('eventHubName')), json('null'), parameters('eventHubName'))]",
+            "logs": [
+                {
+                    "category": "PostgreSQLLogs",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                },
+                {
+                    "category": "PostgreSQLFlexSessions",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                },
+                {
+                    "category": "PostgreSQLFlexQueryStoreRuntime",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                },
+                {
+                    "category": "PostgreSQLFlexQueryStoreWaitStats",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                },
+                {
+                    "category": "PostgreSQLFlexTableStats",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                },
+                {
+                    "category": "PostgreSQLFlexDatabaseXacts",
+                    "enabled": true,
+                    "retentionPolicy": {
+                        "enabled": false,
+                        "days": 0
+                    }
+                }
+            ],
+            "metrics": [
+                {
+                    "category": "AllMetrics",
+                    "categoryGroup": "[json('null')]",
+                    "enabled": true
+                }
+            ]
+        }
+      }
+    ]
+  }
