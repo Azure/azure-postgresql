@@ -1,13 +1,17 @@
-// This template deploys a flexible server with AAD auth enabled and password auth enabled.
-// Pre-requisties:
-// 1. Create a vnet and subnet. Make sure that the subnet used is delegated to Microsoft.DBforPostgreSQL/flexibleServers
-// 2. Create a private DNS zone
-// 3. Create a virtual network link between the virtual network and private DNS zone (This is make sure that private DNS zone can connect with the flexible server using the virtual network)
-// 4. Provide a delegated subnet resource ID as input parameter to the template
-// 5. Provide a Private DNS zone resource ID as input parameter to the template
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "This template deploys a PostgreSQL flexible server with AAD auth enabled and password auth enabled."
+        /*
+        // Pre-requisties:
+        // 1. Create a vnet and subnet. Make sure that the subnet used is delegated to Microsoft.DBforPostgreSQL/flexibleServers
+        // 2. Create a private DNS zone
+        // 3. Create a virtual network link between the virtual network and private DNS zone (This is make sure that private DNS zone can connect with the flexible server using the virtual network)
+        // 4. Provide a delegated subnet resource ID as input parameter to the template
+        // 5. Provide a Private DNS zone resource ID as input parameter to the template
+        */
+    },
     "parameters": {
         "location": {
             "type": "String"

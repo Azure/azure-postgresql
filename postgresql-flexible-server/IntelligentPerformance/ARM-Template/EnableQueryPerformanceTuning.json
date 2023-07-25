@@ -1,8 +1,9 @@
-// This template will help set 2 server parameters for a PostgreSQL Flexible Server.
-// This  will allow enable Intelligent Query performance tuning for a PostgreSQL Flexible Server.
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "This template will help set 2 server parameters for a PostgreSQL Flexible Server. This  will allow enable Intelligent Query performance tuning for a PostgreSQL Flexible Server"
+    },
     "parameters": {
         "serverName": {
             "type": "string"

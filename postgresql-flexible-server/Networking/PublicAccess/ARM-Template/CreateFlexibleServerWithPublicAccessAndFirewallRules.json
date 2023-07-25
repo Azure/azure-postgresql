@@ -1,6 +1,9 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Create a PostgreSQL flexible server with Public access enabled and firewall rules added once server is provisioned."
+    },
     "parameters": {
         "location": {
             "type": "String"

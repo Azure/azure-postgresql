@@ -1,12 +1,16 @@
-// THis template allows us to Manage Azure Database for PostgreSQL Flexible Server
-// It allows us to:
-// 1. Scale Compute
-// 2. Scale Storage
-// 3. Manage Backup Retention
-// 4. Manage Storage Autogrow
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "Manage Azure Database for PostgreSQL Flexible Server"
+        /*
+        // It allows us to:
+        // 1. Scale Compute
+        // 2. Scale Storage
+        // 3. Manage Backup Retention
+        // 4. Manage Storage Autogrow
+        */
+    },
     "parameters": {
         "location": {
         "type": "string"

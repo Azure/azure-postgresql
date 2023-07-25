@@ -1,7 +1,9 @@
-// This template allows to add diagnostic setting for PostgreSQL FLexible Server
 {    
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "description": "This template allows to add diagnostic setting for PostgreSQL FLexible Server"
+    },
     "parameters": {
       "settingName": {
         "type": "string",
