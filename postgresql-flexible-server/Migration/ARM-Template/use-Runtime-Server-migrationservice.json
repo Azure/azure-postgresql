@@ -1,161 +1,161 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "metadata": {
-        "description": "Template to create a migration from source PostrgeSQL Server to target Azure database for PostgreSQL Flexible Server and using offline"
-    },
-    "parameters": {
-"migrationName": {
-            "type": "String",
-            "metadata": {
-                "description": "Name of the migration from the source server to target server"
-            }
-        },
+	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"metadata": {
+		"description": "Template to create a migration from source PostrgeSQL Server to target Azure database for PostgreSQL Flexible Server and using offline"
+	},
+	"parameters": {
+		"migrationName": {
+			"type": "String",
+			"metadata": {
+				"description": "Name of the migration from the source server to target server"
+			}
+		},
 		"SourceType": {
 			"defaultValue": "OnPremises",
-            "allowedValues": [
-                "OnPremises",
-                "AzureVM",
-                "AWS_RDS",
-                "PostgreSQLSingleServer"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Migration source server type : OnPremises, AWS, GCP, AzureVM or PostgreSQLSingleServer"
-            }
+			"allowedValues": [
+				"OnPremises",
+				"AzureVM",
+				"AWS_RDS",
+				"PostgreSQLSingleServer"
+			],
+			"type": "String",
+			"metadata": {
+				"description": "Migration source server type : OnPremises, AWS, GCP, AzureVM or PostgreSQLSingleServer"
+			}
 		},
-        "targetServerName": {
-            "type": "String",
-            "metadata": {
-                "description": "Target Azure database for PostgreSQL Flexible Server name to which data will be migrated"
-            }
-        },
-        "sourceServerResourceId": {
-            "type": "String",
-            "metadata": {
-                "description": "ResourceID of the source server to be migrated"
-            }
-        },
-        "sourceServerLoginName": {
-            "minLength": 1,
-            "type": "String",
-            "metadata": {
-                "description": "Login name for the source server"
-            }
-        },
-        "sourceServerLoginPassword": {
-            "minLength": 8,
-            "type": "SecureString",
-            "metadata": {
-                "description": "Login password for the source server"
-            }
-        },
-        "targetServerLoginName": {
-            "minLength": 1,
-            "type": "String",
-            "metadata": {
-                "description": "Login name for the target server"
-            }
-        },
-        "targetServerLoginPassword": {
-            "minLength": 8,
-            "type": "SecureString",
-            "metadata": {
-                "description": "Login password for the target server"
-            }
-        },
-        "location": {
-            "defaultValue": "[resourceGroup().location]",
-            "type": "String",
-            "metadata": {
-                "description": "Location for all resources."
-            }
-        },
-         "migrationRuntimeServerResourceId": {
-          "type": "string",
-          "metadata": {
-          "description": "ResourceId of the private endpoint migration instance"
-          }
-        },
-        "dbNamesToMigrate": {
-            "defaultValue": [],
-            "type": "Array",
-            "metadata": {
-                "description": "String array containing the names of databases to be migrated from source server to target server."
-            }
-        },
+		"targetServerName": {
+			"type": "String",
+			"metadata": {
+				"description": "Target Azure database for PostgreSQL Flexible Server name to which data will be migrated"
+			}
+		},
+		"sourceServerResourceId": {
+			"type": "String",
+			"metadata": {
+				"description": "ResourceID of the source server to be migrated"
+			}
+		},
+		"sourceServerLoginName": {
+			"minLength": 1,
+			"type": "String",
+			"metadata": {
+				"description": "Login name for the source server"
+			}
+		},
+		"sourceServerLoginPassword": {
+			"minLength": 8,
+			"type": "SecureString",
+			"metadata": {
+				"description": "Login password for the source server"
+			}
+		},
+		"targetServerLoginName": {
+			"minLength": 1,
+			"type": "String",
+			"metadata": {
+				"description": "Login name for the target server"
+			}
+		},
+		"targetServerLoginPassword": {
+			"minLength": 8,
+			"type": "SecureString",
+			"metadata": {
+				"description": "Login password for the target server"
+			}
+		},
+		"location": {
+			"defaultValue": "[resourceGroup().location]",
+			"type": "String",
+			"metadata": {
+				"description": "Location for all resources."
+			}
+		},
+		"migrationRuntimeServerResourceId": {
+			"defaultValue": "",
+			"type": "string",
+			"metadata": {
+				"description": "ResourceId of the private endpoint migration instance"
+			}
+		},
+		"dbNamesToMigrate": {
+			"defaultValue": [],
+			"type": "Array",
+			"metadata": {
+				"description": "String array containing the names of databases to be migrated from source server to target server."
+			}
+		},
 		"migrationOption": {
 			"defaultValue": "ValidateAndMigrate",
-            "allowedValues": [
-                "Validate",
-                "Migrate",
+			"allowedValues": [
+				"Validate",
+				"Migrate",
 				"ValidateAndMigrate"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Supported types of migration request include Validate, Migrate and ValidateAndMigrate"
-            }
+			],
+			"type": "String",
+			"metadata": {
+				"description": "Supported types of migration request include Validate, Migrate and ValidateAndMigrate"
+			}
 		},
 		"SslMode": {
 			"defaultValue": "Prefer",
-            "allowedValues": [
-                "Prefer",
-                "Require"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Supported SSL modes for migration. VerifyFull is the recommended SSL mode for Single server migration. Prefer, Require are recommended SSL modes for other source types"
-            }
+			"allowedValues": [
+				"Prefer",
+				"Require"
+			],
+			"type": "String",
+			"metadata": {
+				"description": "Supported SSL modes for migration. VerifyFull is the recommended SSL mode for Single server migration. Prefer, Require are recommended SSL modes for other source types"
+			}
 		},
-        "migrationMode": {
-            "defaultValue": "Offline",
-            "allowedValues": [
-                "Offline",
-                "Online"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Mode of migration. This can be either Offline or Online"
-            }
-        },
-        "overwriteDbsInTarget": {
-            "defaultValue": "True",
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "type": "String",
-            "metadata": {
-                "description": "Indicates whether to overwrite DB in Target. Allowed values: \"True\" or \"False\""
-            }
-        }
-    },
-    "resources": [
-        {
-            "type": "Microsoft.DBforPostgreSQL/flexibleServers/migrations",
-            "apiVersion": "2023-12-01-preview",
-            "name": "[concat(parameters('targetServerName'), '/', parameters('migrationName'))]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "sourceDbServerResourceId": "[parameters('sourceServerResourceId')]",
-                "dbsToMigrate": "[parameters('dbNamesToMigrate')]",
-                "secretParameters": {
-                    "adminCredentials": {
-                        "sourceServerPassword": "[parameters('sourceServerLoginPassword')]",
-                        "targetServerPassword": "[parameters('targetServerLoginPassword')]"
-                    },
-                    "sourceServerUsername": "[parameters('sourceServerLoginName')]",
-                    "targetServerUsername": "[parameters('targetServerLoginName')]"
-                },
-                "migrationMode": "[parameters('migrationMode')]",
-                "overwriteDbsInTarget": "[parameters('overwriteDbsInTarget')]",
+		"migrationMode": {
+			"defaultValue": "Offline",
+			"allowedValues": [
+				"Offline",
+				"Online"
+			],
+			"type": "String",
+			"metadata": {
+				"description": "Mode of migration. This can be either Offline or Online"
+			}
+		},
+		"overwriteDbsInTarget": {
+			"defaultValue": "True",
+			"allowedValues": [
+				"True",
+				"False"
+			],
+			"type": "String",
+			"metadata": {
+				"description": "Indicates whether to overwrite DB in Target. Allowed values: \"True\" or \"False\""
+			}
+		}
+	},
+	"resources": [
+		{
+			"type": "Microsoft.DBforPostgreSQL/flexibleServers/migrations",
+			"apiVersion": "2023-12-01-preview",
+			"name": "[concat(parameters('targetServerName'), '/', parameters('migrationName'))]",
+			"location": "[parameters('location')]",
+			"properties": {
+				"sourceDbServerResourceId": "[parameters('sourceServerResourceId')]",
+				"dbsToMigrate": "[parameters('dbNamesToMigrate')]",
+				"secretParameters": {
+					"adminCredentials": {
+						"sourceServerPassword": "[parameters('sourceServerLoginPassword')]",
+						"targetServerPassword": "[parameters('targetServerLoginPassword')]"
+					},
+					"sourceServerUsername": "[parameters('sourceServerLoginName')]",
+					"targetServerUsername": "[parameters('targetServerLoginName')]"
+				},
+				"migrationMode": "[parameters('migrationMode')]",
+				"overwriteDbsInTarget": "[parameters('overwriteDbsInTarget')]",
 				"migrationOption": "[parameters('migrationOption')]",
-                "sslMode": "[parameters('SslMode')]",
-                "sourceType": "[parameters('SourceType')]",
-                "migrationInstanceResourceId": "[parameters('migrationRuntimeServerResourceId')]"
-				
-            }
-        }
-    ],
-    "outputs": {}
+				"sslMode": "[parameters('SslMode')]",
+				"sourceType": "[parameters('SourceType')]",
+				"migrationInstanceResourceId": "[if(empty(parameters('migrationRuntimeServerResourceId')), json('null'), parameters('migrationRuntimeServerResourceId'))]"
+			}
+		}
+	],
+	"outputs": {}
 }
