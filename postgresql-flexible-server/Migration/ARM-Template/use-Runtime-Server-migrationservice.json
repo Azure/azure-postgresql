@@ -71,7 +71,7 @@
                 "description": "Location for all resources."
             }
         },
-         "RuntimeServer": {
+         "migrationRuntimeServerResourceId": {
           "type": "string",
           "metadata": {
           "description": "ResourceId of the private endpoint migration instance"
@@ -152,7 +152,7 @@
 				"migrationOption": "[parameters('migrationOption')]",
                 "sslMode": "[parameters('SslMode')]",
                 "sourceType": "[parameters('SourceType')]",
-                "migrationInstanceResourceId": "[parameters('RuntimeServer')]"
+                "migrationInstanceResourceId": "[parameters('migrationRuntimeServerResourceId')]"
 				
             }
         }
