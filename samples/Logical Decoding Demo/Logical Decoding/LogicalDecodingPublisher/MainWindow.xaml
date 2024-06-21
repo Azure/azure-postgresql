@@ -1,0 +1,61 @@
+﻿<Window x:Class="LogicalDecodingPublisher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LogicalDecodingPublisher"
+        mc:Ignorable="d"
+        Title="Logical Decoding Publisher" Height="450" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <GroupBox Header="Database connection" Margin="10,10,0,217" HorizontalAlignment="Left" Width="374" VerticalAlignment="Top">
+            <Grid Height="157" Margin="0,0,-2,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="17*"/>
+                    <ColumnDefinition Width="74*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Hostname:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="User:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <Label Content="Password:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="Database:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="requireSslCheckbox" Content="Require SSL mode" HorizontalAlignment="Left" Margin="10,134,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.664,1.992" TabIndex="4" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="serverTxt" HorizontalAlignment="Left" Margin="17,14,0,0" VerticalAlignment="Top" Width="266" TabIndex="0" Grid.Column="1"/>
+                <TextBox x:Name="userTxt" HorizontalAlignment="Left" Margin="17,45,0,0" VerticalAlignment="Top" Width="266" TabIndex="1" Grid.Column="1"/>
+                <TextBox x:Name="databaseTxt" HorizontalAlignment="Left" Margin="17,107,0,0" VerticalAlignment="Top" Width="266" TabIndex="3" Grid.Column="1"/>
+                <PasswordBox x:Name="passwordTxt" HorizontalAlignment="Left" Margin="17,76,0,0" VerticalAlignment="Top" Width="266" TabIndex="2" Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Logical decoding" Margin="10,217,0,0" HorizontalAlignment="Left" Width="374" VerticalAlignment="Top" Height="180">
+            <Grid>
+                <Label Content="Slot name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="slotTxt" HorizontalAlignment="Left" Margin="122,14,0,0" VerticalAlignment="Top" Width="200" TabIndex="7"/>
+                <Button x:Name="startBtn" Content="Start" HorizontalAlignment="Left" Margin="43,127,0,0" VerticalAlignment="Top" Width="60" TabIndex="9" Click="startBtn_Click"/>
+                <Button x:Name="stopBtn" Content="Stop" HorizontalAlignment="Left" Margin="252,127,0,0" VerticalAlignment="Top" Width="60" IsEnabled="False" TabIndex="10" Click="stopBtn_Click"/>
+                <Label Content="Plugin name:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                <ComboBox x:Name="pluginTxt" HorizontalAlignment="Left" Margin="122,45,0,0" VerticalAlignment="Top" Width="200" SelectedValuePath="Content">
+                    <ComboBoxItem Content="wal2json"/>
+                    <ComboBoxItem Content="test_decoding"/>
+                    <ComboBoxItem Content="pgoutput"/>
+                </ComboBox>
+                <Label x:Name="publicationLabel" Content="Publication name:" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="publicationTxt" HorizontalAlignment="Left" Margin="122,83,0,0" VerticalAlignment="Top" Width="200" TabIndex="7"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox HorizontalAlignment="Left" Height="177" Header="Event Grid connection" Margin="413,10,0,0" VerticalAlignment="Top" Width="358">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="39*"/>
+                    <ColumnDefinition Width="132*"/>
+                    <ColumnDefinition Width="191*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Topic endpoint:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <Label Content="Topic key:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+                <TextBox x:Name="topicEndpointTxt" HorizontalAlignment="Left" Margin="81,14,0,0" VerticalAlignment="Top" Width="210" TabIndex="5" Grid.ColumnSpan="2" Grid.Column="1"/>
+                <PasswordBox x:Name="topicKeyTxt" HorizontalAlignment="Left" Margin="81,45,0,0" VerticalAlignment="Top" Width="210" TabIndex="6" Grid.ColumnSpan="2" Grid.Column="1"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Output" Margin="413,217,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="180" Width="358">
+            <TextBox x:Name="outputTxt" Margin="0,0,-2,0" TextWrapping="Wrap" IsReadOnly="True" TabIndex="11" ScrollViewer.CanContentScroll="True" VerticalScrollBarVisibility="Visible"/>
+        </GroupBox>
+
+    </Grid>
+</Window>
