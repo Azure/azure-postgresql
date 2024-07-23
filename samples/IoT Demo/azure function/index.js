@@ -15,8 +15,8 @@ module.exports = async function (context, eventHubMessages) {
     var client = new pg.Client(config);
     const query = 'insert into iotdata(deviceid, data) values(' + eventHubMessages.deviceId + ',\'' + JSON.stringify(eventHubMessages) + '\');';
     context.log(query);
-    client.connect();
-    client.query(query);
+    await client.connect();
+    await client.query(query);
     await client.end();
     context.log('insert completed successfully!');	
     /*
